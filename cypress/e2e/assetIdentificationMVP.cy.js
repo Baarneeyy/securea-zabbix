@@ -152,22 +152,35 @@ describe('clone asset-threats and asset-controls', { testIsolation:false }, () =
         cy.deleteDataEntry('testClone')
     })
 })
-/*
-describe('sorting assets', () => {
-    it('sorts', () => {
+describe('sorting assets', { testIsolation:false }, () => {
+    it ("logins", () => {
+        cy.clearCookies()
+        cy.login('demo', '16w99aH2GS')
+        cy.switchTenant('cypressTenantProto')
+        cy.openManagement('Risk', 'Asset Browser')
         cy.wait(750)
-        //cy.sortName(2, 1)
+        cy.url().then((url) => {
+            Cypress.env('currentPageURL', url);
+        });
+        cy.sortName(2, 1)  
+    });
+    
+    it ('sortsRV', () => {
+        cy.visit(Cypress.env('currentPageURL'))
         cy.sort(3,2)
-        cy.sort(4,3)
-        cy.sort(5,4)
-        cy.classfilter(2)
-        cy.classfilter(5)
-        cy.classfilter(7)
-        cy.classfilter(9)
-        cy.wordfilter("test", "t", 2)
     })
+    it ('sortsTC', () => {
+        cy.visit(Cypress.env('currentPageURL'))
+
+        cy.sort(4,3)
+    })
+    it ('sortsCC', () => {
+        cy.visit(Cypress.env('currentPageURL'))
+
+        cy.sort(5,4)
+    })
+    
 })
-*/
 
 describe('ability to perform asset reports', { testIsolation:false }, () => {
     it('count of reports', () => {

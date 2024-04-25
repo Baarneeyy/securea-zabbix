@@ -346,7 +346,7 @@ Cypress.Commands.add('addMapping', (MapNO, NO, search, searchbar, description) =
         cy.get('.p-inputtextarea').should("contain", "test")
     }*/
     cy.contains(description).click()
-    //cy.get('.p-inputtextarea').contains("test").should('exist');
+    cy.get('.p-inputtextarea').invoke('val').should('equal', 'test');
     cy.get('.p-inputtextarea').click().clear()
     cy.AddMapAndSave("false", 1)
     cy.get('[aria-label="Save"]').click()

@@ -164,6 +164,91 @@ describe('control manipulation', () => {
         cy.deleteDataEntry()
     })
 })
+
+describe('sorting assets', { testIsolation:false }, () => {
+    it ("logins", () => {
+        cy.clearCookies()
+        cy.login('demo', '16w99aH2GS')
+        cy.switchTenant('cypressTenantProto')
+        cy.openManagement('Risk', 'Asset Browser')
+        cy.wait(750)
+        cy.url().then((url) => {
+            Cypress.env('currentPageURL', url);
+        });
+        cy.sortName(2, 1)  
+    });
+    
+    it ('sortsRV', () => {
+        cy.visit(Cypress.env('currentPageURL'))
+        cy.sort(3,2)
+    })
+    it ('sortsTC', () => {
+        cy.visit(Cypress.env('currentPageURL'))
+
+        cy.sort(4,3)
+    })
+    it ('sortsCC', () => {
+        cy.visit(Cypress.env('currentPageURL'))
+
+        cy.sort(5,4)
+    })
+    
+})
+
+describe('filtering assets',  { testIsolation:false }, () => {
+    it ('logins', () => {
+        cy.clearCookies()
+        cy.login('demo', '16w99aH2GS')
+        cy.switchTenant('cypressTenantProto')
+        cy.openManagement('Risk', 'Asset Browser')
+        cy.wait(750)
+    })
+
+    it('filtersValue', () => {
+        cy.ValueFilter(200, 300)
+    })
+    it ('filtersclass', () => {
+        cy.classfilter(2)
+    })
+    it ('filtersowner', () => {
+        cy.classfilter(5)
+    })
+    it ('filtersconfidentialyrequirements', () => {
+        cy.classfilter(7)
+    })
+    it ('filtersprocessingofpersonaldata', () => {
+        cy.classfilter(9)
+    })
+    it ('filtersname', () => {
+        cy.wordfilter("test", "t", 2)
+    })
+
+})
+
+describe('asset browser mapping', { testIsolation:false }, () => {
+    it ('logins', () => {
+        cy.login('demo', '16w99aH2GS')
+        cy.switchTenant('cypressTenantProto')
+        cy.openManagement('Risk', 'Asset Browser')
+        cy.wait(750)
+    })
+
+    it ('mapsassetbussinessprocess', () => {
+        cy.wait(750)
+        cy.addMapping(0, 0, "testBusinessProcess{enter}", "testOfBrowserMapping", "test­Bu­si­ness­Pro­ce­ss")
+    })
+
+    it ('mapsassetcontrol', () => {
+        cy.wait(750)
+        cy.addMapping(1, 1, "Next Generation FW{enter}", "testOfBrowserMapping", "Next Ge­ne­ra­ti­on FW")
+    })
+
+    it ('mapsassetthreats', () => {
+        cy.wait(750)
+        cy.addMapping(2, 2, "Cloud – útok proti aplikácii{enter}", "testOfBrowserMapping", "Cloud – útok pro­ti ap­li­ká­cii (SaaS)")
+    })
+
+})
 /*
     describe('create and edit risk assessment report', () => {
         it('opens risk assessment report', () => {
