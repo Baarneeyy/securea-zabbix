@@ -1,0 +1,185 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: b7a204ec8aed41b6bf4002fbc2e9dca8
+      name: BCR
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    - uuid: f5f98aeed3ca4f29bb2a7f171d3f8fd5
+      template: 'BCR Cypress'
+      name: 'BCR Cypress'
+      groups:
+        - name: BCR
+        - name: Templates
+      items:
+        - uuid: 1a99fa1aae144374a19e32eb1da526af
+          name: 'BCR Cypress Test: Duration'
+          type: TRAP
+          key: bcr.cypress.test.duration
+          delay: '0'
+          units: s
+        - uuid: 9088dc88996848ccb4440ba7c6de3c88
+          name: 'BCR Cypress Test: End'
+          type: TRAP
+          key: bcr.cypress.test.end
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+        - uuid: fa06db55f5a84ccd837decc0431a9720
+          name: 'BCR Cypress Test: Failures'
+          type: TRAP
+          key: bcr.cypress.test.failures
+          delay: '0'
+        - uuid: 26ac765de3c04f7c91002fc8ffb86f71
+          name: 'BCR Cypress Test: Out Num'
+          type: TRAP
+          key: bcr.cypress.test.outnum
+          delay: '0'
+          value_type: FLOAT
+        - uuid: 597602dbafbb46a0b8f3c0db10662ec4
+          name: 'BCR Cypress Test: Out Str'
+          type: TRAP
+          key: bcr.cypress.test.outstr
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+        - uuid: 8e4eb81a53ea48bb888639e3e4a50b45
+          name: 'BCR Cypress Test: Passes'
+          type: TRAP
+          key: bcr.cypress.test.passes
+          delay: '0'
+        - uuid: e4b6763aebbb432aa57e8389e3a8f42e
+          name: 'BCR Cypress Test: Pass Percent'
+          type: TRAP
+          key: bcr.cypress.test.passPercent
+          delay: '0'
+          units: '%'
+        - uuid: 952b5eda2719429eb19c58a81e1196e1
+          name: 'BCR Cypress Test: Pending'
+          type: TRAP
+          key: bcr.cypress.test.pending
+          delay: '0'
+        - uuid: ff546301f6b14067b30e291d06659bda
+          name: 'BCR Cypress Test: Pending Percent'
+          type: TRAP
+          key: bcr.cypress.test.pendingPercent
+          delay: '0'
+          units: '%'
+        - uuid: 99011745af4c451ca3bb63c172e3136d
+          name: 'BCR Cypress Test: Skipped'
+          type: TRAP
+          key: bcr.cypress.test.skipped
+          delay: '0'
+        - uuid: f97d7543067b4dc4870eba34a1bc021d
+          name: 'BCR Cypress Test: Start'
+          type: TRAP
+          key: bcr.cypress.test.start
+          delay: '0'
+          trends: '0'
+          value_type: TEXT
+        - uuid: 2a0eb0be90b641489a0447e684b9ee77
+          name: 'BCR Cypress Test: Suites'
+          type: TRAP
+          key: bcr.cypress.test.suites
+          delay: '0'
+        - uuid: a109c1cdf86342ea84a1baaf283a09d7
+          name: 'BCR Cypress Test: Tests'
+          type: TRAP
+          key: bcr.cypress.test.tests
+          delay: '0'
+        - uuid: 6a6ef6d2366e42d3b4faaeb5e25e04b6
+          name: 'BCR Cypress Test: Tests Registered'
+          type: TRAP
+          key: bcr.cypress.test.testsRegistered
+          delay: '0'
+      discovery_rules:
+        - uuid: efef06e383b3473fb372db3e1497feb7
+          name: 'Cypress tests discovery'
+          key: 'vfs.file.contents[/tmp/cypress_discovery.json]'
+          delay: 1h
+          description: 'Discovery of Cypress tests.'
+          item_prototypes:
+            - uuid: b21f0b3d83484e8d88aed90f75f50739
+              name: 'BCR Cypress {#NAME}: duration'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, duration]'
+              delay: '0'
+              units: s
+            - uuid: 04ada45bafe9497fab56ed8574335292
+              name: 'BCR Cypress {#NAME}: end'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, end]'
+              delay: '0'
+              trends: '0'
+              value_type: TEXT
+            - uuid: df717c57efbe43d085eb8e01efbbcadb
+              name: 'BCR Cypress {#NAME}: failures'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, failures]'
+              delay: '0'
+            - uuid: 49b73c92dd0b4682bbd5c16c31261c2c
+              name: 'BCR Cypress {#NAME}: other'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, other]'
+              delay: '0'
+            - uuid: b026d4e0e3b74a1696703b005d7ee3a7
+              name: 'BCR Cypress {#NAME}: outNum'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, outNum]'
+              delay: '0'
+              trends: '0'
+            - uuid: c1192741f4644dd59cc9a8364223d6b5
+              name: 'BCR Cypress {#NAME}: outStr'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, outStr]'
+              delay: '0'
+              trends: '0'
+              value_type: TEXT
+            - uuid: 8789397b39a74703a28e9baf17de1d90
+              name: 'BCR Cypress {#NAME}: passes'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, passes]'
+              delay: '0'
+            - uuid: 8096b4868b3b4857b2f6731d35a03ae8
+              name: 'BCR Cypress {#NAME}: passPercent'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, passPercent]'
+              delay: '0'
+            - uuid: 97706e95ee21444098e2f15a073ac8d6
+              name: 'BCR Cypress {#NAME}: pendingPercent'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, pendingPercent]'
+              delay: '0'
+            - uuid: 58fbfdc5a9054386823b505d4c5d93c6
+              name: 'BCR Cypress {#NAME}: pending'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, pending]'
+              delay: '0'
+            - uuid: 6f344a67596f47d6a52e3c55e6d02a22
+              name: 'BCR Cypress {#NAME}: skipped'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, skipped]'
+              delay: '0'
+            - uuid: 12db4b4e59bf443bbcb94aaeebcef2cd
+              name: 'BCR Cypress {#NAME}: start'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, start]'
+              delay: '0'
+              trends: '0'
+              value_type: TEXT
+            - uuid: 184a6aff5f4e47768e1f793a5a655c83
+              name: 'BCR Cypress {#NAME}: testsRegistered'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, testsRegistered]'
+              delay: '0'
+            - uuid: cb3f7a28f99a486881ce10f686740c64
+              name: 'BCR Cypress {#NAME}: tests'
+              type: TRAP
+              key: 'bcr.cypress[{#NAME}, tests]'
+              delay: '0'
+          lld_macro_paths:
+            - lld_macro: '{#NAME}'
+              path: $.name
+            - lld_macro: '{#TITLE}'
+              path: $.title
