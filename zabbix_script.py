@@ -1,39 +1,25 @@
 import json
 import yaml
 import subprocess
-from pathlib import Path
 import os
+import sys
+from datetime import datetime
 
-os.chdir("C:/Users/mzvalo/Desktop/Cypress-Securea/cypress-securea")
-
-
-def run_cypress_tests(test_files):
-    for test_file in test_files:
-        command = f"npx cypress run --spec {test_file}"
-        try:
-            subprocess.run(command, shell=True, check=True)
-        except subprocess.CalledProcessError as e:
-            print(f"Error executing Cypress test for {test_file}: {e}")
-
-
-def json_to_yaml(json_file, yaml_file):
+def run_cypress_test(test_file: str) -> bool:
+    command = f"npx cypress run --spec {test_file}"
     try:
-        with open(json_file, 'r') as f:
-            json_data = json.load(f)
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing Cypress test for {test_file}: {e}")
+        return False
 
-        with open(yaml_file, 'w') as f:
-            yaml.dump(json_data, f, default_flow_style=False)
-
-        print(f"Successfully converted JSON file '{json_file}' to YAML file '{yaml_file}'")
-    except Exception as e:
-        print(f"Error converting JSON to YAML: {str(e)}")
+    return True
 
 
-def json_file_to_dict(file_path):
+def json_to_dict_to_yaml(json_file: str):
     try:
-        with open(file_path, 'r') as json_file:
-            data_dict = json.load(json_file)
-            return data_dict
+        with open(json_file, 'r') as file:
+            json_data = json.load(file)
     except FileNotFoundError:
         print("File not found.")
         return None
@@ -41,74 +27,103 @@ def json_file_to_dict(file_path):
         print("Error decoding JSON:", e)
         return None
 
-def extract_values(result_dict):
+    try:
+        yaml_file: str = os.path.join(path_repots, json_file.replace(".json", ".yaml"))
+        with open(yaml_file, 'w') as f:
+            yaml.dump(json_data, f, default_flow_style=False)
+
+        print(f"Successfully converted JSON file '{json_file}' to YAML file '{yaml_file}'")
+    except Exception as e:
+        print(f"Error converting JSON to YAML: {str(e)}")
+
+    return json_data
+
+
+def extract_values(keys, result_dict):
+    res = {}
     stats = result_dict.get('stats', {})
-    tests, failures, pending, start, end, duration = (
-        stats.get(key) for key in ['tests', 'failures', 'pending', 'start', 'end', 'duration'])
-    context = result_dict.get("results", [])
-    elist = [i["context"] for adict in context[:1] for bdict in adict.get("suites", [])
-             for cdict in [bdict] for ddict in [cdict.get("tests", [])]
-             for i in ddict if i.get("context") is not None]
-    return tests, pending, failures, start, end, duration, elist,
 
-# def send_to_zabbix(yaml_file, tests, pending, failures, start, end, duration, contexts):
-#     hostname = 'your_hostname'
-#     zabbix_sender_cmd = ['zabbix_sender', '-z', 'your_zabbix_server', '-s', hostname, '-i', yaml_file]
+    for key in keys:
+        res[key] = stats.get(key, None)
 
-#     data = [
-#         (hostname, 'tests', tests),
-#         (hostname, 'pending', pending),
-#         (hostname, 'failures', failures),
-#         (hostname, 'start', start),
-#         (hostname, 'end', end),
-#         (hostname, 'duration', duration),
-#         (hostname, 'contexts', contexts),
-#     ]
+    # Convert to seconds
+    if isinstance(res['duration'], int):
+        res['duration'] = int(res['duration'] / 1000)
 
-#     for item in data:
-#         zabbix_sender_cmd.extend(['-k', item[1], '-o', str(item[2])])
+    return res
 
-#     zabbix_sender_process = subprocess.Popen(zabbix_sender_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#     zabbix_sender_output, zabbix_sender_error = zabbix_sender_process.communicate()
 
-#     if zabbix_sender_process.returncode == 0:
-#         print("Data sent to Zabbix successfully.")
-#     else:
-#         print("Error sending data to Zabbix:", zabbix_sender_error.decode())
+def send_to_zabbix(server, host, prefix, stats, suffix=''):
+    for key, value in stats.items():
+        zabbix_sender_cmd = ['zabbix_sender', '-z', server, '-p', '10051', '-s', host, '-k', prefix + key + suffix, '-o', str(value)]
+        print(f" Z {key}: {value}")
+        zabbix_sender_process = subprocess.Popen(zabbix_sender_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        zabbix_sender_output, zabbix_sender_error = zabbix_sender_process.communicate()
+
+        if zabbix_sender_process.returncode != 0:
+            print("Error sending data to Zabbix, stdout:", zabbix_sender_output.decode())
+            print("Error sending data to Zabbix, stderr:", zabbix_sender_error.decode())
 
 
 if __name__ == "__main__":
-    test_files = [
-        Path("cypress/e2e/securea/tlsCheck.cy.js"),
-        Path("cypress/e2e/securea/settingsTab.cy.js")
-    ]
-    run_cypress_tests(test_files)
-    json_file_path = [
-        Path('mochawesome-report/tlsCheck.json'),
-        Path('mochawesome-report/settingsTab.json')
-    ]
-    yaml_file_path = [
-        Path('mochawesome-report/tlsCheck.yaml'),
-        Path('mochawesome-report/settingsTab.yaml')
-    ]
-    
-    for json_file, yaml_file in zip(json_file_path, yaml_file_path):
-        result_dict = json_file_to_dict(json_file)
-        json_to_yaml(json_file, yaml_file)
-        tests, pending, failures, start, end, duration, elist = extract_values(result_dict)
 
-        if result_dict:
-            print("Dictionary from JSON file:")
-            print("Extracted values:")
-            print(f"Tests: {tests}")
-            print(f"Pending: {pending}")
-            print(f"Failures: {failures}")
-            print(f"Start: {start}")
-            print(f"End: {end}")
-            print(f"Duration: {duration}")
-            if elist is not None:
-                print(f"Contexts: {elist}")
+    zabbix_host: str = 'sec-tester10'
+    zabbix_server: str = 'zabbix.bcresearch.eu'
 
+    path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e'
+    path_repots: str = '/root/cypress/securea-zabbix/mochawesome-report'
 
-            #send_to_zabbix(yaml_file_path, tests, pending, failures, start, end, duration, contexts)
+    tests = {
+        'tlsCheck': 'tlsCheck.json',
+        'assetIdentificationMVP': 'assetIdentificationMVP.json',
+        'controllBrowserMVP': 'controllBrowserMVP.json',
+        'threatBrowserMVP': 'threatBrowserMVP.json',
+        'riskAssessmentMVP': 'riskAssessmentMVP.json',
+    }
 
+    stats_keys = ['tests', 'failures', 'pending', 'start', 'end', 'duration', 'passes', 'passPercent', 'pendingPercent', 'testsRegistered', 'skipped', 'suites']
+
+    os.chdir("/root/cypress/securea-zabbix")
+
+    discovery = []
+
+    for test, file_res in tests.items():
+        file_test = test + '.cy.js'
+        print(f"{test}:")
+        run_cypress_test(os.path.join(path_tests, file_test))
+
+        result_dict = json_to_dict_to_yaml(os.path.join(path_repots, file_res))
+
+        if not result_dict:
+            continue
+
+        # Extract stats from the results
+        stats = extract_values(stats_keys, result_dict)
+
+        # Extract and collect titles from the results for Zabbix discovery
+        key = test
+        title = result_dict['results'][0]['title']
+        discovery.append({'name': key, 'title': title})
+
+        # Process special cases
+        if 'tlsCheck' in file_test and isinstance(result_dict, dict):
+            test_results = result_dict['results'][0]['suites'][0]['tests']
+            for test_res in test_results:
+                if test_res['title'] == 'valid until':
+                    context = test_res['context'].replace('"', '')
+                    stats['outStr'] = context
+                    try:
+                        date = datetime.strptime(context, '%d%m%Y')
+                        stats['outNum'] = int(date.timestamp())
+                    except:
+                        stats['outNum'] = 0
+
+        # Print stats
+        yaml.dump(stats, sys.stdout, default_flow_style=False)
+
+        # Send stats to Zabbix
+        send_to_zabbix(zabbix_server, zabbix_host, f'bcr.cypress[{key}, ', stats, ']')
+
+    # Write Zabbix discovery data to a file as JSON
+    with open('/tmp/cypress_discovery.json', 'w') as f:
+        json.dump(discovery, f)
