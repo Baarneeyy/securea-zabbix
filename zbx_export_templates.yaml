@@ -13,91 +13,83 @@ zabbix_export:
         - name: BCR
         - name: Templates
       items:
-        - uuid: 1a99fa1aae144374a19e32eb1da526af
-          name: 'BCR Cypress Test: Duration'
+        - uuid: 80f1b535df9f492e8e6e2746ff881bdd
+          name: 'BCR Cypress _Total: duration'
           type: TRAP
-          key: bcr.cypress.test.duration
+          key: 'bcr.cypress[_total, duration]'
           delay: '0'
           units: s
-        - uuid: 9088dc88996848ccb4440ba7c6de3c88
-          name: 'BCR Cypress Test: End'
+          triggers:
+            - uuid: b4fd684de45e436f86f79e3d2e37391e
+              expression: 'last(/BCR Cypress/bcr.cypress[_total, duration])>30m'
+              name: 'BCR Cypress _Total: duration > 30m'
+              priority: WARNING
+        - uuid: abd6c0c9bd9e407a856c729a24152137
+          name: 'BCR Cypress _Total: end'
           type: TRAP
-          key: bcr.cypress.test.end
+          key: 'bcr.cypress[_total, end]'
           delay: '0'
           trends: '0'
           value_type: TEXT
-        - uuid: fa06db55f5a84ccd837decc0431a9720
-          name: 'BCR Cypress Test: Failures'
+        - uuid: 0096265cbdf64ba1b7a4f44f3b60e7cd
+          name: 'BCR Cypress _Total: failures'
           type: TRAP
-          key: bcr.cypress.test.failures
+          key: 'bcr.cypress[_total, failures]'
           delay: '0'
-        - uuid: 26ac765de3c04f7c91002fc8ffb86f71
-          name: 'BCR Cypress Test: Out Num'
+          triggers:
+            - uuid: 777e1b1f4bf54a78be1b3f1f2ecc4eb4
+              expression: 'last(/BCR Cypress/bcr.cypress[_total, failures])>0'
+              name: 'BCR Cypress _Total: failures > 0'
+              priority: AVERAGE
+        - uuid: 7602ef46a2e04b2d93f51f4d7c911dd8
+          name: 'BCR Cypress _Total: ok'
           type: TRAP
-          key: bcr.cypress.test.outnum
+          key: 'bcr.cypress[_total, ok]'
           delay: '0'
-          value_type: FLOAT
-        - uuid: 597602dbafbb46a0b8f3c0db10662ec4
-          name: 'BCR Cypress Test: Out Str'
+        - uuid: b169480c031d4f8a890cbede515f8f41
+          name: 'BCR Cypress _Total: pending'
           type: TRAP
-          key: bcr.cypress.test.outstr
+          key: 'bcr.cypress[_total, pending]'
           delay: '0'
-          trends: '0'
-          value_type: TEXT
-        - uuid: 8e4eb81a53ea48bb888639e3e4a50b45
-          name: 'BCR Cypress Test: Passes'
+          triggers:
+            - uuid: 0a5542aba1e64b9484a12518a5a301f9
+              expression: 'last(/BCR Cypress/bcr.cypress[_total, pending])>0'
+              name: 'BCR Cypress _Total: pending > 0'
+              priority: WARNING
+        - uuid: 335be8b135fa42eaa40de3d6c85b5f4d
+          name: 'BCR Cypress _Total: returncode'
           type: TRAP
-          key: bcr.cypress.test.passes
+          key: 'bcr.cypress[_total, returncode]'
           delay: '0'
-        - uuid: e4b6763aebbb432aa57e8389e3a8f42e
-          name: 'BCR Cypress Test: Pass Percent'
+          triggers:
+            - uuid: 6131e5e9433d4d628592a80b47303fd8
+              expression: 'last(/BCR Cypress/bcr.cypress[_total, returncode])>0'
+              name: 'BCR Cypress _Total: returncode <> 0'
+              priority: AVERAGE
+        - uuid: 93adb0c5dfec44939638d56bb47d1e6f
+          name: 'BCR Cypress _Total: start'
           type: TRAP
-          key: bcr.cypress.test.passPercent
-          delay: '0'
-          units: '%'
-        - uuid: 952b5eda2719429eb19c58a81e1196e1
-          name: 'BCR Cypress Test: Pending'
-          type: TRAP
-          key: bcr.cypress.test.pending
-          delay: '0'
-        - uuid: ff546301f6b14067b30e291d06659bda
-          name: 'BCR Cypress Test: Pending Percent'
-          type: TRAP
-          key: bcr.cypress.test.pendingPercent
-          delay: '0'
-          units: '%'
-        - uuid: 99011745af4c451ca3bb63c172e3136d
-          name: 'BCR Cypress Test: Skipped'
-          type: TRAP
-          key: bcr.cypress.test.skipped
-          delay: '0'
-        - uuid: f97d7543067b4dc4870eba34a1bc021d
-          name: 'BCR Cypress Test: Start'
-          type: TRAP
-          key: bcr.cypress.test.start
+          key: 'bcr.cypress[_total, start]'
           delay: '0'
           trends: '0'
           value_type: TEXT
-        - uuid: 2a0eb0be90b641489a0447e684b9ee77
-          name: 'BCR Cypress Test: Suites'
+        - uuid: 8da8418d71db4bfa973c8da74c4eb277
+          name: 'BCR Cypress _Total: tests'
           type: TRAP
-          key: bcr.cypress.test.suites
+          key: 'bcr.cypress[_total, tests]'
           delay: '0'
-        - uuid: a109c1cdf86342ea84a1baaf283a09d7
-          name: 'BCR Cypress Test: Tests'
-          type: TRAP
-          key: bcr.cypress.test.tests
-          delay: '0'
-        - uuid: 6a6ef6d2366e42d3b4faaeb5e25e04b6
-          name: 'BCR Cypress Test: Tests Registered'
-          type: TRAP
-          key: bcr.cypress.test.testsRegistered
-          delay: '0'
+          triggers:
+            - uuid: a0a0b9d4f9ac4f7093a2183ce84cf80b
+              expression: 'change(/BCR Cypress/bcr.cypress[_total, tests])<>0'
+              name: 'BCR Cypress _Total: tests changed'
+              priority: WARNING
       discovery_rules:
         - uuid: efef06e383b3473fb372db3e1497feb7
           name: 'Cypress tests discovery'
           key: 'vfs.file.contents[/tmp/cypress_discovery.json]'
           delay: 1h
+          lifetime_type: DELETE_IMMEDIATELY
+          lifetime: '0'
           description: 'Discovery of Cypress tests.'
           item_prototypes:
             - uuid: b21f0b3d83484e8d88aed90f75f50739
@@ -106,6 +98,11 @@ zabbix_export:
               key: 'bcr.cypress[{#NAME}, duration]'
               delay: '0'
               units: s
+              trigger_prototypes:
+                - uuid: f325cf42b1994bb5a1f864b1b6f7cac3
+                  expression: 'last(/BCR Cypress/bcr.cypress[{#NAME}, duration])>10m'
+                  name: 'BCR Cypress {#NAME}: duration > 10m'
+                  priority: AVERAGE
             - uuid: 04ada45bafe9497fab56ed8574335292
               name: 'BCR Cypress {#NAME}: end'
               type: TRAP
@@ -118,10 +115,15 @@ zabbix_export:
               type: TRAP
               key: 'bcr.cypress[{#NAME}, failures]'
               delay: '0'
-            - uuid: 49b73c92dd0b4682bbd5c16c31261c2c
-              name: 'BCR Cypress {#NAME}: other'
+              trigger_prototypes:
+                - uuid: 8d31881eb5644e69aea2d58c12bc567f
+                  expression: 'last(/BCR Cypress/bcr.cypress[{#NAME}, failures])>0'
+                  name: 'BCR Cypress {#NAME}: failures > 0'
+                  priority: AVERAGE
+            - uuid: ebad9250aa3f4a21b27991929f7e8b46
+              name: 'BCR Cypress {#NAME}: ok'
               type: TRAP
-              key: 'bcr.cypress[{#NAME}, other]'
+              key: 'bcr.cypress[{#NAME}, ok]'
               delay: '0'
             - uuid: b026d4e0e3b74a1696703b005d7ee3a7
               name: 'BCR Cypress {#NAME}: outNum'
@@ -136,31 +138,26 @@ zabbix_export:
               delay: '0'
               trends: '0'
               value_type: TEXT
-            - uuid: 8789397b39a74703a28e9baf17de1d90
-              name: 'BCR Cypress {#NAME}: passes'
-              type: TRAP
-              key: 'bcr.cypress[{#NAME}, passes]'
-              delay: '0'
-            - uuid: 8096b4868b3b4857b2f6731d35a03ae8
-              name: 'BCR Cypress {#NAME}: passPercent'
-              type: TRAP
-              key: 'bcr.cypress[{#NAME}, passPercent]'
-              delay: '0'
-            - uuid: 97706e95ee21444098e2f15a073ac8d6
-              name: 'BCR Cypress {#NAME}: pendingPercent'
-              type: TRAP
-              key: 'bcr.cypress[{#NAME}, pendingPercent]'
-              delay: '0'
             - uuid: 58fbfdc5a9054386823b505d4c5d93c6
               name: 'BCR Cypress {#NAME}: pending'
               type: TRAP
               key: 'bcr.cypress[{#NAME}, pending]'
               delay: '0'
-            - uuid: 6f344a67596f47d6a52e3c55e6d02a22
-              name: 'BCR Cypress {#NAME}: skipped'
+              trigger_prototypes:
+                - uuid: 81498429c5924df6bea874ecdc13deed
+                  expression: 'last(/BCR Cypress/bcr.cypress[{#NAME}, pending])>0'
+                  name: 'BCR Cypress {#NAME}: pending > 0'
+                  priority: WARNING
+            - uuid: 30614833f2584ee4bd19bb2396331fab
+              name: 'BCR Cypress {#NAME}: returncode'
               type: TRAP
-              key: 'bcr.cypress[{#NAME}, skipped]'
+              key: 'bcr.cypress[{#NAME}, returncode]'
               delay: '0'
+              trigger_prototypes:
+                - uuid: 5b47544cdda541f3b935f6ec1646a759
+                  expression: 'last(/BCR Cypress/bcr.cypress[{#NAME}, returncode])>0'
+                  name: 'BCR Cypress {#NAME}: returncode <> 0'
+                  priority: AVERAGE
             - uuid: 12db4b4e59bf443bbcb94aaeebcef2cd
               name: 'BCR Cypress {#NAME}: start'
               type: TRAP
@@ -168,18 +165,85 @@ zabbix_export:
               delay: '0'
               trends: '0'
               value_type: TEXT
-            - uuid: 184a6aff5f4e47768e1f793a5a655c83
-              name: 'BCR Cypress {#NAME}: testsRegistered'
-              type: TRAP
-              key: 'bcr.cypress[{#NAME}, testsRegistered]'
-              delay: '0'
             - uuid: cb3f7a28f99a486881ce10f686740c64
               name: 'BCR Cypress {#NAME}: tests'
               type: TRAP
               key: 'bcr.cypress[{#NAME}, tests]'
               delay: '0'
+          graph_prototypes:
+            - uuid: 1929c5e22cd646c787a63cb69b5fed12
+              name: 'BCR Cypress {#NAME}: duration'
+              graph_items:
+                - color: 0040FF
+                  calc_fnc: ALL
+                  item:
+                    host: 'BCR Cypress'
+                    key: 'bcr.cypress[{#NAME}, duration]'
+            - uuid: d683b15387304abc8515b84834553c94
+              name: 'BCR Cypress {#NAME}: test results'
+              graph_items:
+                - color: CC0000
+                  calc_fnc: ALL
+                  item:
+                    host: 'BCR Cypress'
+                    key: 'bcr.cypress[{#NAME}, failures]'
+                - sortorder: '1'
+                  color: FFBF00
+                  calc_fnc: ALL
+                  item:
+                    host: 'BCR Cypress'
+                    key: 'bcr.cypress[{#NAME}, pending]'
+                - sortorder: '2'
+                  drawtype: DOTTED_LINE
+                  color: BF00FF
+                  calc_fnc: ALL
+                  item:
+                    host: 'BCR Cypress'
+                    key: 'bcr.cypress[{#NAME}, tests]'
+                - sortorder: '3'
+                  drawtype: DASHED_LINE
+                  color: 00CC00
+                  calc_fnc: ALL
+                  item:
+                    host: 'BCR Cypress'
+                    key: 'bcr.cypress[{#NAME}, ok]'
           lld_macro_paths:
             - lld_macro: '{#NAME}'
               path: $.name
             - lld_macro: '{#TITLE}'
               path: $.title
+  graphs:
+    - uuid: 51bbe2581a2249ba953e46783336a0d7
+      name: 'BCR Cypress _total: duration'
+      graph_items:
+        - color: 0040FF
+          calc_fnc: ALL
+          item:
+            host: 'BCR Cypress'
+            key: 'bcr.cypress[_total, duration]'
+    - uuid: 45e24c5c66064d2cb3a1ef797d62de4f
+      name: 'BCR Cypress _total: test results'
+      graph_items:
+        - color: CC0000
+          calc_fnc: ALL
+          item:
+            host: 'BCR Cypress'
+            key: 'bcr.cypress[_total, failures]'
+        - sortorder: '1'
+          color: 00CC00
+          calc_fnc: ALL
+          item:
+            host: 'BCR Cypress'
+            key: 'bcr.cypress[_total, ok]'
+        - sortorder: '2'
+          color: FFBF00
+          calc_fnc: ALL
+          item:
+            host: 'BCR Cypress'
+            key: 'bcr.cypress[_total, pending]'
+        - sortorder: '3'
+          color: 0000CC
+          calc_fnc: ALL
+          item:
+            host: 'BCR Cypress'
+            key: 'bcr.cypress[_total, tests]'
