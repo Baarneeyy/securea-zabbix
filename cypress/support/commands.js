@@ -31,6 +31,8 @@ Cypress.Commands.add('login', (username, password) => {
     cy.get('[type="password"]').type(password)
 
     cy.get('.submit__btn').click()
+
+    cy.wait(750)
     //'/t/' -> tenant logged in
     //cy.url().should('include', `/t/`) //removed ${Cypress.env('Demo Company')} cuz random error
 })
@@ -60,7 +62,7 @@ Cypress.Commands.add('openManagement', (managementName, browserName) => {
         })
     //dropdown__link-holder__active-btn
     cy.contains(`${browserName}`).click()
-    cy.get('[aria-controls="header_overlay_menu_risk_value"] > .flex > .mr-1').click()
+    cy.get('.wrapper__header').click()
     cy.wait(1500)
 })
 
@@ -111,6 +113,10 @@ Cypress.Commands.add('deleteDataEntry', () => {
     cy.reload()
     cy.wait(1000)
     cy.contains(`test-add-asset`).should('not.exist')
+})
+
+Cypress.Commands.add('deleteSpecificEntry', (entryName) => {
+    cy.get('p').should('have.text', entryName).as('entry')
 })
 
 Cypress.Commands.add('editDataEntry', () => {
@@ -374,6 +380,7 @@ Cypress.Commands.add('sort', (SNO, FilterNO) => {
         cy.get('.flex-col > .items-center > .p-button').click()
         cy.wait(1000)
 
+        //edit -> on second sort returns num to be at most 0
         for(let i = 0; i < length; i++) {
             cy.get(`:nth-child(${SNO}) > .overflow-hidden`).eq(i).invoke('text').then(value => {
                 expect(Number(value)).to.be.at.most(a);

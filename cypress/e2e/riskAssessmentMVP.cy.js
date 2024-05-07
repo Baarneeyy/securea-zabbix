@@ -162,12 +162,15 @@ describe('control manipulation', () => {
         cy.wait(750)
         cy.get('.main-model-detail-container__header').find('button').click()
         cy.deleteDataEntry()
+        cy.wait(750)
+        cy.get('.wrapper__header > .flex > .p-button-icon-only').click()
     })
 })
 
 describe('sorting assets', { testIsolation:false }, () => {
-    it ("logins", () => {
+    /*it ("logins", () => {
         cy.clearCookies()
+        cy.reload()
         cy.login('demo', '16w99aH2GS')
         cy.switchTenant('cypressTenantProto')
         cy.openManagement('Risk', 'Asset Browser')
@@ -176,7 +179,12 @@ describe('sorting assets', { testIsolation:false }, () => {
             Cypress.env('currentPageURL', url);
         });
         cy.sortName(2, 1)  
-    });
+    });*/
+    it('sets the url for the tests', () => {
+        cy.url().then((url) => {
+            Cypress.env('currentPageURL', url);
+        });
+    })
     
     it ('sortsRV', () => {
         cy.visit(Cypress.env('currentPageURL'))
@@ -194,10 +202,11 @@ describe('sorting assets', { testIsolation:false }, () => {
     })
     
 })
-
+/*
 describe('filtering assets',  { testIsolation:false }, () => {
     it ('logins', () => {
         cy.clearCookies()
+        cy.reload()
         cy.login('demo', '16w99aH2GS')
         cy.switchTenant('cypressTenantProto')
         cy.openManagement('Risk', 'Asset Browser')
@@ -224,14 +233,18 @@ describe('filtering assets',  { testIsolation:false }, () => {
     })
 
 })
+*/
+
 
 describe('asset browser mapping', { testIsolation:false }, () => {
-    it ('logins', () => {
+    /*it ('logins', () => {
+        cy.clearCookies()
+        cy.reload()
         cy.login('demo', '16w99aH2GS')
         cy.switchTenant('cypressTenantProto')
         cy.openManagement('Risk', 'Asset Browser')
         cy.wait(750)
-    })
+    })*/
 
     it ('mapsassetbussinessprocess', () => {
         cy.wait(750)

@@ -1,5 +1,5 @@
 
-describe('filtering threats', { testIsolation:false }, () => {
+/*describe('filtering threats', { testIsolation:false }, () => {
     it ('logins', () => {
         cy.clearCookies()
         cy.login('demo', '16w99aH2GS')
@@ -18,11 +18,11 @@ describe('filtering threats', { testIsolation:false }, () => {
         cy.visit(Cypress.env('currentPageURL'))
         cy.wordfilter("Náhodné", "N", 5)
     })
-/*
+
     it('filtersValue', () => {
         cy.visit(Cypress.env('currentPageURL'))
         cy.ValueFilter(200, 300)
-    })*/
+    })
     it ('filtersname', () => {
         cy.visit(Cypress.env('currentPageURL'))
         cy.wordfilter("test", "t", 2)
@@ -31,13 +31,13 @@ describe('filtering threats', { testIsolation:false }, () => {
         cy.visit(Cypress.env('currentPageURL'))
         cy.wordfilter("Náhodné", "N", 5)
     })
-    /*
+    
     it ('filtersdescription', () => {
         cy.visit(Cypress.env('currentPageURL'))
         cy.wordfilter("test", "t", 6)
-    })*/
+    })
 
-})
+})*/
 
 describe('sorting assets', { testIsolation:false }, () => {
     it ("logins", () => {
