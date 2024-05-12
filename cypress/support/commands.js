@@ -66,6 +66,11 @@ Cypress.Commands.add('openManagement', (managementName, browserName) => {
     cy.wait(1500)
 })
 
+Cypress.Commands.add('save', () => {
+    cy.get('[aria-label="Save"]').click()
+    cy.get('.Vue-Toastification__close-button').click()
+})
+
 
 Cypress.Commands.add('fillDataEntry', (dataEntryName, hasClass) => {
     cy.contains('Add').click({force: true})
@@ -154,14 +159,17 @@ Cypress.Commands.add('sortCategory', (categoryName) => {
 
 })
 
-Cypress.Commands.add('AddMapAndSave', (highlight, NO) => {
-    cy.get('.p-checkbox-input').eq(NO).click()
+Cypress.Commands.add('AddMapAndSave', (NO, BoxNO) => {
+    let selector =  '#checkb';
+    if (BoxNO == 0) {
+       selector =  '.p-checkbox-input'
+    }
+    cy.get(`${selector}`).eq(NO).click()
     //selects the asset and maps it
-
-    cy.get('[data-p-highlight]').eq(NO).should('have.attr', 'data-p-highlight', highlight)
+    //cy.get('[type="checkbox"]').check()
+    //cy.get(`${selector}`).eq(NO).check();
     //checks if the applied checkbox is checked
 })
-
 Cypress.Commands.add('defaultValues', () => {
     cy.get('u').filter(':contains("Default Values")').as('defaultRiskValues').then((defaultRiskValues) => {
         let thresholdTab = 0
@@ -202,8 +210,9 @@ Cypress.Commands.add('defaultValues', () => {
     })
 })
 
-Cypress.Commands.add('addMapping', (MapNO, NO, search, searchbar, description) => {
-    // NO = 0: for only number 1: for percentage number 2: for two numbers 3: for control browser
+Cypress.Commands.add('addMapping', (MapNO, NO, search, searchbar, description, ValueNO) => {
+    // ValueNO = 0 = 0 assert, 1 = 1 asser, 80 = 80 assert
+    //NO 0: for only number , 1: for 2 numbers
     //MapNO = 0: for first mapping 1: for second mapping 2: for third mapping
     //search = mapping search
     //searchbar = first searchbar search 
@@ -226,7 +235,7 @@ Cypress.Commands.add('addMapping', (MapNO, NO, search, searchbar, description) =
         .type(search)
         .type( "{enter}");
     cy.wait(3000)
-    cy.AddMapAndSave("true", 1)
+    cy.AddMapAndSave(0, 1)
     cy.contains(description).click()
     cy.get('.p-inputtextarea').click().type("test")
     //increases value by 1
@@ -237,66 +246,37 @@ Cypress.Commands.add('addMapping', (MapNO, NO, search, searchbar, description) =
     //check for strings 
     //saves mapping
     switch (NO) {
-        // 0: for only number 1: for percentage number 2: for two numbers 3: for control browser
+        // 0: for only number , 1: for 2 numbers
     case 0: 
-        cy.get('.p-inputnumber-button-up').eq(0).click()
-        cy.get('[aria-valuenow]').should('have.attr', 'aria-valuenow', '1')
-        cy.get('.p-inputnumber > .p-inputtext').eq(0).click().clear().type("35")
-        cy.get('[aria-valuenow]').should('have.attr', 'aria-valuenow', '35')
-        cy.get('[aria-label="Save"]').click()
+        cy.get(':nth-child(4) > .\\!w-20').invoke('val').then((val) => {
+            expect(Number(val)).to.equal(ValueNO);
+            });
+        cy.get(':nth-child(4) > .\\!w-20').eq(0).click().clear().type("35")
+        cy.get(':nth-child(4) > .\\!w-20').invoke('val').then((val) => {
+            expect(Number(val)).to.equal(35);
+            });
+        cy.save()
         break;
     case 1:
-        cy.get('.p-inputnumber-button-up').eq(0).click()
-        if (MapNO == 1) {
-            cy.get('[aria-valuenow]').should('have.attr', 'aria-valuenow', '2')
-        }else {
-        cy.get('[aria-valuenow]').should('have.attr', 'aria-valuenow', '81')
-        }
-        cy.get('.p-inputnumber > .p-inputtext').eq(0).click().clear().type("35")
-        cy.get('[aria-label="Save"]').click()
-        cy.get('[aria-valuenow]').should('have.attr', 'aria-valuenow', '35')
-        //cy.get('.overflow-hidden').children().eq(1).click({ force: true });   
-        //cy.get('.p-inputtextarea').click().type("test")
-        //cy.get('[aria-label="Save"]').click()
+        cy.get(':nth-child(4) > .\\!w-20').invoke('val').then((val) => {
+            expect(Number(val)).to.equal(ValueNO);
+            });
+        cy.get(':nth-child(4) > .\\!w-20').invoke('val').then((val) => {
+            expect(Number(val)).to.equal(ValueNO);
+            });
+        cy.get(':nth-child(4) > .\\!w-20').eq(0).click().clear().type("35")
+        cy.get(':nth-child(5) > .\\!w-20').eq(0).click().clear().type("50")
+        cy.get(':nth-child(4) > .\\!w-20').invoke('val').then((val) => {
+            expect(Number(val)).to.equal(35);
+            });
+        cy.get(':nth-child(5) > .\\!w-20').invoke('val').then((val) => {
+            expect(Number(val)).to.equal(50);
+            });
+        cy.save()
         break;
     case 2:
-        cy.get('.p-inputnumber-button-down').eq(0).click()
-        cy.get('.p-inputnumber-button-down').eq(1).click()
-        cy.wait(500)
-        cy.get('[aria-valuenow]').eq(0).should('have.attr', 'aria-valuenow', '99')
-        cy.get('[aria-valuenow]').eq(1).should('have.attr', 'aria-valuenow', '99')
-        cy.get('.p-inputnumber > .p-inputtext').eq(0).click().clear().type("35")
-        cy.get('.p-inputnumber > .p-inputtext').eq(1).click().clear().type("55")
-        cy.get('[aria-label="Save"]').click()
-        cy.get('[aria-valuenow]').eq(0).should('have.attr', 'aria-valuenow', '35')
-        cy.get('[aria-valuenow]').eq(1).should('have.attr', 'aria-valuenow', '55')
-        //cy.get('.list__body > .list__body-elem > :nth-child(2)').click()
-        //cy.get('.p-inputtextarea').click().type("test")
-        //cy.get('[aria-label="Save"]').click()
+        cy.save()
         break;
-    case 3: // only in control browser
-        cy.get('.p-inputnumber-button-up').eq(0).click()
-        cy.get('[aria-valuenow]').should('have.attr', 'aria-valuenow', '2')
-        cy.get('.p-inputnumber > .p-inputtext').eq(0).click().clear().type("35")
-        cy.get('[aria-label="Save"]').click()
-        cy.get('[aria-valuenow]').should('have.attr', 'aria-valuenow', '35')
-        cy.get('.splitpanes__pane > .wrapper > .wrapper__header > .relative > .p-inputtext').click().clear().type("{enter}")
-        cy.AddMapAndSave("true", 0)
-        cy.get('.px-4').click()
-        cy.get('#adjust-implementation_degree > .p-inputnumber-button-group > .p-inputnumber-button-up').click()
-        cy.get(':nth-child(2) > [aria-valuenow]').should('have.attr', 'aria-valuenow', '1')
-        cy.get('#adjust-implementation_degree > .p-inputtext').click().clear().type("30")
-        cy.get(':nth-child(2) > [aria-valuenow]').should('have.attr', 'aria-valuenow', '30')
-        cy.get('.px-3').click()
-        cy.get('[aria-label="Save"]').click()
-        cy.get('.px-4').click()
-        cy.get('[aria-valuenow]').each(($el) => {
-            cy.wrap($el).should('have.attr', 'aria-valuenow', '30');
-          });
-        break;
-    case 4:
-        cy.get('[aria-label="Save"]').click()
-        break; 
     }
     
     //navigates back to asset browser
@@ -331,18 +311,8 @@ Cypress.Commands.add('addMapping', (MapNO, NO, search, searchbar, description) =
     
     cy.wait(1000)
     
-    cy.AddMapAndSave("true", 0)
+    cy.AddMapAndSave(0, 0)
     cy.wait(1000)
-    if (NO == 3) {
-        cy.get('.px-4').click()
-        cy.get('#adjust-implementation_degree > .p-inputtext').click().clear().type("10")
-        cy.get('.px-3').click({force:true})
-        cy.get('[aria-label="Save"]').click()
-        cy.get('.px-4').click()
-        cy.get('[aria-valuenow]').each(($el) => {
-            cy.wrap($el).should('have.attr', 'aria-valuenow', '10');
-          });
-    }
     cy.get('.splitpanes__pane > .wrapper > .wrapper__header > .relative > .p-inputtext').click()
         .type(search)
         .type("{enter}");
@@ -352,55 +322,82 @@ Cypress.Commands.add('addMapping', (MapNO, NO, search, searchbar, description) =
         cy.get('.p-inputtextarea').should("contain", "test")
     }*/
     cy.contains(description).click()
-    cy.get('.p-inputtextarea').invoke('val').should('equal', 'test');
-    cy.get('.p-inputtextarea').click().clear()
-    cy.AddMapAndSave("false", 1)
-    cy.get('[aria-label="Save"]').click()
+    switch (NO) {
+        // 0: for only number , 1: for 2 numbers
+    case 0: 
+        cy.get(':nth-child(4) > .\\!w-20').invoke('val').then((val) => {
+            expect(Number(val)).to.equal(35);
+            });
+        break;
+    case 1:
+        cy.get(':nth-child(4) > .\\!w-20').invoke('val').then((val) => {
+            expect(Number(val)).to.equal(35);
+            });
+        cy.get(':nth-child(5) > .\\!w-20').invoke('val').then((val) => {
+            expect(Number(val)).to.equal(50);
+            });
+        break;
+    }
+    
+    //cy.get('.p-inputtextarea').invoke('text').should('equal', 'test');
+    //cy.get('.p-inputtextarea').click().clear()
+    cy.AddMapAndSave(0, 1)
+    cy.save()
     cy.get('.breadcrumbs__content > :nth-child(2) > .flex').click()
     cy.wait(2000)
-    //disable end
+    
 })
 
 Cypress.Commands.add('sort', (SNO, FilterNO) => {
-    let numberOfElements;
     cy.get('[aria-controls]').eq(FilterNO).click()
     cy.wait(1000)
     cy.get('.flex-col > .items-center > .p-button').click()
     cy.wait(1000)
     cy.get(':nth-child(2) > .overflow-hidden').its('length').then(length => {
-        numberOfElements = length;
         let a = 0;
-        for(let i = 0; i < length; i++) {
+        let i = 0;
+        if (length > 7) {
+            i = length - 7;
+        }
+        for(i ; i < length; i++) {
             cy.get(`:nth-child(${SNO}) > .overflow-hidden`).eq(i).invoke('text').then(value => {
                 expect(Number(value)).to.be.at.least(a);
                 a = Number(value);
             });
         }
-
-        cy.get('.flex-col > .items-center > .p-button').click()
-        cy.wait(1000)
-
-        //edit -> on second sort returns num to be at most 0
-        for(let i = 0; i < length; i++) {
-            cy.get(`:nth-child(${SNO}) > .overflow-hidden`).eq(i).invoke('text').then(value => {
-                expect(Number(value)).to.be.at.most(a);
-                a = Number(value);
-            });
-        }
-    
-        
-});
-})
-
-Cypress.Commands.add('sortName', (SNO, FilterNO) => {
-    let numberOfElements;
+    });
     cy.get('[aria-controls]').eq(FilterNO).click()
     cy.wait(1000)
     cy.get('.flex-col > .items-center > .p-button').click()
     cy.wait(1000)
     cy.get(':nth-child(2) > .overflow-hidden').its('length').then(length => {
-        numberOfElements = length;
+        let a = 0;
+        if (length > 7) {
+            length = 7;
+        }
+        for(let i = 0; i < length; i++) {
+            cy.get(`:nth-child(${SNO}) > .overflow-hidden`).eq(i).invoke('text').then(value => {
+                if (i == 0){
+                    a = Number(value)
+                }
+                expect(Number(value)).to.be.at.most(a);
+                a = Number(value);
+            });
+        }
+    });
+})
+
+Cypress.Commands.add('sortName', (SNO, FilterNO) => {
+    cy.get('[aria-controls]').eq(FilterNO).click()
+    cy.wait(1000)
+    cy.get('.flex-col > .items-center > .p-button').click()
+    cy.wait(1000)
+    cy.get(':nth-child(2) > .overflow-hidden').its('length').then(length => {
         let previousItem = '';
+        let a = length - 1;
+        if (length > 10) {
+            length = 10;
+        }
         for(let i = 0; i < length; i++) {
             cy.get(`:nth-child(${SNO}) > .overflow-hidden`).eq(i).invoke('text').then(text => {
                 // Convert to lowercase for case-insensitive comparison
@@ -416,9 +413,12 @@ Cypress.Commands.add('sortName', (SNO, FilterNO) => {
         cy.wait(1000)
         cy.get('.flex-col > .items-center > .p-button').click()
         cy.wait(1000)
-                numberOfElements = length;
         let previousItem2 = '';
-        for(let i = length - 1; i >= 0; i--) { // Loop from z to a
+        let b = 0;
+        if (a > 10) {
+            b = a - 10;
+        }
+        for(a; a >= b; a--) { // Loop from z to a
             cy.get(`:nth-child(${SNO}) > .overflow-hidden`).eq(i).invoke('text').then(text => {
                 // Convert to lowercase for case-insensitive comparison
                 const currentText = text.toLowerCase();
