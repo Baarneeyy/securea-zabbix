@@ -202,7 +202,7 @@ describe('sorting assets', { testIsolation:false }, () => {
     })
     
 })
-/*
+
 describe('filtering assets',  { testIsolation:false }, () => {
     it ('logins', () => {
         cy.clearCookies()
@@ -233,7 +233,7 @@ describe('filtering assets',  { testIsolation:false }, () => {
     })
 
 })
-*/
+
 
 
 describe('asset browser mapping', { testIsolation:false }, () => {

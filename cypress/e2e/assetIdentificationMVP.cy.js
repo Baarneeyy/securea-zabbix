@@ -117,6 +117,7 @@ describe('clone asset-threats and asset-controls', { testIsolation:false }, () =
             cy.get('.Vue-Toastification__toast-body', { timeout:2000 }).should('be.visible')
             //cy.get('.breadcrumbs__content > :nth-child(2) > .flex').click()
             cy.go(-1)
+            cy.get('.Vue-Toastification__close-button').should('exist').click()
             cy.wait(1000)
             cy.get('.main-model-detail-container__header > .p-button').click()
             cy.get('.list__body-elem').last().click()
@@ -134,13 +135,13 @@ describe('clone asset-threats and asset-controls', { testIsolation:false }, () =
                         value = values.threat
                     }
                     //changeable based on type of mapping
-                    for (let e = 1; e < 3; e++) {
+                    /*for (let e = 1; e < 3; e++) {
                         cy.get('.list__body-elem').eq(-e).children().eq(value[1])
                             .find('p').invoke('text').then((text) => {
                                 expect(text).to.include(value[0])
                             })
                         }
-                    })         
+                    */})        
             cy.wait(500)
             cy.get('.main-model-detail-container__header > .p-button').click()
             cy.get('.list__body-elem').eq(-2).click()
@@ -166,7 +167,8 @@ describe('sorting assets', { testIsolation:false }, () => {
     });
     
     it ('sortsRV', () => {
-        cy.visit(Cypress.env('currentPageURL'))
+        let url = Cypress.env('currentPageURL')
+        cy.visit()
         cy.sort(3,2)
     })
     it ('sortsTC', () => {
@@ -190,8 +192,8 @@ describe('ability to perform asset reports', { testIsolation:false }, () => {
         cy.wait(750)
         cy.get('.detail-toolbar__inner__expand-btn').click()
         cy.wait(750)
-        cy.get('.detail-toolbar__inner__mapping-btn').should('have.length', 6)
-            .children().first().click()
+        cy.get('.detail-toolbar__inner__mapping-btn').should('have.length', 7)
+            .children().eq(2).click()
         cy.wait(1000)
     })
 

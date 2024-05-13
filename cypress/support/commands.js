@@ -33,6 +33,8 @@ Cypress.Commands.add('login', (username, password) => {
     cy.get('.submit__btn').click()
 
     cy.wait(750)
+
+    cy.get('.Vue-Toastification__close-button').should('exist').click()
     //'/t/' -> tenant logged in
     //cy.url().should('include', `/t/`) //removed ${Cypress.env('Demo Company')} cuz random error
 })
