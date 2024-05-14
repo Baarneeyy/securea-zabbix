@@ -46,13 +46,21 @@ describe('Adding new asset and populating the data', { testIsolation:false }, ()
         cy.clearCookies()
         cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
         cy.wait(750)
-        cy.switchTenant('cypressTenantProto')
+        cy.switchTenant('cypressTenantLukas')
         cy.wait(750)
         cy.openManagement('Risk', 'Asset Browser')
         cy.wait(750)
 
         cy.addDataEntry('test-add-asset', true)
         cy.wait(1000)
+
+        // Assert that the asset is created and visible
+        cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden')
+            cy.wait(200)
+            .contains('test-add-asset')
+        cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden').should('be.visible');
+        //
+
     })
     //set asset class values or nah
     it('propagates values from asset class', () => {
@@ -80,6 +88,13 @@ describe('Adding new asset and populating the data', { testIsolation:false }, ()
 describe('Editing of asset', { testIsolation:false }, () => {
     it('Edits asset test-add-asset', () => {
         cy.editDataEntry()
+        // Assert that the asset is updated
+        cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden')
+            cy.wait(200)
+            .contains('test-add-asset-update')
+        cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden')
+            .should('be.visible');
+        //
     })
 })
 
@@ -117,9 +132,11 @@ describe('clone asset-threats and asset-controls', { testIsolation:false }, () =
             cy.get('.Vue-Toastification__toast-body', { timeout:2000 }).should('be.visible')
             //cy.get('.breadcrumbs__content > :nth-child(2) > .flex').click()
             cy.go(-1)
-            cy.get('.Vue-Toastification__close-button').should('exist').click()
             cy.wait(1000)
-            cy.get('.main-model-detail-container__header > .p-button').click()
+            // z random dôvodu to nevie nájsť asset(šípku)
+            cy.get('.main-model-detail-container__header > .p-button > .duration-100 > path')
+                cy.wait(200)
+                .click()
             cy.get('.list__body-elem').last().click()
             cy.get('.main-model-detail-container__header > .p-button').click({force:true})
 
@@ -135,17 +152,24 @@ describe('clone asset-threats and asset-controls', { testIsolation:false }, () =
                         value = values.threat
                     }
                     //changeable based on type of mapping
-                    /*for (let e = 1; e < 3; e++) {
+                    for (let e = 1; e < 3; e++) {
                         cy.get('.list__body-elem').eq(-e).children().eq(value[1])
                             .find('p').invoke('text').then((text) => {
                                 expect(text).to.include(value[0])
                             })
                         }
-                    */})        
+                    })         
             cy.wait(500)
             cy.get('.main-model-detail-container__header > .p-button').click()
             cy.get('.list__body-elem').eq(-2).click()
             cy.get('.main-model-detail-container__header > .p-button').click()
+
+            // Add assertions to check if the cloned asset mappings are visible
+            cy.get('.list__body')
+                cy.wait(200)
+                .contains('cloned-mapping')
+                .should('be.visible');
+            //
         }
         cy.wait(500)
         cy.deleteDataEntry('test-add-asset-update')
