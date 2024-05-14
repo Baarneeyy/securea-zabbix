@@ -5,15 +5,15 @@ import os
 import sys
 from datetime import datetime
 
-def run_cypress_test(test_file: str) -> bool:
+def run_cypress_test(test_file: str) -> int:
     command = f"npx cypress run --spec {test_file}"
     try:
         subprocess.run(command, shell=True, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error executing Cypress test for {test_file}: {e}")
-        return False
+        return e.returncode
 
-    return True
+    return 0
 
 
 def json_to_dict_to_yaml(json_file: str):
@@ -61,6 +61,7 @@ def send_to_zabbix(server, host, prefix, stats, suffix=''):
         zabbix_sender_output, zabbix_sender_error = zabbix_sender_process.communicate()
 
         if zabbix_sender_process.returncode != 0:
+            print("Error sending data to Zabbix, cmdline:", zabbix_sender_cmd)
             print("Error sending data to Zabbix, stdout:", zabbix_sender_output.decode())
             print("Error sending data to Zabbix, stderr:", zabbix_sender_error.decode())
 
@@ -81,16 +82,20 @@ if __name__ == "__main__":
         'riskAssessmentMVP': 'riskAssessmentMVP.json',
     }
 
-    stats_keys = ['tests', 'failures', 'pending', 'start', 'end', 'duration', 'passes', 'passPercent', 'pendingPercent', 'testsRegistered', 'skipped', 'suites']
+    stats_keys = ['tests', 'pending', 'failures', 'start', 'end', 'duration']
+    aggregates = {'returncode': 0, 'start': None, 'end': None, 'tests': 0, 'pending': 0, 'failures': 0, 'duration': 0, 'ok': 0}
 
     os.chdir("/root/cypress/securea-zabbix")
 
     discovery = []
 
     for test, file_res in tests.items():
+        stats = {}
         file_test = test + '.cy.js'
+
+        # Run the test
         print(f"{test}:")
-        run_cypress_test(os.path.join(path_tests, file_test))
+        stats['returncode'] = run_cypress_test(os.path.join(path_tests, file_test))
 
         result_dict = json_to_dict_to_yaml(os.path.join(path_repots, file_res))
 
@@ -98,7 +103,17 @@ if __name__ == "__main__":
             continue
 
         # Extract stats from the results
-        stats = extract_values(stats_keys, result_dict)
+        stats.update(extract_values(stats_keys, result_dict))
+        stats['ok'] = int(stats['tests'] - stats['failures'])
+
+        if aggregates['start'] is None:
+            aggregates['start'] = stats['start']
+        aggregates['end'] = stats['end']
+        aggregates['duration'] += stats['duration']
+        aggregates['tests'] += stats['tests']
+        aggregates['failures'] += stats['failures']
+        aggregates['ok'] += stats['ok']
+        aggregates['returncode'] += max(aggregates['returncode'], stats['returncode'])
 
         # Extract and collect titles from the results for Zabbix discovery
         key = test
@@ -123,6 +138,10 @@ if __name__ == "__main__":
 
         # Send stats to Zabbix
         send_to_zabbix(zabbix_server, zabbix_host, f'bcr.cypress[{key}, ', stats, ']')
+
+    # Write the aggregated stats to Zabbix
+    key: str = "_total"
+    send_to_zabbix(zabbix_server, zabbix_host, f'bcr.cypress[{key}, ', aggregates, ']')
 
     # Write Zabbix discovery data to a file as JSON
     with open('/tmp/cypress_discovery.json', 'w') as f:
