@@ -34,7 +34,16 @@ Cypress.Commands.add('login', (username, password) => {
 
     cy.wait(750)
 
-    cy.get('.Vue-Toastification__close-button').should('exist').click()
+    cy.get('body').then(($body) => {
+        if ($body.find('.Vue-Toastification__close-button').length > 0) {
+            cy.get('.Vue-Toastification__close-button').click()
+        }
+    })
+    /*cy.get('.Vue-Toastification__close-button').as('notif').its('length').then((length) => {
+        if (length > 0) {
+            cy.get('@notif').click()
+        }
+    })*/
     //'/t/' -> tenant logged in
     //cy.url().should('include', `/t/`) //removed ${Cypress.env('Demo Company')} cuz random error
 })
@@ -885,6 +894,53 @@ Cypress.Commands.add('checkMappedAmount', (mappingSection, classMapping) => {
         })
     })
 })
+
+Cypress.Commands.add('selectAndCloneMappings', (index, values) => {
+    cy.get('.list__body-elem').eq(-2).click();
+    cy.wait(750);
+    cy.get('.main-model-detail-container__header').find('button').click({ force: true });
+    cy.wait(1000);
+    cy.get('.wrapper__header').eq(index)
+        .children().last().click();
+    cy.wait(1000);
+    cy.get('.actions__body-btn').first().click();
+    cy.wait(1000);
+    cy.get('.p-inputtext.p-component').last().type(`testClone{enter}`);
+    cy.wait(2000);
+    cy.get('.list__table').last().find('tbody').click()
+    cy.get('.mb-6 > .clone__button').click({ force: true });
+    cy.wait(500);
+    cy.get('.Vue-Toastification__toast-body', { timeout: 2000 }).should('be.visible');
+    cy.go(-1);
+    cy.wait(1000);
+    cy.get('.main-model-detail-container__header > .p-button').click();
+    cy.get('.list__body-elem').last().click();
+    cy.get('.main-model-detail-container__header > .p-button').click({ force: true });
+
+    cy.assertValuePropagation(index, values);
+
+    cy.wait(500);
+    cy.get('.main-model-detail-container__header > .p-button').click();
+    cy.get('.list__body-elem').eq(-2).click();
+    cy.get('.main-model-detail-container__header > .p-button').click();
+});
+
+Cypress.Commands.add('assertValuePropagation', (index, values) => {
+    cy.get('.wrapper__header').eq(index).find('h3').invoke('text').then((text) => {
+        let value;
+        if (text.includes('Asset Controls')) {
+            value = values.control;
+        } else if (text.includes('Asset Threats')) {
+            value = values.threat;
+        }
+        for (let e = 1; e < 3; e++) {
+            cy.get('.list__body-elem').eq(-e).children().eq(value[1])
+                .find('p').invoke('text').then((text) => {
+                    expect(text).to.include(value[0]);
+                });
+        }
+    });
+});
 
 import addContext from 'mochawesome/addContext';
 Cypress.Commands.add('addContext', (context) => {

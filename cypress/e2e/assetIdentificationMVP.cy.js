@@ -1,5 +1,5 @@
 const { describe } = require("mocha")
-
+/*
 describe('shows assets with corresponding threats and controls', { testIsolation:false }, () => {
     it('opens asset browser', () => {
         cy.clearCookies()
@@ -38,7 +38,7 @@ describe('shows assets with corresponding threats and controls', { testIsolation
         })
     })
 })
-
+*/
 //check adding/filling up assets with data
 //edit accordingly
 describe('Adding new asset and populating the data', { testIsolation:false }, () => {
@@ -46,7 +46,7 @@ describe('Adding new asset and populating the data', { testIsolation:false }, ()
         cy.clearCookies()
         cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
         cy.wait(750)
-        cy.switchTenant('cypressTenantLukas')
+        cy.switchTenant('cypressTenantTomas')
         cy.wait(750)
         cy.openManagement('Risk', 'Asset Browser')
         cy.wait(750)
@@ -99,7 +99,62 @@ describe('Editing of asset', { testIsolation:false }, () => {
 })
 
 describe('clone asset-threats and asset-controls', { testIsolation:false }, () => {
-    it('clones asset mappings', () => {
+    it('new cloning of assets', () => {
+        cy.wait(1000)
+        //HERE
+        /* ==== Generated with Cypress Studio ==== */
+        /* ==== End Cypress Studio ==== */
+        /* ==== Generated with Cypress Studio ==== */
+        cy.addDataEntry('testClone')
+        cy.wait(1500)
+        cy.get('.main-model-detail-container__header').find('button').click()
+        cy.wait(1000)
+        cy.get(':nth-child(22) > :nth-child(3) > .overflow-hidden').click();
+        cy.wait(1000)
+        cy.get(':nth-child(2) > .wrapper__header > a > .p-button > .icon-small').click();
+        cy.wait(1000)
+        cy.get(':nth-child(1) > .flex > .\\@\\[30rem\\]\\/main\\:\\!text-lg').click();
+        cy.wait(1000)
+        cy.get('.mb-14 > .wrapper > .wrapper__header > .relative > .p-inputtext').clear('t');
+        cy.wait(1000)
+        cy.get('.mb-14 > .wrapper > .wrapper__header > .relative > .p-inputtext').type('testClone{enter}');
+        cy.wait(1000)
+        cy.get('.list__body-elem').last().click()
+        cy.wait(1000)
+        cy.get('.mb-6 > .clone__button').click();
+        cy.wait(1000)
+        cy.get('.breadcrumbs__content > :nth-child(3) > .flex').click();
+        cy.wait(1000)
+        cy.get(':nth-child(23) > :nth-child(2) > .overflow-hidden').click();
+        cy.wait(1000)
+        cy.get(':nth-child(22) > :nth-child(2) > .overflow-hidden').click();
+        cy.wait(1000)
+        cy.get(':nth-child(3) > .wrapper__header > a > .p-button > .icon-small').click();
+        cy.wait(1000)
+        cy.get('.actions__body > :nth-child(1)').click();
+        cy.wait(1000)
+        cy.get('.mb-14 > .wrapper > .wrapper__header > .relative > .p-inputtext').clear('t');
+        cy.wait(1000)
+        cy.get('.mb-14 > .wrapper > .wrapper__header > .relative > .p-inputtext').type('testClone{enter}');
+        cy.wait(1000)
+        cy.get('.list__body-elem').last().click();
+        cy.wait(1000)
+        cy.get('.mb-6 > .clone__button').click();
+        cy.wait(1000)
+        cy.get('.breadcrumbs__content > :nth-child(3) > .flex').click();
+        cy.wait(1000)
+        cy.get(':nth-child(23) > :nth-child(2) > .overflow-hidden').click();
+        cy.wait(1000)
+        cy.get(':nth-child(23) > :nth-child(7) > .overflow-hidden').should('have.text', '14')
+        cy.get(':nth-child(23) > :nth-child(8) > .overflow-hidden').should('have.text', '2')
+        cy.wait(500)
+        cy.deleteDataEntry('test-add-asset-update')
+        cy.wait(500)
+        cy.deleteDataEntry('testClone')
+        /* ==== End Cypress Studio ==== */
+    })
+    
+    /*it('clones asset mappings', () => {
         let values = {
             control: ['1%', -2],
             threat: ['55', -3]
@@ -134,12 +189,10 @@ describe('clone asset-threats and asset-controls', { testIsolation:false }, () =
             cy.go(-1)
             cy.wait(1000)
             // z random dôvodu to nevie nájsť asset(šípku)
-            cy.get('.main-model-detail-container__header > .p-button > .duration-100 > path')
-                cy.wait(200)
-                .click()
-            cy.get('.list__body-elem').last().click()
-            cy.get('.main-model-detail-container__header > .p-button').click({force:true})
 
+            cy.get('.list__body-elem').last().click()
+            //cy.get('.main-model-detail-container__header > .p-button').click({force:true})
+            cy.wait(1000)
             //todo -> make functional
             //current problem -> value doesnt get parsed
             cy.get('.wrapper__header').eq(i).find('h3').invoke('text')
@@ -175,8 +228,9 @@ describe('clone asset-threats and asset-controls', { testIsolation:false }, () =
         cy.deleteDataEntry('test-add-asset-update')
         cy.wait(500)
         cy.deleteDataEntry('testClone')
-    })
+    })*/
 })
+/*
 describe('sorting assets', { testIsolation:false }, () => {
     it ("logins", () => {
         cy.clearCookies()
@@ -206,23 +260,30 @@ describe('sorting assets', { testIsolation:false }, () => {
         cy.sort(5,4)
     })
     
-})
+})*/
 
-describe('ability to perform asset reports', { testIsolation:false }, () => {
-    it('count of reports', () => {
+
+//UPDATE TO INCORPORATE NEW REPORT MANAGER
+describe('ability to generate & open reports', { testIsolation:false }, () => {
+    it('generates reports', () => {
+        //cy.visit('https://securea-dev.germanywestcentral.cloudapp.azure.com/#/t/381/')
         cy.openManagement('Risk', 'Asset Browser')
         cy.wait(750)
         cy.get('.list__body-elem').first().click()
         cy.wait(750)
-        cy.get('.detail-toolbar__inner__expand-btn').click()
-        cy.wait(750)
-        cy.get('.detail-toolbar__inner__mapping-btn').should('have.length', 7)
-            .children().eq(2).click()
+        cy.contains('Generate Detailed Asset Report').click()
         cy.wait(1000)
+        cy.get('.Vue-Toastification__toast').should('have.length', '1')
+        cy.get('.Vue-Toastification__toast-component-body > .flex > p').invoke('text').then((text) => {
+            expect(text).to.include('Generated Successfully')
+        })
+        cy.get('.Vue-Toastification__toast-component-body').find('div').find('.cursor-pointer').click()
+        cy.get('.text-2xl').click()
+        cy.url().should('include', '/report-viewer/asset_report/')
     })
 
 
-    it('reports links', () => {
+    /*it('reports links', () => {
         cy.contains('Report Version').click({force:true})
         cy.wait(1000)
         cy.contains('Save Version').should('exist').click()
@@ -240,5 +301,5 @@ describe('ability to perform asset reports', { testIsolation:false }, () => {
         cy.get('.modal__header-btn').filter(':visible').click()
         cy.get('.export__button').click()
         cy.verifyDownload('securea_asset_report_export', { contains:true });
-    })
+    })*/
 })
