@@ -32,7 +32,7 @@ Cypress.Commands.add('login', (username, password) => {
 
     cy.get('.submit__btn').click()
 
-    cy.wait(750)
+    cy.wait(1000)
 
     cy.get('body').then(($body) => {
         if ($body.find('.Vue-Toastification__close-button').length > 0) {
@@ -83,7 +83,7 @@ Cypress.Commands.add('save', () => {
 })
 
 
-Cypress.Commands.add('fillDataEntry', (dataEntryName, hasClass) => {
+Cypress.Commands.add('fillDataEntry', (dataEntryName, hasClass, lastClass) => {
     cy.contains('Add').click({force: true})
     cy.wait(1000)    
     cy.get('#name').type(`${dataEntryName}`)
@@ -92,7 +92,11 @@ Cypress.Commands.add('fillDataEntry', (dataEntryName, hasClass) => {
     
     if (hasClass) {
         cy.get('#class').click()
-        cy.get('.p-dropdown-item-label').eq(0).click()
+        if (lastClass) {
+            cy.get('.p-dropdown-item-label').last().click({force:true})
+        } else {
+            cy.get('.p-dropdown-item-label').eq(0).click()
+        }
     }
 
     cy.get('.p-inputnumber-input').type(256)
@@ -104,8 +108,8 @@ Cypress.Commands.add('fillDataEntry', (dataEntryName, hasClass) => {
     })
 })
 
-Cypress.Commands.add('addDataEntry', (dataEntryName, hasClass=false) => {
-    cy.fillDataEntry(dataEntryName, hasClass)
+Cypress.Commands.add('addDataEntry', (dataEntryName, hasClass=false, lastClass=false) => {
+    cy.fillDataEntry(dataEntryName, hasClass, lastClass)
     
     cy.contains('Create').click()
     

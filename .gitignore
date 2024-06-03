@@ -2,3 +2,4 @@ mochawesome-report/
 node_modules
 cypress/downloads/
 cypress/e2e/assetBrowserMVP2.cy.js
+cypress/e2e/testSpec.cy.js

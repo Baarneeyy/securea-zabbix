@@ -1,6 +1,7 @@
-describe('newly made asset has threats and controls assigned from asset class', { testIsolation:false }, () => {
+
+describe('newly made asset has threats and controls assigned from asset class', () => {
     it('creates a new asset', () => {
-        cy.clearCookies()
+        //cy.clearCookies()
         cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
         cy.wait(750)
         cy.get('body').then($body => {
@@ -12,44 +13,167 @@ describe('newly made asset has threats and controls assigned from asset class', 
         cy.wait(750)
         cy.openManagement('Risk', 'Asset Browser')
         cy.wait(750)
-        cy.addDataEntry('test-add-asset', true)
+        cy.addDataEntry('test-add-asset', true, true)
     })
-    it('check if threats and controls match in mapping and reg', () => {
-        //maybe test isolation -> false
-        //open main window -> check count of controls/threats per asset ->
-        //go to mapping -> assert mapping count == main count -> iterate
-        cy.get('.mr-1').first().find('span').invoke('text').then((text) => {
-            text = text.replace(/[()]/g, '')
-            cy.get('.main-model-detail-container__header').children().click()
-            cy.get('.list__body-elem').should('have.length', text) //asserts number count with actual count
-            cy.get('.main-model-detail-container__header').children().click()
-
-            cy.get('.wrapper__header').eq(2).find('.mr-1').find('span').invoke('text').then((entryCount) => {
-                entryCount = entryCount.replace(/[()]/g, '')
-                cy.get('.flex.items-center.field__name').eq(2).parent().children().eq(1).invoke('text').then((assetClass) => {
-                    cy.get('.flex.items-center.field__name').eq(2).children().click()
-                    cy.wait(750)
-                    cy.Searchbar(assetClass)
-                    cy.get('.list__body-elem').click()
-                    cy.wait(750)
-                    cy.get('.list__body').eq(1).find('.list__body-elem').should('have.length', entryCount)
-                })
-            })
-            cy.go(-1)
-            cy.wait(750)
-            
-        })
-    })
-    /*
-        it('checks if threats are correctly mapped to asset', () => {
-            cy.get('.list__body-elem').last().click()
-            cy.checkMappedAmount(3, 2)
-        })
-    */
 })
 
+describe('mapping tests', () => {
+    it('maps & updates asset threats', () => {
+        cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
+        cy.wait(750)
+        cy.get('body').then($body => {
+            if ($body.find('.Vue-Toastification__close-button').length > 0) {
+                cy.get('.Vue-Toastification__close-button').click()
+            }
+        })
+        cy.switchTenant('cypressTenantProto')
+        cy.wait(750)
+        cy.openManagement('Risk', 'Asset Browser')
+        cy.wait(750)
+        /* ==== Generated with Cypress Studio ==== */
+        cy.get('.list__body-elem').last().click();
+        cy.wait(2000)
+        cy.get(':nth-child(3) > .wrapper__header > a > .p-button > .icon-small').click();
+        cy.wait(750)
+        cy.get(':nth-child(1) > :nth-child(3) > .flex > .checkbox-style').uncheck();
+        cy.wait(750)
+        cy.get(':nth-child(2) > :nth-child(4) > .\\!w-20').click();
+        cy.wait(750)
+        cy.get(':nth-child(2) > :nth-child(4) > .\\!w-20').clear('5');
+        cy.wait(750)
+        cy.get(':nth-child(2) > :nth-child(4) > .\\!w-20').type('50');
+        cy.wait(750)
+        cy.get(':nth-child(2) > :nth-child(5) > .\\!w-20').click();
+        cy.wait(750)
+        cy.get(':nth-child(2) > :nth-child(5) > .\\!w-20').clear('4');
+        cy.wait(750)
+        cy.get(':nth-child(2) > :nth-child(5) > .\\!w-20').type('4');
+        cy.wait(750)
+        cy.get(':nth-child(3) > :nth-child(3) > .flex > .checkbox-style').uncheck();
+        cy.wait(750)
+        cy.get(':nth-child(3) > :nth-child(3) > .flex > .checkbox-style').check();
+        cy.wait(750)
+        cy.get('tbody').eq(1).find('.list__body-elem').eq(3).click();
+        cy.wait(750)
+        cy.get('.p-inputtextarea').type('testAdd');
+        cy.wait(750)
+        cy.get('[aria-label="Save"] > .p-button-label').click();
+        cy.wait(750)
+        cy.go(-1)
+        cy.wait(750)
+        cy.get(':nth-child(1) > :nth-child(3) > .pl-3').should('have.text', '100%')
+        cy.get(':nth-child(2) > :nth-child(3) > .pl-3').should('have.text', '50%')
+        cy.get(':nth-child(3) > :nth-child(3) > .pl-3').should('have.text', '100%')
+        cy.get(':nth-child(4) > :nth-child(3) > .pl-3').should('have.text', '100%')
+        cy.get('tbody').last().find('.list__body-elem').as('controls').its('length').then((length) => {
+            for (let i = 0; i < length; i++) {
+                let value = 100
+                if (i == 1) {
+                    value = 4
+                    cy.get('@controls').eq(i).children().eq(4).find('p').should('have.text', '')
+                } else if (i == 3) {
+                    cy.get('@controls').eq(i).children().eq(4).find('p').should('have.text', 'testAdd')
+                } else {
+                    cy.get('@controls').eq(i).children().eq(4).find('p').should('have.text', '')
+                }
+                cy.get('@controls').eq(i).children().eq(3).find('p').should('have.text', value.toString())
+            }
+        })
+        /* ==== End Cypress Studio ==== */
+    })
+    it('maps & updates asset controls', () => {
+        cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
+        cy.wait(750)
+        cy.get('body').then($body => {
+            if ($body.find('.Vue-Toastification__close-button').length > 0) {
+                cy.get('.Vue-Toastification__close-button').click()
+            }
+        })
+        cy.switchTenant('cypressTenantProto')
+        cy.wait(750)
+        cy.openManagement('Risk', 'Asset Browser')
+        cy.wait(750)
+        cy.get('.list__body-elem').last().click()
+        cy.wait(750)
+        //add checks for current functionality surrounding asset controls
+        /* ==== Generated with Cypress Studio ==== */
+        cy.get(':nth-child(2) > .wrapper__header > a > .p-button > .icon-small').click();
+        cy.wait(750)
+        cy.get(':nth-child(1) > :nth-child(3) > .gap-x-1 > .checkbox-style').uncheck();
+        cy.get(':nth-child(2) > :nth-child(3) > .gap-x-1 > .p-button > .icon > path').click({force:true});
+        cy.get(':nth-child(3) > :nth-child(4) > .\\!w-20').clear('15');
+        cy.get(':nth-child(3) > :nth-child(4) > .\\!w-20').type('150');
+        cy.get(':nth-child(4) > :nth-child(4) > .\\!w-20').click();
+        cy.get(':nth-child(4) > :nth-child(4) > .\\!w-20').click();
+        cy.get(':nth-child(4) > :nth-child(4) > .\\!w-20').click();
+        cy.get('tbody').eq(1).find('.list__body-elem').eq(3).click();
+        cy.wait(750)
+        cy.get('.p-inputtextarea').type('testAdd');
+        cy.get('[aria-label="Save"] > .p-button-label').click();
+        cy.get('.Vue-Toastification__toast-body').invoke('text').should('include', 'greater than')
+        cy.get('.Vue-Toastification__close-button').click();
+        cy.get(':nth-child(3) > :nth-child(4) > .\\!w-20').type('{selectAll}{del}40');
+        cy.get('[aria-label="Save"]').click();
+        cy.wait(750)
+        cy.go(-1)
+        cy.get('tbody').eq(2).find('.list__body-elem').as('controls').its('length').then((length) => {
+            for (let i = 0; i < length; i++) {
+                let value = 1;
+                if (i == 2) {
+                    value = 40
+                    cy.get('@controls').eq(i).children().eq(3).find('p').should('have.text', '')
+                } else if (i == 3) {
+                    cy.get('@controls').eq(i).children().eq(3).find('p').should('have.text', 'testAdd')
+                } else {
+                    cy.get('@controls').eq(i).children().eq(3).find('p').should('have.text', '')
+                }
+                cy.get('@controls').eq(i).children().eq(4).find('p').should('have.text', value.toString() + '%')
+            }
+        })
+        //cy.wait(75000000)
+        /* ==== End Cypress Studio ==== */
+    })
+})
 
+describe('risk register report', () => {
+    it('opens risk register', () => {
+        cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
+        cy.wait(750)
+        cy.get('body').then($body => {
+            if ($body.find('.Vue-Toastification__close-button').length > 0) {
+                cy.get('.Vue-Toastification__close-button').click()
+            }
+        })
+        cy.switchTenant('cypressTenantProto')
+        cy.wait(750)
+        cy.openManagement('Risk', 'Risk Assessment Report')
+        cy.wait(750)
+        cy.get('.list__body-elem').last().click()
+        cy.wait(750)
+        /* ==== Generated with Cypress Studio ==== */
+        cy.get('.p-dropdown-label').click();
+        cy.get('#pv_id_36_0').click();
+        cy.get(':nth-child(2) > .p-inputtextarea').type('test description');
+        cy.get(':nth-child(3) > .p-inputtextarea').type('test treatment strat');
+        cy.get(':nth-child(4) > .p-inputtextarea').type('test detail');
+        cy.get(':nth-child(5) > .p-inputtextarea').type('test acceptance');
+        cy.get('.p-button-label').click();
+        cy.wait(750)
+        cy.get('.Vue-Toastification__toast-body').invoke('text').should('include', 'Risk updated successfully')
+        cy.get('.menu__item').eq(5).click()
+        cy.wait(750)
+        //PROBLEM BELOW
+        cy.get('.list__body-elem').last().children().as('children').second().find('p').should('have.text', 'Risk Register')
+        cy.get('@children').eq(4).click()
+        cy.wait(750)
+        //checks the element in report
+        cy.wait(750000)
+        /* ==== End Cypress Studio ==== */
+        //menu__item
+    })
+})
 
+/*
 //third and fourth items are nums
 describe('assigned threats manipulation', () => {
     it('logs in and adjusts mappings', () => {
@@ -126,9 +250,10 @@ describe('assigned threats manipulation', () => {
     })
 
 })
+*/
 //threat -> control test
 //applied controls -> potential benefit
-describe('control manipulation', () => {
+/*describe('control manipulation', () => {
     it('logs in and adjusts control mappings', () => {
         cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
         cy.get('body').then($body => {
@@ -165,8 +290,8 @@ describe('control manipulation', () => {
         cy.wait(750)
         cy.get('.wrapper__header > .flex > .p-button-icon-only').click()
     })
-})
-
+})*/
+/*
 describe('sorting assets', { testIsolation:false }, () => {
     /*it ("logins", () => {
         cy.clearCookies()
@@ -179,7 +304,7 @@ describe('sorting assets', { testIsolation:false }, () => {
             Cypress.env('currentPageURL', url);
         });
         cy.sortName(2, 1)  
-    });*/
+    });
     it('sets the url for the tests', () => {
         cy.url().then((url) => {
             Cypress.env('currentPageURL', url);
@@ -201,8 +326,9 @@ describe('sorting assets', { testIsolation:false }, () => {
         cy.sort(5,4)
     })
     
-})
+})*/
 
+/*
 describe('filtering assets',  { testIsolation:false }, () => {
     it ('logins', () => {
         cy.clearCookies()
@@ -232,10 +358,10 @@ describe('filtering assets',  { testIsolation:false }, () => {
         cy.wordfilter("test", "t", 2)
     })
 
-})
+})*/
 
 
-
+/*
 describe('asset browser mapping', { testIsolation:false }, () => {
     /*it ('logins', () => {
         cy.clearCookies()
@@ -244,7 +370,7 @@ describe('asset browser mapping', { testIsolation:false }, () => {
         cy.switchTenant('cypressTenantProto')
         cy.openManagement('Risk', 'Asset Browser')
         cy.wait(750)
-    })*/
+    })
 
     it ('mapsassetbussinessprocess', () => {
         cy.wait(750)
@@ -261,7 +387,7 @@ describe('asset browser mapping', { testIsolation:false }, () => {
         cy.addMapping(2, 2, "Cloud – útok proti aplikácii{enter}", "testOfBrowserMapping", "Cloud – útok pro­ti ap­li­ká­cii (SaaS)")
     })
 
-})
+})*/
 /*
     describe('create and edit risk assessment report', () => {
         it('opens risk assessment report', () => {

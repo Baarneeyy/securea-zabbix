@@ -7,6 +7,7 @@ module.exports = defineConfig({
     reportFilename: "[name]"
   },
   e2e: {
+    experimentalStudio: true,
     setupNodeEvents(on, config) {
       // implement node event listeners here
       on('task', verifyDownloadTasks);
