@@ -146,7 +146,7 @@ describe('risk register report', () => {
         })
         cy.switchTenant('cypressTenantProto')
         cy.wait(750)
-        cy.openManagement('Risk', 'Risk Assessment Report')
+        cy.openManagement('Risk', 'Risk Register')
         cy.wait(750)
         cy.get('.list__body-elem').last().click()
         cy.wait(750)
@@ -160,10 +160,13 @@ describe('risk register report', () => {
         cy.get('.p-button-label').click();
         cy.wait(750)
         cy.get('.Vue-Toastification__toast-body').invoke('text').should('include', 'Risk updated successfully')
-        cy.get('.menu__item').eq(5).click()
+        cy.wait(750)
+        cy.get('.wrapper__header').first().children().last().find('.p-button').click()
+        cy.wait(750)
+        cy.get('Vue-Toastification__toast-component-body').find('.cursor-pointer').click()
         cy.wait(750)
         //PROBLEM BELOW
-        cy.get('.list__body-elem').last().children().as('children').second().find('p').should('have.text', 'Risk Register')
+        cy.get('.list__body-elem').last().children().as('children').eq(1).find('p').should('have.text', 'Risk Register')
         cy.get('@children').eq(4).click()
         cy.wait(750)
         //checks the element in report
