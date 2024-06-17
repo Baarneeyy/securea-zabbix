@@ -102,14 +102,11 @@ describe('clone asset-threats and asset-controls', { testIsolation:false }, () =
     it('new cloning of assets', () => {
         cy.wait(1000)
         //HERE
-        /* ==== Generated with Cypress Studio ==== */
-        /* ==== End Cypress Studio ==== */
-        /* ==== Generated with Cypress Studio ==== */
         cy.addDataEntry('testClone')
         cy.wait(1500)
         cy.get('.main-model-detail-container__header').find('button').click()
         cy.wait(1000)
-        cy.get(':nth-child(22) > :nth-child(3) > .overflow-hidden').click();
+        cy.get('.list__body-elem').eq(-2).click();
         cy.wait(1000)
         cy.get(':nth-child(2) > .wrapper__header > a > .p-button > .icon-small').click();
         cy.wait(1000)
@@ -122,12 +119,11 @@ describe('clone asset-threats and asset-controls', { testIsolation:false }, () =
         cy.get('.list__body-elem').last().click()
         cy.wait(1000)
         cy.get('.mb-6 > .clone__button').click();
+        cy.get('.Vue-Toastification__toast-body', { timeout: 1000 }).invoke('text').should('contains', 'Successful')
         cy.wait(1000)
         cy.get('.breadcrumbs__content > :nth-child(3) > .flex').click();
         cy.wait(1000)
-        cy.get(':nth-child(23) > :nth-child(2) > .overflow-hidden').click();
-        cy.wait(1000)
-        cy.get(':nth-child(22) > :nth-child(2) > .overflow-hidden').click();
+        cy.get('.list__body-elem').eq(-2).click();
         cy.wait(1000)
         cy.get(':nth-child(3) > .wrapper__header > a > .p-button > .icon-small').click();
         cy.wait(1000)
@@ -140,18 +136,19 @@ describe('clone asset-threats and asset-controls', { testIsolation:false }, () =
         cy.get('.list__body-elem').last().click();
         cy.wait(1000)
         cy.get('.mb-6 > .clone__button').click();
+        cy.get('.Vue-Toastification__toast-body', { timeout: 1000 }).invoke('text').should('contains', 'Successful')
         cy.wait(1000)
         cy.get('.breadcrumbs__content > :nth-child(3) > .flex').click();
         cy.wait(1000)
         cy.get(':nth-child(23) > :nth-child(2) > .overflow-hidden').click();
         cy.wait(1000)
-        cy.get(':nth-child(23) > :nth-child(7) > .overflow-hidden').should('have.text', '14')
-        cy.get(':nth-child(23) > :nth-child(8) > .overflow-hidden').should('have.text', '2')
+        cy.reload()
+        cy.get('.list__body-elem').last().children().eq(6).find('p').should('contain', '14')
+        cy.get('.list__body-elem').last().children().eq(7).find('p').should('contain', '2')
         cy.wait(500)
         cy.deleteDataEntry('test-add-asset-update')
         cy.wait(500)
         cy.deleteDataEntry('testClone')
-        /* ==== End Cypress Studio ==== */
     })
     
     /*it('clones asset mappings', () => {
