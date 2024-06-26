@@ -9,7 +9,7 @@ describe('tests governing documentation', () => {
         })
         cy.switchTenant('cypressTenantProto')
         cy.wait(750)
-        cy.openManagement('Compliance', 'Governing Documentation')
+        cy.openManagement('Compliance Management', 'Governing Documentation')
         cy.wait(750)
         cy.contains('Add').click()
         cy.wait(750)

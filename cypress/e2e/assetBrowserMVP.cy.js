@@ -5,7 +5,7 @@ const { describe } = require("mocha")
         cy.clearCookies()
         cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
         cy.switchTenant('cypressTenantProto')
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(1500)
     })
     it('check if threats and controls match in mapping and reg', () => {
@@ -48,7 +48,7 @@ describe('Adding new asset and populating the data', { testIsolation: false }, (
         cy.wait(750);
         cy.switchTenant('cypressTenantLukas');
         cy.wait(750);
-        cy.openManagement('Risk', 'Asset Browser');
+        cy.openManagement('Risk Management', 'Asset Browser');
         cy.wait(750);
 
         cy.addDataEntry('test-add-asset', true);
@@ -120,7 +120,7 @@ describe('sorting assets', () => {
 /*
 describe('ability to perform asset reports', { testIsolation:false }, () => {
     it('count of reports', () => {
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
         cy.get('.list__body-elem').first().click()
         cy.wait(750)

@@ -4,7 +4,7 @@
         cy.clearCookies()
         cy.login('demo', '16w99aH2GS')
         cy.switchTenant('cypressTenantProto')
-        cy.openManagement('Risk', 'Threat Browser')
+        cy.openManagement('Risk Management', 'Threat Browser')
         cy.wait(750)
         cy.url().then((url) => {
             Cypress.env('currentPageURL', url);
@@ -44,7 +44,7 @@ describe('sorting assets', { testIsolation:false }, () => {
         cy.clearCookies()
         cy.login('demo', '16w99aH2GS')
         cy.switchTenant('cypressTenantProto')
-        cy.openManagement('Risk', 'Threat Browser')
+        cy.openManagement('Risk Management', 'Threat Browser')
         cy.url().then((url) => {
             Cypress.env('currentPageURL', url);
         })
@@ -71,7 +71,7 @@ describe('threat browser mapping', { testIsolation:false }, () => {
         cy.clearCookies()
         cy.login('demo', '16w99aH2GS')
         cy.switchTenant('cypressTenantProto')
-        cy.openManagement('Risk', 'Threat Browser')
+        cy.openManagement('Risk Management', 'Threat Browser')
         cy.wait(750)
     })
     it ('mapsthreatassets', () => {

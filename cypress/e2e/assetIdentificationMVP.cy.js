@@ -5,7 +5,7 @@ describe('shows assets with corresponding threats and controls', { testIsolation
         cy.clearCookies()
         cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
         cy.switchTenant('cypressTenantProto')
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(1500)
     })
     it('check if threats and controls match in mapping and reg', () => {
@@ -48,7 +48,7 @@ describe('Adding new asset and populating the data', { testIsolation:false }, ()
         cy.wait(750)
         cy.switchTenant('cypressTenantTomas')
         cy.wait(750)
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
 
         cy.addDataEntry('test-add-asset', true)
@@ -233,7 +233,7 @@ describe('sorting assets', { testIsolation:false }, () => {
         cy.clearCookies()
         cy.login('demo', '16w99aH2GS')
         cy.switchTenant('cypressTenantProto')
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
         cy.url().then((url) => {
             Cypress.env('currentPageURL', url);
@@ -264,7 +264,7 @@ describe('sorting assets', { testIsolation:false }, () => {
 describe('ability to generate & open reports', { testIsolation:false }, () => {
     it('generates reports', () => {
         //cy.visit('https://securea-dev.germanywestcentral.cloudapp.azure.com/#/t/381/')
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
         cy.get('.list__body-elem').first().click()
         cy.wait(750)

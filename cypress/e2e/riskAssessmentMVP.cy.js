@@ -11,7 +11,7 @@ describe('newly made asset has threats and controls assigned from asset class', 
         })
         cy.switchTenant('cypressTenantProto')
         cy.wait(750)
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
         cy.addDataEntry('test-add-asset', true, true)
     })
@@ -28,7 +28,7 @@ describe('mapping tests', () => {
         })
         cy.switchTenant('cypressTenantProto')
         cy.wait(750)
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
         /* ==== Generated with Cypress Studio ==== */
         cy.get('.list__body-elem').last().click();
@@ -91,7 +91,7 @@ describe('mapping tests', () => {
         })
         cy.switchTenant('cypressTenantProto')
         cy.wait(750)
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
         cy.get('.list__body-elem').last().click()
         cy.wait(750)
@@ -146,7 +146,7 @@ describe('risk register report', () => {
         })
         cy.switchTenant('cypressTenantProto')
         cy.wait(750)
-        cy.openManagement('Risk', 'Risk Register')
+        cy.openManagement('Risk Management', 'Risk Register')
         cy.wait(750)
         cy.get('.list__body-elem').last().click()
         cy.wait(750)
@@ -187,7 +187,7 @@ describe('assigned threats manipulation', () => {
             }
         })
         cy.switchTenant('cypressTenantProto')
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
         cy.get('.list__body-elem').last().click()
         //make val selectable
@@ -265,7 +265,7 @@ describe('assigned threats manipulation', () => {
             }
         })
         cy.wait(750)
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
         cy.get('.list__body-elem').last().click()
         cy.wait(750)
@@ -301,7 +301,7 @@ describe('sorting assets', { testIsolation:false }, () => {
         cy.reload()
         cy.login('demo', '16w99aH2GS')
         cy.switchTenant('cypressTenantProto')
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
         cy.url().then((url) => {
             Cypress.env('currentPageURL', url);
@@ -338,7 +338,7 @@ describe('filtering assets',  { testIsolation:false }, () => {
         cy.reload()
         cy.login('demo', '16w99aH2GS')
         cy.switchTenant('cypressTenantProto')
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
     })
 
@@ -371,7 +371,7 @@ describe('asset browser mapping', { testIsolation:false }, () => {
         cy.reload()
         cy.login('demo', '16w99aH2GS')
         cy.switchTenant('cypressTenantProto')
-        cy.openManagement('Risk', 'Asset Browser')
+        cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
     })
 
@@ -398,7 +398,7 @@ describe('asset browser mapping', { testIsolation:false }, () => {
             cy.wait(750)
             cy.switchTenant('cypressTenantProto')
             cy.wait(750)
-            cy.openManagement('Risk', 'Risk Assessment Report')
+            cy.openManagement('Risk Management', 'Risk Assessment Report')
             cy.wait(750)
             
             cy.url().should('contain', 'risk-report')
@@ -413,7 +413,7 @@ describe('asset browser mapping', { testIsolation:false }, () => {
             cy.wait(750)
             cy.switchTenant('cypressTenantProto')
             cy.wait(750)
-            cy.openManagement('Risk', 'Risk Assessment Report')
+            cy.openManagement('Risk Management', 'Risk Assessment Report')
             cy.wait(750)
             cy.get('.list__body-elem').last().click();
 
@@ -465,7 +465,7 @@ describe('asset browser mapping', { testIsolation:false }, () => {
             cy.wait(750)
             cy.switchTenant('cypressTenantProto')
             cy.wait(750)
-            cy.openManagement('Risk', 'Risk Assessment Report')
+            cy.openManagement('Risk Management', 'Risk Assessment Report')
             cy.wait(750)
             cy.get('.list__body-elem').last().click();
 

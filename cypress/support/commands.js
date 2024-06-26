@@ -24,11 +24,10 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 Cypress.Commands.add('login', (username, password) => {
-    cy.visit('https://securea-dev.germanywestcentral.cloudapp.azure.com/')
+    cy.visit("https://securea-dev.germanywestcentral.cloudapp.azure.com/") //https://stage.securea.eu
+    cy.get('[type="username"]').type(username) //'tvsetecka'
 
-    cy.get('[type="username"]').type(username)
-
-    cy.get('[type="password"]').type(password)
+    cy.get('[type="password"]').type(password) //'G,E+vXbhM8Qb8KJ'
 
     cy.get('.submit__btn').click()
 
@@ -54,7 +53,7 @@ Cypress.Commands.add('switchTenant', (tenantName) => {
     
     cy.get('.tenant-selection__content-wrapper')
         .children()
-        .contains(tenantName).click()
+        .contains('cypressTenantProto').click()
 })
 
 Cypress.Commands.add('changePassword', (oldPassword, newPassword) => {
@@ -67,7 +66,7 @@ Cypress.Commands.add('changePassword', (oldPassword, newPassword) => {
 
 Cypress.Commands.add('openManagement', (managementName, browserName) => {
     cy.get('[data-cy="menu_management"]').click()
-    cy.contains(`${managementName} Management`).parent()
+    cy.contains(`${managementName}`).parent()
         .should('not.have.class', '.dropdown__link-holder__active-btn').then(($element) => {
             cy.get($element).click()
         })
