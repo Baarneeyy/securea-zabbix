@@ -53,7 +53,7 @@ Cypress.Commands.add('switchTenant', (tenantName) => {
     
     cy.get('.tenant-selection__content-wrapper')
         .children()
-        .contains('cypressTenantProto').click()
+        .contains(`${tenantName}`).click()
 })
 
 Cypress.Commands.add('changePassword', (oldPassword, newPassword) => {
@@ -68,7 +68,7 @@ Cypress.Commands.add('openManagement', (managementName, browserName) => {
     cy.get('[data-cy="menu_management"]').click()
     cy.contains(`${managementName}`).parent()
         .should('not.have.class', '.dropdown__link-holder__active-btn').then(($element) => {
-            cy.get($element).contains('BCM').click()
+            cy.get($element).contains(`${managementName}`).click()
         })
     //dropdown__link-holder__active-btn
     cy.contains(`${browserName}`).click()

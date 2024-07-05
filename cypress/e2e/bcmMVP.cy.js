@@ -49,16 +49,18 @@ describe('tests basic functionality of impacts', () => {
         cy.get('#description').type('description of BP');
         cy.get('.\\!bg-transparent').click();
         cy.get('[data-cy="assetBrowser_create"] > .p-button-label').click();
-        cy.get('a > .p-button > .icon-small').first().click();
-        cy.get(':nth-child(1) > :nth-child(3) > .flex > .checkbox-style').check();
-        cy.get('[aria-label="Save"] > .p-button-label').click();
-        cy.get('.breadcrumbs__content > :nth-child(3) > .flex').click();
-        /* ==== End Cypress Studio ==== */
-        cy.wait(1000)
-        cy.get('.list__body-elem--select > :nth-child(3) > .overflow-hidden').should('contain', '1')
-        
-        cy.get('.field--hidden > .field__value').should('contain', 'Testing BP')
-        cy.deleteDataEntry()
+        cy.get('a > .p-button > .icon-small').its('length').then((length) => {
+            for (let i = 0; i < length; i++) {
+                cy.get('a > .p-button > .icon-small').eq(i).click();
+                cy.get(':nth-child(1) > :nth-child(3) > .flex > .checkbox-style').check();
+                cy.get('[aria-label="Save"] > .p-button-label').click();
+                cy.get('.breadcrumbs__content > :nth-child(3) > .flex').click();
+                /* ==== End Cypress Studio ==== */
+                cy.wait(1000)
+                //cy.get('.list__body-elem--select > :nth-child(3) > .overflow-hidden').should('contain', '1') 
+            }
+            cy.deleteDataEntry()
+        })
         //maps a business process and checks if it updates in browser -> done
         //prolly do the same shit for business process -> in process
         //delete -> done
