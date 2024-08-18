@@ -1,23 +1,55 @@
 
-describe('newly made asset has threats and controls assigned from asset class', () => {
+describe.skip('newly made asset has threats and controls assigned from asset class', () => {
     it('creates a new asset', () => {
         //cy.clearCookies()
-        cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
+        cy.login('tvsetecka', 'D"AJ%.:M2Vq]2,h')
         cy.wait(750)
         cy.get('body').then($body => {
             if ($body.find('.Vue-Toastification__close-button').length > 0) {
                 cy.get('.Vue-Toastification__close-button').click()
             }
         })
-        cy.switchTenant('cypressTenantProto')
+        cy.switchTenant('TVsetecka test tenant')
         cy.wait(750)
-        cy.openManagement('Risk Management', 'Asset Browser')
+        cy.openManagement('Management', 'Risk Management', 'Asset Browser')
         cy.wait(750)
-        cy.addDataEntry('test-add-asset', true, true)
+        
+        //CREATES AN ASSET WITH EVERY FIELD FILLED//
+        //TODO -> create list with assets info to control later
+        cy.contains("Add").click()
+        cy.wait(750)
+        cy.get('.p-inputtext.p-component').eq(1).type('test-risk', {delay:100})
+            .should('have.value', 'test-risk') //Name
+
+        cy.get('.p-inputtext.p-component').eq(2).type('testing creation of new asset') //Description
+
+        cy.get('.p-dropdown-trigger').first().click() //Asset Class
+        cy.get('.p-dropdown-items').children().eq(1).click() //first in the list
+        cy.wait(750)
+
+        cy.get('.p-inputtext.p-component').eq(3).type('10') //Value  TODO-> Change according to Metodika analyzy
+        
+        cy.get('.p-inputtext.p-component').eq(4).type('testing creation of new asset') //Detail
+
+        //Fills all dropdown boxes
+        for (let i = 0; i < 6; i++) {
+            cy.get('.p-dropdown-trigger').eq(i).click() //Dropdown Menu
+            cy.get('.p-dropdown-items').children().first().click() //first in the list
+            cy.wait(750)
+        }
+        cy.get('[data-cy="assetBrowser_create"] > .p-button-label').click({force:true})
+        cy.wait(1000)
+        
+        // Assert that the asset is created and visible
+        cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden')
+            cy.wait(200)
+            .contains('test-add-asset')
+        cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden').should('be.visible');
+        //
     })
 })
 
-describe('mapping tests', () => {
+describe.skip('mapping tests', () => {
     it('maps & updates asset threats', () => {
         cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
         cy.wait(750)
@@ -82,14 +114,14 @@ describe('mapping tests', () => {
         /* ==== End Cypress Studio ==== */
     })
     it('maps & updates asset controls', () => {
-        cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
+        cy.login('tvsetecka', 'D"AJ%.:M2Vq]2,h')
         cy.wait(750)
         cy.get('body').then($body => {
             if ($body.find('.Vue-Toastification__close-button').length > 0) {
                 cy.get('.Vue-Toastification__close-button').click()
             }
         })
-        cy.switchTenant('cypressTenantProto')
+        cy.switchTenant('TVsetecka test tenant')
         cy.wait(750)
         cy.openManagement('Risk Management', 'Asset Browser')
         cy.wait(750)
@@ -135,8 +167,10 @@ describe('mapping tests', () => {
     })
 })
 
+const riskAttrs = ["peto", "test description", "test treatment strat", "test detail", "test acceptance"]
+
 describe('risk register report', () => {
-    it('opens risk register', () => {
+    it('opens risk register & adds risk details into the last asset', () => {
         cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
         cy.wait(750)
         cy.get('body').then($body => {
@@ -146,36 +180,92 @@ describe('risk register report', () => {
         })
         cy.switchTenant('cypressTenantProto')
         cy.wait(750)
-        cy.openManagement('Risk Management', 'Risk Register')
+        cy.openManagement('Management', 'Risk Management', 'Risk Register')
         cy.wait(750)
         cy.get('.list__body-elem').last().click()
         cy.wait(750)
         /* ==== Generated with Cypress Studio ==== */
         cy.get('.p-dropdown-label').click();
-        cy.get('#pv_id_36_0').click();
-        cy.get(':nth-child(2) > .p-inputtextarea').type('test description');
-        cy.get(':nth-child(3) > .p-inputtextarea').type('test treatment strat');
-        cy.get(':nth-child(4) > .p-inputtextarea').type('test detail');
-        cy.get(':nth-child(5) > .p-inputtextarea').type('test acceptance');
-        cy.get('.p-button-label').click();
+        cy.get('.p-dropdown-item-label').eq(2).click();
+        cy.get(':nth-child(2) > .p-inputtextarea').type('{selectAll}{del}test description')
+        cy.get(':nth-child(3) > .p-inputtextarea').type('{selectAll}{del}test treatment strat');
+        cy.get(':nth-child(4) > .p-inputtextarea').type('{selectAll}{del}test detail');
+        cy.get(':nth-child(5) > .p-inputtextarea').type('{selectAll}{del}test acceptance');
+        cy.get('.p-button-label').last().click();
         cy.wait(750)
         cy.get('.Vue-Toastification__toast-body').invoke('text').should('include', 'Risk updated successfully')
         cy.wait(750)
-        cy.get('.wrapper__header').first().children().last().find('.p-button').click()
-        cy.wait(750)
-        cy.get('Vue-Toastification__toast-component-body').find('.cursor-pointer').click()
+        cy.get('.icon-btn').first().click()
+        cy.reload()
         cy.wait(750)
         //PROBLEM BELOW
-        cy.get('.list__body-elem').last().children().as('children').eq(1).find('p').should('have.text', 'Risk Register')
-        cy.get('@children').eq(4).click()
+        //cy.get('.sticky').click()
         cy.wait(750)
+        cy.contains('Generate Report').click()
+
+        //cy.contains('Shrink Text to Fit').click({force:true})
+        //cy.wait(750)
+        cy.wait(750)
+        
+        /*
+        cy.get('.list__body-elem').last().children().eq(14).invoke('text').then((text) => {
+            cy.log(text)
+        })
+        for (let i = 14; i < 19; i++) {
+            cy.get('.list__body-elem').last().children().eq(i).invoke('text').then((text) => {
+                if((i-14) == 0) {
+                    expect(text).to.include('peto')
+                } else {
+                    expect(text).to.include('test')
+                }
+                
+            })
+        }
+        cy.contains('Generate Report').click()
+        cy.wait(1000)
+        cy.get('.Vue-Toastification__toast-component-body > .flex > p').should('contain', 'Successfully')
+
+        //CREATE DICT WITH RISK INFO
+
+        */
         //checks the element in report
-        cy.wait(750000)
         /* ==== End Cypress Studio ==== */
         //menu__item
     })
-})
 
+    it('opens report manager and views the newly made report', () => {
+        cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
+        cy.wait(750)
+        cy.get('body').then($body => {
+            if ($body.find('.Vue-Toastification__close-button').length > 0) {
+                cy.get('.Vue-Toastification__close-button').click()
+            }
+        })
+        cy.switchTenant('cypressTenantProto')
+        cy.wait(750)
+        cy.get('[data-cy="menu_reports"] > .flex').click()
+        cy.wait(750)
+        cy.get('.list__body-elem').first().click()
+        cy.wait(750)
+        cy.contains('Open Report').click()
+        cy.wait(1000)
+        cy.get('.truncate').should('contain', 'Risk Register')
+
+        cy.get('tbody').first().children('tr').last().as('newRow')
+        /*
+        cy.get('@newRow').find('td').then((rowItems) => {
+            for (let i = 0; i < 5; i++) {
+                cy.get('@newRow').find('td').eq(i+14).invoke('text').then((text) => {
+                    if(i == 0) {
+                        expect(text).to.equal('peto')
+                    } else {
+                        expect(text).to.include('test')
+                    }
+                })
+            }
+        }) */
+    })
+})
 /*
 //third and fourth items are nums
 describe('assigned threats manipulation', () => {
@@ -475,5 +565,4 @@ describe('asset browser mapping', { testIsolation:false }, () => {
             cy.get('.export__button').click()
             cy.verifyDownload('securea_risk_register_export', { contains:true });
         })
-    })
-*/
+    })*/

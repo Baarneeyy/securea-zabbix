@@ -24,7 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 Cypress.Commands.add('login', (username, password) => {
-    cy.visit("https://securea-dev.germanywestcentral.cloudapp.azure.com/") //https://stage.securea.eu
+    cy.visit("https://securea-dev.germanywestcentral.cloudapp.azure.com/") //https://securea-dev.germanywestcentral.cloudapp.azure.com/
     cy.get('[type="username"]').type(username) //'tvsetecka'
 
     cy.get('[type="password"]').type(password) //'G,E+vXbhM8Qb8KJ'
@@ -64,15 +64,27 @@ Cypress.Commands.add('changePassword', (oldPassword, newPassword) => {
     cy.get('.change-pwd__inputs__button').click()
 })
 
-Cypress.Commands.add('openManagement', (managementName, browserName) => {
-    cy.get('[data-cy="menu_management"]').click()
-    cy.contains(`${managementName}`).parent()
-        .should('not.have.class', '.dropdown__link-holder__active-btn').then(($element) => {
+Cypress.Commands.add('openManagement', (sectionName, managementName, browserName) => {
+    const menus = {
+        "Tenant" : "tenant",
+        "Dashboard" : "dashboard",
+        "Security Posture": "securityPosture",
+        "Management" : "management",
+    }
+    let string = '[data-cy="menu_' + menus[sectionName] + '"]'
+    cy.get(string).click()
+    cy.contains(`${managementName}`).parent('.dropdown__link-holder').then(($element) => {
+        if (!$element.hasClass('.border-purple')) {
             cy.get($element).contains(`${managementName}`).click()
-        })
+            //for some reason all logic ignored -> clicks anyway
+        }
+    })
+            
+            
     //dropdown__link-holder__active-btn
     cy.contains(`${browserName}`).click()
-    cy.get('.wrapper__header').click()
+    cy.wait(750)
+    cy.get('.wrapper__header').first().click()
     cy.wait(1500)
 })
 
@@ -85,7 +97,14 @@ Cypress.Commands.add('save', () => {
 Cypress.Commands.add('fillDataEntry', (dataEntryName, hasClass, lastClass) => {
     cy.contains('Add').click({force: true})
     cy.wait(1000)    
-    cy.get('#name').type(`${dataEntryName}`)
+    cy.get('.p-inputtext.p-component').its('length').then((inputBoxes) => {
+        for (let i = 0; i < inputBoxes; i++) {
+            
+        }
+    })
+    //text input elements found, selectbar els missing
+    cy.get('.p-dropdown-trigger').filter(':visible')
+    cy.wait(10000)
 
     cy.get('#description').type(`description of ${dataEntryName}`)
     

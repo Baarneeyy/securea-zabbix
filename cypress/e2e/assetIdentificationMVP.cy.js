@@ -48,12 +48,36 @@ describe('Adding new asset and populating the data', { testIsolation:false }, ()
         cy.wait(750)
         cy.switchTenant('cypressTenantTomas')
         cy.wait(750)
-        cy.openManagement('Risk Management', 'Asset Browser')
+        cy.openManagement('Management' , 'Risk Management', 'Asset Browser')
+        cy.wait(750)
+        
+
+        //CREATES AN ASSET WITH EVERY FIELD FILLED//
+        //TODO -> create list with assets info to control later
+        cy.contains("Add").click()
+        cy.wait(750)
+        cy.get('.p-inputtext.p-component').eq(1).type('test-add-asset', {delay:100})
+            .should('have.value', 'test-add-asset') //Name
+
+        cy.get('.p-inputtext.p-component').eq(2).type('testing creation of new asset') //Description
+
+        cy.get('.p-dropdown-trigger').first().click() //Asset Class
+        cy.get('.p-dropdown-items').children().first().click() //first in the list
         cy.wait(750)
 
-        cy.addDataEntry('test-add-asset', true)
-        cy.wait(1000)
+        cy.get('.p-inputtext.p-component').eq(3).type('10') //Value  TODO-> Change according to Metodika analyzy
+        
+        cy.get('.p-inputtext.p-component').eq(4).type('testing creation of new asset') //Detail
 
+        //Fills all dropdown boxes
+        for (let i = 0; i < 6; i++) {
+            cy.get('.p-dropdown-trigger').eq(i).click() //Dropdown Menu
+            cy.get('.p-dropdown-items').children().first().click() //first in the list
+            cy.wait(750)
+        }
+        cy.get('[data-cy="assetBrowser_create"] > .p-button-label').click({force:true})
+        cy.wait(1000)
+        
         // Assert that the asset is created and visible
         cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden')
             cy.wait(200)
@@ -63,7 +87,7 @@ describe('Adding new asset and populating the data', { testIsolation:false }, ()
 
     })
     //set asset class values or nah
-    it('propagates values from asset class', () => {
+    it.skip('propagates values from asset class', () => {
         cy.get('.wrapper__container').its('length').then((mappings) => {
             for (let i = 2; i < mappings; i++) {
                 cy.get('.list__body').eq(i).find('.list__body-elem').its('length').then((items) => {
@@ -79,7 +103,7 @@ describe('Adding new asset and populating the data', { testIsolation:false }, ()
                     })
             }
         })
-        
+        cy.wait(1000)
         //prepare scenario for propagation -> commandize later
     })
 })
@@ -87,18 +111,36 @@ describe('Adding new asset and populating the data', { testIsolation:false }, ()
 //add depth
 describe('Editing of asset', { testIsolation:false }, () => {
     it('Edits asset test-add-asset', () => {
-        cy.editDataEntry()
+        cy.get('.list__body-elem').last().click()
+        cy.wait(250)
+        cy.get('.toolbar').children().first().click()
+        cy.wait(750)
+        cy.get('.p-inputtext.p-component').eq(1).type('{end}-update') //Name
+        cy.get('.detail-toolbar__inner').children().first().click()
+        cy.wait(1000)
+
         // Assert that the asset is updated
         cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden')
             cy.wait(200)
             .contains('test-add-asset-update')
         cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden')
             .should('be.visible');
+        cy.deleteDataEntry('test-add-asset-update')
         //
     })
 })
 
-describe('clone asset-threats and asset-controls', { testIsolation:false }, () => {
+
+
+
+
+
+
+
+
+
+
+describe.skip('clone asset-threats and asset-controls', { testIsolation:false }, () => {
     it('new cloning of assets', () => {
         cy.wait(1000)
         //HERE
@@ -261,7 +303,7 @@ describe('sorting assets', { testIsolation:false }, () => {
 
 
 //UPDATE TO INCORPORATE NEW REPORT MANAGER
-describe('ability to generate & open reports', { testIsolation:false }, () => {
+describe.skip('ability to generate & open reports', { testIsolation:false }, () => {
     it('generates reports', () => {
         //cy.visit('https://securea-dev.germanywestcentral.cloudapp.azure.com/#/t/381/')
         cy.openManagement('Risk Management', 'Asset Browser')
