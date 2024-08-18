@@ -77,8 +77,7 @@ if __name__ == "__main__":
     tests = {
         'tlsCheck': 'tlsCheck.json',
         'assetIdentificationMVP': 'assetIdentificationMVP.json',
-        'controllBrowserMVP': 'controllBrowserMVP.json',
-        'threatBrowserMVP': 'threatBrowserMVP.json',
+        'bcmMVP': 'bcmMVP.json',
         'riskAssessmentMVP': 'riskAssessmentMVP.json',
     }
 
