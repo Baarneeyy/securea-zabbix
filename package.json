@@ -12,7 +12,8 @@
   "dependencies": {
     "cypress": "^13.6.6",
     "cypress-clipboard": "^1.0.3",
-    "cypress-mochawesome-reporter": "^3.8.2"
+    "cypress-mochawesome-reporter": "^3.8.2",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "cy-verify-downloads": "^0.2.3"

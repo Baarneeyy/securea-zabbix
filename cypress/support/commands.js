@@ -24,7 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 Cypress.Commands.add('login', (username, password) => {
-    cy.visit("https://securea-dev.germanywestcentral.cloudapp.azure.com/") //https://securea-dev.germanywestcentral.cloudapp.azure.com/
+    cy.visit(Cypress.env('PRE_URL')) //https://securea-dev.germanywestcentral.cloudapp.azure.com/
     cy.get('[type="username"]').type(username) //'tvsetecka'
 
     cy.get('[type="password"]').type(password) //'G,E+vXbhM8Qb8KJ'
@@ -33,11 +33,7 @@ Cypress.Commands.add('login', (username, password) => {
 
     cy.wait(1000)
 
-    cy.get('body').then(($body) => {
-        if ($body.find('.Vue-Toastification__close-button').length > 0) {
-            cy.get('.Vue-Toastification__close-button').click()
-        }
-    })
+    //cy.errCleanup()
     /*cy.get('.Vue-Toastification__close-button').as('notif').its('length').then((length) => {
         if (length > 0) {
             cy.get('@notif').click()
@@ -45,6 +41,15 @@ Cypress.Commands.add('login', (username, password) => {
     })*/
     //'/t/' -> tenant logged in
     //cy.url().should('include', `/t/`) //removed ${Cypress.env('Demo Company')} cuz random error
+})
+
+//CLEANUP ERRORS COMMAND
+Cypress.Commands.add('errCleanup', () => {
+    cy.get('.Vue-Toastification__close-button').click( {multiple:true} )
+    cy.wait(2500)
+    cy.get('.Vue-Toastification__close-button').click( {multiple:true} )
+    cy.wait(2500)
+    cy.get('.Vue-Toastification__close-button').click()
 })
 
 Cypress.Commands.add('switchTenant', (tenantName) => {
@@ -86,6 +91,22 @@ Cypress.Commands.add('openManagement', (sectionName, managementName, browserName
     cy.wait(750)
     cy.get('.wrapper__header').first().click()
     cy.wait(1500)
+})
+
+Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSectionName, openManagementName, openBrowserName) => {
+    cy.login(userName, userPassword) //zIaNuhpGz8uxZRazhSCU
+        cy.wait(750)
+        /*cy.get('body').then($body => {
+            if ($body.find('.Vue-Toastification__close-button').length > 0) {  // create a command out of this
+                cy.get('.Vue-Toastification__close-button').click()
+            }
+        })*/
+        cy.switchTenant(tenantName)
+        /*cy.get('.p-dropdown-trigger').first().click()
+        cy.contains('cypressTenantProto').click()
+        cy.wait(750)*/
+        cy.wait(750)
+        cy.openManagement(openSectionName, openManagementName, openBrowserName)
 })
 
 Cypress.Commands.add('save', () => {
