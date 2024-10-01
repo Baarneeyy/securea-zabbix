@@ -53,7 +53,7 @@ Cypress.Commands.add('errCleanup', () => {
 })
 
 Cypress.Commands.add('switchTenant', (tenantName) => {
-    cy.get('.label-wrapper').click()
+    cy.get('.flex-wrap > :nth-child(1) > .flex').click()
     //cy.wait(100)
     
     cy.get('.tenant-selection__content-wrapper')
@@ -85,7 +85,7 @@ Cypress.Commands.add('openManagement', (sectionName, managementName, browserName
         }
     })
             
-            
+    cy.wait(250)     
     //dropdown__link-holder__active-btn
     cy.contains(`${browserName}`).click()
     cy.wait(750)
@@ -94,19 +94,20 @@ Cypress.Commands.add('openManagement', (sectionName, managementName, browserName
 })
 
 Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSectionName, openManagementName, openBrowserName) => {
-    cy.login(userName, userPassword) //zIaNuhpGz8uxZRazhSCU
-        cy.wait(750)
+    cy.login(userName, userPassword)
+    cy.openManagement(openSectionName, openManagementName, openBrowserName) //zIaNuhpGz8uxZRazhSCU
+    cy.wait(750)
         /*cy.get('body').then($body => {
             if ($body.find('.Vue-Toastification__close-button').length > 0) {  // create a command out of this
                 cy.get('.Vue-Toastification__close-button').click()
             }
         })*/
-        cy.switchTenant(tenantName)
+    cy.switchTenant(tenantName)
         /*cy.get('.p-dropdown-trigger').first().click()
         cy.contains('cypressTenantProto').click()
         cy.wait(750)*/
-        cy.wait(750)
-        cy.openManagement(openSectionName, openManagementName, openBrowserName)
+    cy.wait(750)
+    cy.openManagement(openSectionName, openManagementName, openBrowserName)
 })
 
 Cypress.Commands.add('save', () => {

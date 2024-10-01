@@ -8,6 +8,9 @@ module.exports = defineConfig({
   reporterOptions: {
     reportFilename: "[name]"
   },
+  env: {
+    tempUrl: '',
+  },
   e2e: {
     experimentalStudio: true,
     setupNodeEvents(on, config) {
