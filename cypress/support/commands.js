@@ -32,15 +32,6 @@ Cypress.Commands.add('login', (username, password) => {
     cy.get('.submit__btn').click()
 
     cy.wait(1000)
-
-    //cy.errCleanup()
-    /*cy.get('.Vue-Toastification__close-button').as('notif').its('length').then((length) => {
-        if (length > 0) {
-            cy.get('@notif').click()
-        }
-    })*/
-    //'/t/' -> tenant logged in
-    //cy.url().should('include', `/t/`) //removed ${Cypress.env('Demo Company')} cuz random error
 })
 
 //CLEANUP ERRORS COMMAND
@@ -53,12 +44,15 @@ Cypress.Commands.add('errCleanup', () => {
 })
 
 Cypress.Commands.add('switchTenant', (tenantName) => {
-    cy.get('.flex-wrap > :nth-child(1) > .flex').click()
-    //cy.wait(100)
-    
-    cy.get('.tenant-selection__content-wrapper')
-        .children()
-        .contains(`${tenantName}`).click()
+    cy.get('.flex > .overflow-hidden').click()
+    cy.wait(250)
+    cy.get('.p-dropdown-item').each(($el) => {
+        cy.wrap($el).find('p').invoke('text').then((itemName) => {
+            if (itemName.trim() == tenantName) {
+                $el.click()
+            }
+        })
+    })
 })
 
 Cypress.Commands.add('changePassword', (oldPassword, newPassword) => {
@@ -95,17 +89,9 @@ Cypress.Commands.add('openManagement', (sectionName, managementName, browserName
 
 Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSectionName, openManagementName, openBrowserName) => {
     cy.login(userName, userPassword)
-    cy.openManagement(openSectionName, openManagementName, openBrowserName) //zIaNuhpGz8uxZRazhSCU
-    cy.wait(750)
-        /*cy.get('body').then($body => {
-            if ($body.find('.Vue-Toastification__close-button').length > 0) {  // create a command out of this
-                cy.get('.Vue-Toastification__close-button').click()
-            }
-        })*/
+    /*cy.openManagement(openSectionName, openManagementName, openBrowserName) //zIaNuhpGz8uxZRazhSCU
+    cy.wait(750)*/
     cy.switchTenant(tenantName)
-        /*cy.get('.p-dropdown-trigger').first().click()
-        cy.contains('cypressTenantProto').click()
-        cy.wait(750)*/
     cy.wait(750)
     cy.openManagement(openSectionName, openManagementName, openBrowserName)
 })
@@ -165,14 +151,17 @@ Cypress.Commands.add('Searchbar', (search) => {
     cy.wait(1000)
 })
 
-Cypress.Commands.add('deleteDataEntry', () => {
-    cy.get('.list__body-elem').last().find('.cursor-pointer').click()
+Cypress.Commands.add('deleteDataEntry', (dataEntryName) => {
+    cy.get('.list__body-elem').last().find('.cursor-pointer').click({force:true})
     cy.get('.toolbar').children().last().click()
 
-    cy.contains('Yes').click()
-    cy.reload()
+    cy.get('.p-confirm-popup-accept > .p-button-label')
+        .should('exist')
+        .click({force:true})
+    //cy.reload()
     cy.wait(1000)
-    cy.contains(`test-add-asset`).should('not.exist')
+    cy.get('.list__body-elem').last().children().eq(1) //name column of last item
+        .children().should('not.contain', dataEntryName)
 })
 
 Cypress.Commands.add('deleteSpecificEntry', (entryName) => {
