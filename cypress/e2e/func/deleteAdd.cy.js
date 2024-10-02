@@ -61,12 +61,3 @@ describe('Checks CRUD ability ', () => {
 
     })
 })
-
-describe.skip('quick login fix', () => {
-    it('fix', () => {
-        cy.login(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'))
-
-        cy.switchTenant('endOfLine')
-        cy.wait(1000)
-    })
-})
