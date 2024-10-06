@@ -71,20 +71,17 @@ if __name__ == "__main__":
     zabbix_host: str = 'sec-tester10'
     zabbix_server: str = 'zabbix.bcresearch.eu'
 
-    path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e'
+    path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/func'
     path_repots: str = '/root/cypress/securea-zabbix/mochawesome-report'
 
     tests = {
-        'tlsCheck': 'tlsCheck.json',
-        'assetIdentificationMVP': 'assetIdentificationMVP.json',
-        'bcmMVP': 'bcmMVP.json',
-        'riskAssessmentMVP': 'riskAssessmentMVP.json',
+        'deleteAdd': 'deleteAdd.json',
     }
 
     stats_keys = ['tests', 'pending', 'failures', 'start', 'end', 'duration']
     aggregates = {'returncode': 0, 'start': None, 'end': None, 'tests': 0, 'pending': 0, 'failures': 0, 'duration': 0, 'ok': 0}
 
-    os.chdir("/root/cypress/securea-zabbix")
+    os.chdir("/root/securea-zabbix")
 
     discovery = []
 

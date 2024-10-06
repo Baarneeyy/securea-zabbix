@@ -89,8 +89,6 @@ Cypress.Commands.add('openManagement', (sectionName, managementName, browserName
 
 Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSectionName, openManagementName, openBrowserName) => {
     cy.login(userName, userPassword)
-    /*cy.openManagement(openSectionName, openManagementName, openBrowserName) //zIaNuhpGz8uxZRazhSCU
-    cy.wait(750)*/
     cy.switchTenant(tenantName)
     cy.wait(750)
     cy.openManagement(openSectionName, openManagementName, openBrowserName)

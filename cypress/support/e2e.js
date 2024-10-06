@@ -17,6 +17,7 @@
 import './commands'
 import './commands1'
 import './deepSort'
+import 'cypress-wait-until'
 
 Cypress.on('uncaught:exception', (err, runnable) => {
     // returning false here prevents Cypress from

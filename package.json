@@ -16,6 +16,7 @@
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "cy-verify-downloads": "^0.2.3"
+    "cy-verify-downloads": "^0.2.3",
+    "cypress-wait-until": "^3.0.2"
   }
 }
