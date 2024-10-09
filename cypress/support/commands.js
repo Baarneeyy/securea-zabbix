@@ -72,17 +72,25 @@ Cypress.Commands.add('openManagement', (sectionName, managementName, browserName
     }
     let string = '[data-cy="menu_' + menus[sectionName] + '"]'
     cy.get(string).click()
+    if (sectionName == "Security Posture") {
+        cy.get('.dropdown__sub-category-link').click()
+        cy.wait(500)
+        return
+    }
     cy.contains(`${managementName}`).parent('.dropdown__link-holder').then(($element) => {
         if (!$element.hasClass('.border-purple')) {
             cy.get($element).contains(`${managementName}`).click()
             //for some reason all logic ignored -> clicks anyway
         }
-    })
-            
+    })      
     cy.wait(250)     
     //dropdown__link-holder__active-btn
     cy.contains(`${browserName}`).click()
     cy.wait(750)
+    if (browserName == 'BCM') {
+        cy.wait(250)
+        cy.contains('Impacts').click()
+    }
     cy.get('.wrapper__header').first().click()
     cy.wait(1500)
 })
@@ -91,6 +99,9 @@ Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSecti
     cy.login(userName, userPassword)
     cy.switchTenant(tenantName)
     cy.wait(750)
+    if (openSectionName == "Dashboard") {
+        return
+    }
     cy.openManagement(openSectionName, openManagementName, openBrowserName)
 })
 

@@ -110,7 +110,7 @@ describe.skip('Will check every url and match to window type', {testIsolation:tr
         })
     })
 })
-describe.skip('Management', () => {
+describe('Management', () => {
     it('Risk Management', () => {
         //Setup + Asset Browser
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
@@ -178,7 +178,7 @@ describe.skip('Management', () => {
     })
 })
 describe('Other', () => {
-    it.skip('Admin Tools', () => {
+    it('Admin Tools', () => {
         //Tenant Management
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.get('[data-cy="menu_adminTools"]').click({force:true})

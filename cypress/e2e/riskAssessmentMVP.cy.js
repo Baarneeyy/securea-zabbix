@@ -1,25 +1,15 @@
 
-describe.skip('newly made asset has threats and controls assigned from asset class', () => {
-    it('creates a new asset', () => {
+describe('newly made asset has threats and controls assigned from asset class', () => {
+    it.skip('creates a new asset', () => {
         //cy.clearCookies()
-        cy.login('tvsetecka', 'D"AJ%.:M2Vq]2,h')
-        cy.wait(750)
-        cy.get('body').then($body => {
-            if ($body.find('.Vue-Toastification__close-button').length > 0) {
-                cy.get('.Vue-Toastification__close-button').click()
-            }
-        })
-        cy.switchTenant('TVsetecka test tenant')
-        cy.wait(750)
-        cy.openManagement('Management', 'Risk Management', 'Asset Browser')
-        cy.wait(750)
-        
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         //CREATES AN ASSET WITH EVERY FIELD FILLED//
         //TODO -> create list with assets info to control later
+        cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         cy.contains("Add").click()
         cy.wait(750)
-        cy.get('.p-inputtext.p-component').eq(1).type('test-risk', {delay:100})
-            .should('have.value', 'test-risk') //Name
+        cy.get('.p-inputtext.p-component').eq(1).type('test-add-asset', {delay:100})
+            .should('have.value', 'test-add-asset') //Name
 
         cy.get('.p-inputtext.p-component').eq(2).type('testing creation of new asset') //Description
 
@@ -45,8 +35,87 @@ describe.skip('newly made asset has threats and controls assigned from asset cla
             cy.wait(200)
             .contains('test-add-asset')
         cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden').should('be.visible');
+        cy.get('.list__body').eq(2).children().should('have.length', '36', {timeout:8000})
+        cy.get('.list__body').last().children().should('have.length', '13', {timeout:12000})
+        //cy.deleteDataEntry('test-add-asset')
         //
     })
+
+    it.skip('is possible to adjust mapped threats', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.get('.wrapper__header >', {timeout:8000}).should('have.length', '4')
+        cy.get('.list__body-elem').last().click({force:true})
+        cy.wait(500)
+        cy.get(':nth-child(3) > .wrapper__header >').last().click()
+        cy.wait(1000)
+        cy.get('.flex-col > .mt-4', {timeout:18000}).should('not.exist')
+
+        //in mapping window
+        cy.wait(800)
+        cy.get('.p-checkbox-input', {timeout:8000}).click()
+        //assert num of controls
+        cy.get('.splitpanes__pane > .wrapper > .wrapper__header > .mr-1 > .text-base')
+            .should('contain', '13')
+
+        cy.get('.list__body').eq(1).find('.list__body-elem').as('items')
+        
+        
+        cy.get('@items').first().children().eq(4)
+            .click().type('{backspace}{backspace}28')
+        
+        cy.get('@items').eq(1).children().eq(3)
+            .click()
+        
+        cy.get('.primary-btn').click()
+        cy.get('.Vue-Toastification__toast-body', {timeout:8000}).should('exist')
+
+        cy.go(-1)
+        cy.wait(3000)
+        cy.get('.list__body').last().children()
+            .should('have.length', '12')
+        cy.get(':nth-child(1) > :nth-child(3) > .pl-3')
+            .should('contain' , '28')
+    })
+
+    it.skip('is possible to adjust mapped controls', () => { //potential benefit; highlighted items
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.get('.wrapper__header >', {timeout:8000}).should('have.length', '4')
+        cy.get('.list__body-elem').last().click({force:true})
+        cy.wait(500)
+        cy.get(':nth-child(2) > .wrapper__header >').last().click()
+        cy.wait(1000)
+        cy.get('.flex-col > .mt-4', {timeout:18000}).should('not.exist')
+ 
+        cy.get(':nth-child(1) > :nth-child(5) > .gap-x-1 > .checkbox-style')
+            .check() //first mapping
+        cy.wait(250)
+        cy.get('.p-checkbox-input').click()
+        
+        //Only Applied Controls
+        /*cy.get('.list__body').eq(1).children('.\!opacity-30').its('length')
+            .should('be.lessThan', '37')
+        */
+
+        //Potential Benefit
+        cy.get('.list__header__row').eq(1).children().last().click()
+        cy.wait(250)
+        cy.contains('Load Potential Benefit').should('exist').click()
+        
+        cy.wait(250)
+        cy.get(':nth-child(1) > :nth-child(8) > .pl-3').should('contain', '635')
+        
+        cy.get('.primary-btn').click()
+        cy.get('.Vue-Toastification__toast-body', {timeout:8000}).should('exist')
+        cy.go(-1)
+        cy.wait(1000)
+
+        cy.get('.list__body').eq(1).children().first() //first mapped control
+            .children().eq(1).should('contain', 'NIPS')
+
+        cy.wait(150000)
+
+    })
+
 })
 
 describe.skip('mapping tests', () => {
@@ -169,19 +238,9 @@ describe.skip('mapping tests', () => {
 
 const riskAttrs = ["peto", "test description", "test treatment strat", "test detail", "test acceptance"]
 
-describe('risk register report', () => {
+describe.skip('risk register report', () => {
     it('opens risk register & adds risk details into the last asset', () => {
-        cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
-        cy.wait(750)
-        cy.get('body').then($body => {
-            if ($body.find('.Vue-Toastification__close-button').length > 0) {
-                cy.get('.Vue-Toastification__close-button').click()
-            }
-        })
-        cy.switchTenant('cypressTenantProto')
-        cy.wait(750)
-        cy.openManagement('Management', 'Risk Management', 'Risk Register')
-        cy.wait(750)
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Risk Report')
         cy.get('.list__body-elem').last().click()
         cy.wait(750)
         /* ==== Generated with Cypress Studio ==== */
@@ -234,22 +293,14 @@ describe('risk register report', () => {
     })
 
     it('opens report manager and views the newly made report', () => {
-        cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
-        cy.wait(750)
-        cy.get('body').then($body => {
-            if ($body.find('.Vue-Toastification__close-button').length > 0) {
-                cy.get('.Vue-Toastification__close-button').click()
-            }
-        })
-        cy.switchTenant('cypressTenantProto')
-        cy.wait(750)
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Dashboard', 'Risk Management', 'Asset Browser')
         cy.get('[data-cy="menu_reports"] > .flex').click()
         cy.wait(750)
         cy.get('.list__body-elem').first().click()
         cy.wait(750)
         cy.contains('Open Report').click()
         cy.wait(1000)
-        cy.get('.truncate').should('contain', 'Risk Register')
+        cy.get('.truncate').should('contain', 'Risk Report')
 
         cy.get('tbody').first().children('tr').last().as('newRow')
         /*
