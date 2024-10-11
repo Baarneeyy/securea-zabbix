@@ -1,120 +1,124 @@
 const { describe } = require("mocha")
-/*
-describe('shows assets with corresponding threats and controls', { testIsolation:false }, () => {
-    it('opens asset browser', () => {
-        cy.clearCookies()
-        cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
-        cy.switchTenant('cypressTenantProto')
-        cy.openManagement('Risk Management', 'Asset Browser')
-        cy.wait(1500)
-    })
-    it('check if threats and controls match in mapping and reg', () => {
-        //maybe test isolation -> false
-        //open main window -> check count of controls/threats per asset ->
-        //go to mapping -> assert mapping count == main count -> iterate
-        cy.get('.mr-1').find('span').invoke('text').then((text) => {
-            text = text.replace(/[()]/g, '')
-            cy.get('.list__body-elem').should('have.length', text) //asserts number count with actual count
-            
 
-            //iterates through every item and checks count printed count of threats/controls
-            //against the amount of rows in the corresponding table
-            //TODO -> add mapping checks; some counter check??
-            for (let i = 0; i < parseInt(text); i++) {
-                cy.get('.list__body-elem').eq(i).click()
-                cy.get('.wrapper__header').its('length').then((headers) => {
-                    for (let i = 1; i < headers; i++) {
-                        cy.get('.wrapper__header').eq(i)
-                            .children('.mr-1').find('span').invoke('text').then((count1) => {
-                                count1 = count1.replace(/[()]/g, '')// commandize
-                                cy.get('.list__body').eq(i) //selects the corresponding table;FURTHER MAPPING HERE
-                                    .find('.list__body-elem').should('have.length', count1)
-                            })
+describe('bum', () => {
+    //'enters asset browser and create a new asset
+    it.skip('asset browser showing assets and threats/controls', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.wait(250)
+        cy.get('.transition', {timeout:8000}).should('not.exist')
 
-                    }
-                })
-                cy.wait(500)
-            }
+        cy.get('.list__body >').its('length').then((length) => {
+            cy.get('.text-base').should('contain', length)
         })
+
+        cy.get('.list__body-elem').first().click()
+        cy.wait(250)
+        cy.get('.list__body-elem').first()
+            .children().eq(2).invoke('text').then((text) => {
+                cy.get(':nth-child(3) > .wrapper__header > .mr-1 > .text-base')
+                    .should('contain', text)
+            })
+        cy.get('.list__body-elem').first()
+            .children().eq(3).invoke('text').then((text) => {
+                cy.get(':nth-child(2) > .wrapper__header > .mr-1 > .text-base')
+                    .should('contain', text)
+            })
+    })
+    it.skip('asset browser showing risk value per asset/ per threat', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.wait(250)
+        cy.get('.transition', {timeout:8000}).should('not.exist')
+
+        cy.get('.list__body >').its('length').then((length) => {
+            cy.get('.text-base').should('contain', length)
+        })
+
+        cy.get('.list__body-elem').first().click()
+        cy.wait(250)
+        cy.get('.list__header__row').first().children().last().click()
+        cy.wait(250)
+        cy.get(':nth-child(17) > .px-3 > .w-full').click()
+        cy.get(':nth-child(18) > .px-3 > .w-full').click()
+        cy.get(':nth-child(19) > .px-3 > .w-full').click()
+        cy.get('.browser-container__main-model-wrapper > .wrapper > .wrapper__header > .mr-1').click()
+        cy.get('.list__header__row').first().children().should('have.length', '12')
+
+        cy.get('.list__header__row').last().children().last().click()
+        cy.wait(250)
+        cy.get(':nth-child(6) > .px-3 > .w-full').click()
+        cy.get(':nth-child(7) > .px-3 > .w-full').click()
+        cy.get('.browser-container__main-model-wrapper > .wrapper > .wrapper__header > .mr-1').click()
+        cy.get('.list__header__row').first().children().should('have.length', '8')
     })
 })
-*/
-//check adding/filling up assets with data
-//edit accordingly
-describe('Adding new asset and populating the data', { testIsolation:false }, () => {
-    it('adds a new asset with pre-made data', () => {
-        cy.clearCookies()
-        cy.login('QA_user', 'zIaNuhpGz8uxZRazhSCU')
-        cy.wait(750)
-        cy.errCleanup
-        //currently doesnt work
-        //cy.switchTenant('cypressTenantTomas')
-        cy.get('.p-dropdown-trigger').first().click()
-        cy.contains('cypressTenantProto').click()
-        cy.wait(750)
-        cy.openManagement('Management' , 'Risk Management', 'Asset Browser')
-        cy.wait(750)
+
+describe('Adding new asset and populating the data', () => {
+    it.skip('adds a new asset with pre-made data', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.wait(250)
+        cy.get('.transition', {timeout:8000}).should('not.exist')
+
+        cy.get('.list__body >').its('length').then((length) => {
+            cy.get('.text-base').should('contain', length)
+        })
+
+        cy.get('[data-cy="assetBrowser_add"]').click()
+        cy.wait(250)
+
+        //Creation
+        cy.get('.field--hidden > .p-inputtext').click().type('testingMVP')
+        cy.get(':nth-child(2) > .p-inputtextarea').click().type('testing description')
+        cy.get('.p-dropdown').first().click()
+        cy.wait(250)
+        cy.get('.p-dropdown-item').first().click()
+        cy.get('.p-inputnumber > .p-inputtext').click().type('23')
+        cy.get(':nth-child(5) > .p-inputtextarea').click().type('testing detail')
         
-
-        //CREATES AN ASSET WITH EVERY FIELD FILLED//
-        //TODO -> create list with assets info to control later
-        cy.contains("Add").click()
-        cy.wait(750)
-        cy.get('.p-inputtext.p-component').eq(1).type('test-add-asset', {delay:150})
-            .should('have.value', 'test-add-asset') //Name
-
-        cy.get('.p-inputtext.p-component').eq(2).type('testing creation of new asset') //Description
-
-        cy.get('.p-dropdown-trigger').first().click() //Asset Class
-        cy.get('.p-dropdown-items').children().first().click() //first in the list
-        cy.wait(750)
-
-        cy.get('.p-inputtext.p-component').eq(3).type('10') //Value  TODO-> Change according to Metodika analyzy
-        
-        cy.get('.p-inputtext.p-component').eq(4).type('testing creation of new asset') //Detail
-
-        //Fills all dropdown boxes
-        for (let i = 0; i < 6; i++) {
-            cy.get('.p-dropdown-trigger').eq(i).click() //Dropdown Menu
-            cy.get('.p-dropdown-items').children().first().click() //first in the list
-            cy.wait(750)
-        }
-        cy.get('[data-cy="assetBrowser_create"] > .p-button-label').click({force:true})
-        cy.wait(1000)
-        cy.get('.ml-auto > .p-button-icon-only').click()
-        
-        // Assert that the asset is created and visible
-        cy.get('.list__body-elem').last().as('createdAsset')
-        cy.get('@createdAsset').click()
-        cy.get('@createdAsset').should('have.class', 'list__body-elem--select')
-        //cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden').should('be.visible');
-        //
-
-    })
-    //set asset class values or nah
-    it.skip('propagates values from asset class', () => {
-        cy.get('.wrapper__container').its('length').then((mappings) => {
-            for (let i = 2; i < mappings; i++) {
-                cy.get('.list__body').eq(i).find('.list__body-elem').its('length').then((items) => {
-                        cy.contains('Class').children().first().click()
-                        cy.wait(1000)
-                        cy.get('.list__body-elem').first().click()
-                        cy.wait(1000)
-                        cy.get('.list__body').eq(i).find('.list__body-elem').should('have.length', items)
-                        cy.go(-1)
-                        cy.wait(1000)
-                        cy.get('.list__body-elem').last().click()
-                        cy.wait(1000)
-                    })
+        cy.get('.p-dropdown').its('length').then((length) => {
+            for (let i = 1; i < (length-2); i++) {
+                cy.get('.p-dropdown').eq(i).click()
+                cy.wait(250)
+                cy.get('.p-dropdown-item').first().click()
             }
         })
-        cy.wait(1000)
+
+        cy.wait(250)
+        cy.get('[data-cy="assetBrowser_create"]').click()
+        cy.get('.Vue-Toastification__toast-body', {timeout:8000}).should('exist')
+    })
+    //set asset class values or nah
+    it('propagates values from asset class', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.wait(250)
+        cy.get('.transition', {timeout:8000}).should('not.exist')
+
+        cy.get('.list__body >').its('length').then((length) => {
+            cy.get('.text-base').should('contain', length)
+        })
+
+        cy.get('.list__body-elem').last().click({force:true})
+        cy.get(':nth-child(3) > .field__value').invoke('text')
+            .then((text) => {
+                let cleanedText = text.replace(/[\s\x00-\x1F\x7F-\uFFFF]+/g, '');
+                //expect(cleanedText).to.eq('testingreqfullfill')
+                cy.get(':nth-child(3) > .flex > a').click()
+                cy.wait(750)
+                cy.contains(text).click()
+                cy.wait(15000)
+                cy.get(':nth-child(2) > .wrapper__header > .mr-1 > .text-base')
+                    .should('contain', '36')
+                cy.get(':nth-child(3) > .wrapper__header > .mr-1 > .text-base')
+                    .should('contain', '13')
+            })
+
+        //cy.get(':nth-child(3) > .flex > a').click()
+        cy.wait(15000)
         //prepare scenario for propagation -> commandize later
     })
 })
 
 //add depth
-describe('Editing of asset', { testIsolation:false }, () => {
+describe.skip('Editing of asset', { testIsolation:false }, () => {
     it('Edits asset test-add-asset', () => {
         cy.get('.list__body-elem').last().click()
         cy.wait(250)
