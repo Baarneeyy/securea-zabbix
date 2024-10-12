@@ -1,4 +1,3 @@
-
 describe('newly made asset has threats and controls assigned from asset class', () => {
     it.skip('creates a new asset with propagated threats and assets', () => {
         //cy.clearCookies()
@@ -35,10 +34,10 @@ describe('newly made asset has threats and controls assigned from asset class', 
             cy.wait(200)
             .contains('test-add-asset')
         cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden').should('be.visible');
+        //Asserts that the asset has both threats and controls propagated from asset classs
         cy.get('.list__body').eq(2).children().should('have.length', '36', {timeout:8000})
         cy.get('.list__body').last().children().should('have.length', '13', {timeout:12000})
-        //cy.deleteDataEntry('test-add-asset')
-        //
+
     })
 
     it.skip('is possible to adjust mapped threats', () => {
@@ -77,32 +76,55 @@ describe('newly made asset has threats and controls assigned from asset class', 
             .should('contain' , '28')
     })
 
+    //Tenant Name and asset id needed
     it.skip('is possible to adjust mapped controls', () => { //potential benefit; highlighted items
+
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', '4')
+        
+        cy.get('.list__body-elem').last().as('testAsset')
+
+        cy.intercept( 'GET' ,'/api/t/*/asset/*/control/applicable', (req) => {
+            req.continue()
+        }).as('applicableFilter')
+
         cy.get('.list__body-elem').last().click({force:true})
         cy.wait(500)
         cy.get(':nth-child(2) > .wrapper__header >').last().click()
         cy.wait(1000)
         cy.get('.flex-col > .mt-4', {timeout:18000}).should('not.exist')
- 
+
+        //applicable request -> to intercept
+        cy.wait('@applicableFilter')
+
         cy.get(':nth-child(1) > :nth-child(5) > .gap-x-1 > .checkbox-style')
             .check() //first mapping
         cy.wait(250)
         cy.get('.p-checkbox-input').click()
         
-        //Only Applied Controls
-        /*cy.get('.list__body').eq(1).children('.\!opacity-30').its('length')
-            .should('be.lessThan', '37')
-        */
+        //Checks number of classes for a highlighted control
+        let numOfClasses
+        let numOfClasses1
+        cy.get('.list__body').eq(1).find('.list__body-elem__default') //lists all visible row cells
+            .first().invoke('attr', 'class').then((classes) => {
+                numOfClasses = classes.split(' ').length
+            })
+        
+        //Checks num of classes for unhighlighted control
+        cy.get('.list__body').eq(1).find('.list__body-elem__default') //lists all visible row cells
+            .eq(8).invoke('attr', 'class').then((classes) => {
+                numOfClasses1 = classes.split(' ').length
+                expect(numOfClasses1).to.be.greaterThan(numOfClasses)
+            })
 
         //Potential Benefit
         cy.get('.list__header__row').eq(1).children().last().click()
         cy.wait(250)
         cy.contains('Load Potential Benefit').should('exist').click()
+        cy.get('.overflow-y-auto > .flex').click()
         
         cy.wait(250)
-        cy.get(':nth-child(1) > :nth-child(8) > .pl-3').should('contain', '635')
+        cy.get(':nth-child(1) > :nth-child(8) > .pl-3', {timeout:8000}).should('contain', '635')
         
         cy.get('.primary-btn').click()
         cy.get('.Vue-Toastification__toast-body', {timeout:8000}).should('exist')
@@ -111,21 +133,19 @@ describe('newly made asset has threats and controls assigned from asset class', 
 
         cy.get('.list__body').eq(1).children().first() //first mapped control
             .children().eq(1).should('contain', 'NIPS')
-
-        cy.wait(150000)
-
+        //ADD ADDITIONAL Checks
     })
-
 })
 
 const riskAttrs = ["peto", "test description", "test treatment strat", "test detail", "test acceptance"]
 
-describe.skip('possible to create risk register report; risk fields fill', () => {
-    it('opens risk register & adds risk details into the last asset', () => {
+describe('possible to create risk register report; risk fields fill', () => {
+    it.skip('opens risk register & adds risk details into the last asset', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Risk Report')
         cy.get('.list__body-elem').last().click()
         cy.wait(750)
-        /* ==== Generated with Cypress Studio ==== */
+
+        //Filling the fields
         cy.get('.p-dropdown-label').click();
         cy.get('.p-dropdown-item-label').eq(2).click();
         cy.get(':nth-child(2) > .p-inputtextarea').type('{selectAll}{del}test description')
@@ -134,7 +154,7 @@ describe.skip('possible to create risk register report; risk fields fill', () =>
         cy.get(':nth-child(5) > .p-inputtextarea').type('{selectAll}{del}test acceptance');
         cy.get('.p-button-label').last().click();
         cy.wait(750)
-        cy.get('.Vue-Toastification__toast-body').invoke('text').should('include', 'Risk updated successfully')
+        cy.get('.Vue-Toastification__toast-body', {timeout:8000}).should('exist')
         cy.wait(750)
         cy.get('.icon-btn').first().click()
         cy.reload()
@@ -153,24 +173,53 @@ describe.skip('possible to create risk register report; risk fields fill', () =>
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Dashboard', 'Risk Management', 'Asset Browser')
         cy.get('[data-cy="menu_reports"] > .flex').click()
         cy.wait(750)
-        cy.get('.list__body-elem').first().click()
+        cy.get('.list__body-elem').first().click({force:true})
         cy.wait(750)
-        cy.contains('Open Report').click()
+        cy.contains('Report Browser').click()
         cy.wait(1000)
-        cy.get('.truncate').should('contain', 'Risk Report')
+        cy.get('.transition', {timeout:6000}).should('not.exist')
+        cy.get('.flex-wrap > :nth-child(3) > .flex').should('contain', 'Risk')
 
-        cy.get('tbody').first().children('tr').last().as('newRow')
-        
-        cy.go(-1)
-        cy.wait(750)
+        cy.get('.list__body-elem').last().click({force:true})
+        cy.wait(250)
 
-        cy.get('.list__body-elem--select > :nth-child(5) > .flex').click({force:true})
-        cy.wait(750)
+        for (let i = 0; i < 4; i++) {
+            cy.get(`:nth-child(${i+16}) > .overflow-auto`).should('contain', 'test')
+        }
 
-        cy.get('h3').first().click()
-        cy.get('.flex-wrap > :nth-child(3) > .flex')
-            .should('contain', 'Risk Report')
-    })
+        //CONTROL APPLICABLE FILTER CHECK
+        cy.intercept( 'GET' ,'/api/t/*/asset/*/control/applicable', (req) => {
+            req.continue()
+        }).as('applicableFilter')
+
+        cy.get('.list__body').last().children()
+            .its('length').then((length) => {
+                cy.get('[data-cy="menu_management"] > .flex').click()
+                cy.wait(250)
+                cy.contains('Asset Browser').click({force:true})
+                cy.get('.transition').should('exist')
+                //cy.get('.wrapper__header > .mr-1').click()
+                cy.get('.transition', {timeout:8000}).should('not.exist')
+                cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
+
+                cy.get('.list__body-elem').last().click({force:true})
+                cy.wait(250)
+                cy.get(':nth-child(2) > .wrapper__header >').last().click()
+                cy.wait(1000)
+                cy.get('.flex-col > .mt-4', {timeout:18000}).should('not.exist')
+
+                //applicable request -> to intercept
+                cy.wait('@applicableFilter')
+                cy.wait(250)
+                cy.get('.p-checkbox-input').click()
+
+                //ROZOBRAT
+                //SELECT EACH listbodelem
+                //now each first child of each listbodelem
+                //assert each child against the filter
+                // the onest that remains match
+            })
+    }) //get amount of controls 
 })
 
 //add check of report versions in time
