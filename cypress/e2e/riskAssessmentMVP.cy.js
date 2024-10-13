@@ -219,14 +219,14 @@ describe('possible to create risk register report; risk fields fill', () => {
                 //assert each child against the filter
                 // the onest that remains match
             })
-    }) //get amount of controls 
+    })
 })
 
+//TODO
 //add check of report versions in time
+//add check of report browser VS report viewer
+//add check of download report
 
-//threat browser checks
-
-//control browser checks
 
 
 
