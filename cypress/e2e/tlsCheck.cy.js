@@ -3,7 +3,7 @@ describe('check for website certificates', { testIsolation: false }, () => {
     it('QualyS ssl labs report', () => {
         cy.visit('https://www.ssllabs.com/ssltest/')
 
-        let securea = 'https://securea-dev.germanywestcentral.cloudapp.azure.com/';
+        let securea = 'https://securea-preprod.germanywestcentral.cloudapp.azure.com/';
         cy.contains('Hostname').parent().as('submitForm')   //gets the whole submit 
         
         cy.get('@submitForm').children().eq(1).type(securea)    //gets the input field

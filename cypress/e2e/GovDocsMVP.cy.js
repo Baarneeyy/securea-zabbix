@@ -6,7 +6,7 @@ ullamcorper. Vestibulum nec elementum nisi. Fusce ut mi ut nulla interdum eleife
 `
 
 describe('Governing Documentation', () => {
-    it.skip('Checks Fields shown in Gov Doc creation & creates a Governing Documentation record', () => {
+    it('Checks Fields shown in Gov Doc creation & creates a Governing Documentation record', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Governing Documentation')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         cy.contains('Add').click({force:true})
@@ -58,7 +58,7 @@ describe('Governing Documentation', () => {
         cy.get('.px-4 > .w-full > p').should('contain', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
     })
 
-    it.skip('Checks amount of mapping windows & maps requirements', () => {
+    it('Checks amount of mapping windows & maps requirements', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Governing Documentation')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         cy.get('.list__body-elem').last().click({force:true})
@@ -119,13 +119,68 @@ describe('Governing Documentation', () => {
         })
 
     })
+
+    //One type of report: check diff between general report and 1-govdoc specific report
+    it('Generates and checks newly made report', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Governing Documentation')
+        cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
+
+        cy.get('.list__body-elem').last().click({force:true})
+        
+        //Generates General Report
+        cy.contains('Generate Report').click({force:true})
+        cy.get('.p-dropdown-label').last().click()
+        cy.get('.p-dropdown-item').click()
+        cy.get('.modal__body > .flex > .p-button').click()
+
+        //Generation/PostGeneration checks
+        cy.get('.Vue-Toastification__toast', {timeout:8000}).should('exist')
+        cy.get('.Vue-Toastification__toast-component-body > .flex > p').should('contain', 'queue...')
+        cy.wait(500)
+        cy.get('.Vue-Toastification__toast').should('exist')
+        cy.get('.Vue-Toastification__toast-component-body > .flex > p').should('contain', 'Successfully')
+
+        //Generates Report for 1 data_entry
+        cy.contains('Generate Report').click({force:true})
+        cy.get('.p-dropdown-label').first().click()
+        cy.get('.p-dropdown-item').last().click()
+
+        cy.get('.p-dropdown-label').last().click()
+        cy.get('.p-dropdown-item').click()
+        cy.get('.modal__body > .flex > .p-button').click()
+
+        //Generation/PostGeneration checks
+        cy.get('.Vue-Toastification__toast', {timeout:8000}).should('exist')
+        cy.get('.Vue-Toastification__toast-component-body > .flex > p').should('contain', 'queue...')
+        cy.wait(500)
+        cy.get('.Vue-Toastification__toast').should('exist')
+        cy.get('.Vue-Toastification__toast-component-body > .flex > p').should('contain', 'Successfully') //also add check if id is written in mess
+        
+    })
     
 
+    it('Compares generated Reports', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Reports', 'Compliance Management', 'Governing Documentation')
+        cy.get('.wrapper__header >').should('have.length', '3', {timeout:8000})
+
+        cy.get('.list__body > :nth-child(1) > :nth-child(6)').click()
+        cy.get('.overflow-auto.size-full').children()
+            .children().last().children().its('length').should('eq', 1)
+        
+        cy.go(-1)
+        cy.get('.wrapper__header >').should('have.length', '3', {timeout:8000})
+
+        cy.get('.list__body > :nth-child(2) > :nth-child(6)').click()
+        cy.get('.overflow-auto.size-full').children()
+            .children().last().children().its('length').should('be.greaterThan', 1)
+
+
+    })
     //TODO
     
     //1st test -> Checks amount of fields; field names; creates entry -> DONE
     //2nd test -> Checks amount of mapping windows; maps reqs to docs -> DONE
-    //3rd test -> Checks if correct text and amount of mappings were saved -> DONE | REMAINGING -> Check report generation
+    //3rd test -> Checks if correct text and amount of mappings were saved -> DONE | REMAINING -> Check report generation ->DONE
     //4th test -> Checks minor funcs -> owner relink; link relink; sorting; detail window
     //5th test -> Cleanup
 })

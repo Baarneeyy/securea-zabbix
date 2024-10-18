@@ -2,6 +2,8 @@ describe('Configuration Catalogues + Security Posture', () => {
     it('Asset Class', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Asset Class Catalogue')
         cy.wait(250)
+        cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
+
 
         //Creation
         cy.get('[data-cy="assetBrowser_add"]').click()

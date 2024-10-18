@@ -1,5 +1,5 @@
 describe('newly made asset has threats and controls assigned from asset class', () => {
-    it.skip('creates a new asset with propagated threats and assets', () => {
+    it('creates a new asset with propagated threats and assets', () => {
         //cy.clearCookies()
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         //CREATES AN ASSET WITH EVERY FIELD FILLED//
@@ -40,7 +40,7 @@ describe('newly made asset has threats and controls assigned from asset class', 
 
     })
 
-    it.skip('is possible to adjust mapped threats', () => {
+    it('is possible to adjust mapped threats', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', '4')
         cy.get('.list__body-elem').last().click({force:true})
@@ -77,7 +77,7 @@ describe('newly made asset has threats and controls assigned from asset class', 
     })
 
     //Tenant Name and asset id needed
-    it.skip('is possible to adjust mapped controls', () => { //potential benefit; highlighted items
+    it('is possible to adjust mapped controls', () => { //potential benefit; highlighted items
 
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', '4')
@@ -140,7 +140,7 @@ describe('newly made asset has threats and controls assigned from asset class', 
 const riskAttrs = ["peto", "test description", "test treatment strat", "test detail", "test acceptance"]
 
 describe('possible to create risk register report; risk fields fill', () => {
-    it.skip('opens risk register & adds risk details into the last asset', () => {
+    it('opens risk register & adds risk details into the last asset', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Risk Report')
         cy.get('.list__body-elem').last().click()
         cy.wait(750)

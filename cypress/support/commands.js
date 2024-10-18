@@ -71,6 +71,11 @@ Cypress.Commands.add('openManagement', (sectionName, managementName, browserName
         "Management" : "management",
     }
     let string = '[data-cy="menu_' + menus[sectionName] + '"]'
+    if (sectionName == 'Reports') {
+        cy.get('[data-cy="menu_reports"] > .flex').click()
+        cy.wait(500)
+        return
+    }
     cy.get(string).click()
     if (sectionName == "Security Posture") {
         cy.get('.dropdown__sub-category-link').click()

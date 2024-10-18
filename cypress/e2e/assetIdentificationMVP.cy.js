@@ -1,8 +1,8 @@
 const { describe } = require("mocha")
 
-describe('bum', () => {
+describe.skip('Asset Browser showing data', () => {
     //'enters asset browser and create a new asset
-    it.skip('asset browser showing assets and threats/controls', () => {
+    it('asset browser showing assets and threats/controls', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
@@ -24,7 +24,7 @@ describe('bum', () => {
                     .should('contain', text)
             })
     })
-    it.skip('asset browser showing risk value per asset/ per threat', () => {
+    it('asset browser showing risk value per asset/ per threat', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
@@ -52,7 +52,7 @@ describe('bum', () => {
     })
 })
 
-describe.skip('Adding new asset and populating the data', () => {
+describe('Adding new asset and populating the data', () => {
     it('adds a new asset with pre-made data', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
@@ -113,13 +113,12 @@ describe.skip('Adding new asset and populating the data', () => {
             })
 
         //cy.get(':nth-child(3) > .flex > a').click()
-        cy.wait(15000)
         //prepare scenario for propagation -> commandize later
     })
 })
 
 //add depth
-describe.skip('Editing of asset; Owners; Propagation from Asset Class', () => {
+describe('Editing of asset; Owners; Propagation from Asset Class', () => {
     it('Edits asset testingMVP', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
