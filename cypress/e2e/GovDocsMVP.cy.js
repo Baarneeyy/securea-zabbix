@@ -176,6 +176,13 @@ describe('Governing Documentation', () => {
 
 
     })
+
+    it('GovDoc cleanup', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Governing Documentation')
+        cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
+
+        cy.deleteDataEntry('testingMVP')
+    })
     //TODO
     
     //1st test -> Checks amount of fields; field names; creates entry -> DONE

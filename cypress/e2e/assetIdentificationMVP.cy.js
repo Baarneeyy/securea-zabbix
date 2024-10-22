@@ -1,6 +1,6 @@
 const { describe } = require("mocha")
 
-describe.skip('Asset Browser showing data', () => {
+describe('Asset Browser showing data', () => {
     //'enters asset browser and create a new asset
     it('asset browser showing assets and threats/controls', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
@@ -398,6 +398,29 @@ describe('propagation & cloning of mappings', () => {
         //add/find way to check the api/requests sent
         
 
+    })
+})
+
+describe('Cleanup', () => {
+    it('Clone asset Cleanup', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.wait(250)
+        cy.get('.transition', {timeout:8000}).should('not.exist')
+        cy.deleteDataEntry('assetClone')
+    })
+
+    it('Main asset Cleanup', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.wait(250)
+        cy.get('.transition', {timeout:8000}).should('not.exist')
+        cy.deleteDataEntry('testingMVP++')
+    })
+
+    it('Asset Class Cleanup', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Asset Class Catalogue')
+        cy.wait(250)
+        cy.get('.transition', {timeout:8000}).should('not.exist')
+        cy.deleteDataEntry('testingAssetClass')
     })
 })
 

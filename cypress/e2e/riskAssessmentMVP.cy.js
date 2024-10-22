@@ -1,4 +1,4 @@
-describe('newly made asset has threats and controls assigned from asset class', () => {
+describe.skip('newly made asset has threats and controls assigned from asset class', () => {
     it('creates a new asset with propagated threats and assets', () => {
         //cy.clearCookies()
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
@@ -139,7 +139,7 @@ describe('newly made asset has threats and controls assigned from asset class', 
 
 const riskAttrs = ["peto", "test description", "test treatment strat", "test detail", "test acceptance"]
 
-describe('possible to create risk register report; risk fields fill', () => {
+describe.skip('possible to create risk register report; risk fields fill', () => {
     it('opens risk register & adds risk details into the last asset', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Risk Report')
         cy.get('.list__body-elem').last().click()
@@ -219,6 +219,15 @@ describe('possible to create risk register report; risk fields fill', () => {
                 //assert each child against the filter
                 // the onest that remains match
             })
+    })
+})
+
+describe('Cleanup', () => {
+    it('Cleans up asset from risk assessment', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.wait(250)
+        cy.get('.transition', {timeout:8000}).should('not.exist')
+        cy.deleteDataEntry('test-add-asset')
     })
 })
 

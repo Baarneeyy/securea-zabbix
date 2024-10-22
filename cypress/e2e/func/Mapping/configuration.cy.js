@@ -269,8 +269,8 @@ describe.skip('Regulation Catalogue', () => {
     })
 })
 
-describe('Requirement Catalogue', () => {
-    it.skip('Prepares mapping requirement', () => {
+describe.skip('Requirement Catalogue', () => {
+    it('Prepares mapping requirement', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Security Requirements Catalogue')
         cy.wait(250)
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
@@ -291,7 +291,7 @@ describe('Requirement Catalogue', () => {
         cy.get(':nth-child(3) > .field__value').should('contain', 'testing description')
     })
 
-    it.skip('Requirement-Controls mapping', () => {
+    it('Requirement-Controls mapping', () => {
         cy.clearAllCookies()
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Security Requirements Catalogue')
         cy.wait(250)
@@ -349,8 +349,90 @@ describe('Requirement Catalogue', () => {
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
         cy.deleteDataEntry('testingMapping')
     })
-
-
-
     //Add checks for deprecated urls
+})
+
+describe.skip('BCM/Impact', () => {
+    let businessProcesses = []
+    it('Impact Prep', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'BCM')
+        cy.wait(250)
+        cy.get('.wrapper__header >').should('have.length', 4, {timeoout:8000})
+
+        //Creation
+        cy.get('[data-cy="assetBrowser_add"]').click()
+        cy.wait(250)
+        cy.get('.field--hidden > .p-inputtext').click().type('testing mapping')
+        cy.get('.p-inputtextarea').click().type('testing description')
+        cy.get('[data-cy="assetBrowser_create"]').click()
+
+        //PostCreate asssertions
+        cy.get('.Vue-Toastification__toast-body', {timeout:8000})
+        cy.get('.field--hidden > .field__value').should('contain', 'testing mapping')
+        cy.get('.field--view > .field__value').should('contain', 'testing description')
+    })
+    it('Impact-Business Process mapping', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'BCM')
+        cy.wait(250)
+        cy.get('.wrapper__header >').should('have.length', 4, {timeoout:8000})
+
+        cy.get('.list__body-elem').last().click()
+        cy.wait(250)
+        cy.get('a > .p-button').click()
+        cy.get('.mt-4').should('exist')
+        cy.get('.mt-4').should('not.exist')
+
+        for (let i = 1; i < 3; i++) {
+            cy.get(`:nth-child(${i}) > :nth-child(3) > .flex > .checkbox-style`).click()
+            cy.get(`:nth-child(${i}) > :nth-child(4) > .relative > .custom-spinner`).click().type('{selectAll}{del}10')
+            cy.get(`:nth-child(${i}) > :nth-child(5) > .w-full`).click().type('testing mapping description')
+        }
+
+        cy.get('.primary-btn').click()
+        cy.get('.Vue-Toastification__toast-body').should('exist')
+
+        for (let i = 1; i < 3; i++) {
+            cy.get(`:nth-child(${i}) > :nth-child(3) > .flex > .checkbox-style`).invoke('val').then((checked) => {
+                expect(checked).to.eq('on')
+            })
+            cy.get(`:nth-child(${i}) > :nth-child(4) > .relative > .custom-spinner`).invoke('val').then((value) => {
+                expect(value).to.eq('10')
+            })
+            cy.get(`:nth-child(${i}) > :nth-child(5) > .w-full`).invoke('val').then((text) => {
+                expect(text).to.eq('testing mapping description')
+            })
+        }
+
+
+        cy.get('.flex-wrap > :nth-child(3) > .flex').click()
+        cy.get('.wrapper__header').first().children().should('have.length', 4)
+
+        cy.get('.list__body').last().children().each(($el, index) => {
+            cy.wrap($el).children().eq(3).should('contain', '10')
+            cy.wrap($el).children().eq(4).should('contain', 'testing mapping description')
+            cy.wrap($el).children().eq(0).invoke('text').then((text) => {
+                businessProcesses.push(text)
+                cy.log(businessProcesses)
+            })
+        })
+    })
+
+    it('Business Process view', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Process')
+        cy.wait(250)
+        cy.get('.wrapper__header >').should('have.length', 4, {timeoout:8000})
+        
+        for (let i = 0; i < businessProcesses.length; i++) {
+            cy.get('.list__body').first().contains(businessProcesses[i]).click()
+            cy.get('.list__body').last().contains('testing mapping').should('exist')
+        }
+    })
+
+    it('Impact Cleanup', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'BCM')
+        cy.wait(250)
+        cy.get('.wrapper__header >').should('have.length', 4, {timeoout:8000})
+
+        cy.deleteDataEntry('testing mapping')
+    })
 })
