@@ -1,5 +1,5 @@
 describe('Checks mappings to and from Business Processes', () => {
-    it.skip('Creates process to test with; checks correct amount', () => {
+    it('Creates process to test with; checks correct amount', () => {
         let bpCount = 0;
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
@@ -8,7 +8,7 @@ describe('Checks mappings to and from Business Processes', () => {
         })
 
         cy.contains('Add').click()
-        cy.get('.field--hidden > .p-inputtext').click().type('testingMVP3') //name
+        cy.get('.field--hidden > .p-inputtext').click().type('testingMVP') //name
         cy.get('.p-inputtextarea').click().type('testing description') //description
         cy.get('[data-cy="assetBrowser_create"]').click() //create bp
         cy.wait(250)
@@ -23,7 +23,7 @@ describe('Checks mappings to and from Business Processes', () => {
         cy.get('.wrapper__header').its('length').should('eq', 3)
     })
 
-    it.skip('Maps Assets to new Business Process', () => {
+    it('Maps Assets to new Business Process', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         
@@ -49,7 +49,7 @@ describe('Checks mappings to and from Business Processes', () => {
         cy.get('.Vue-Toastification__toast-body', {timeout:8000}).should('exist')
     })
 
-    it.skip('Checks BP-Asset mappings', () => {
+    it('Checks BP-Asset mappings', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         
@@ -68,7 +68,7 @@ describe('Checks mappings to and from Business Processes', () => {
         }
     })
 
-    it.skip('Maps Assets to new Business Process', () => {
+    it('Maps Assets to new Business Process', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         
@@ -94,7 +94,7 @@ describe('Checks mappings to and from Business Processes', () => {
         cy.get('.Vue-Toastification__toast-body', {timeout:8000}).should('exist')
     })
 
-    it.skip('Checks BP-Asset mappings', () => {
+    it('Checks BP-Asset mappings', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         
@@ -113,6 +113,14 @@ describe('Checks mappings to and from Business Processes', () => {
             //toAdd BP name
         }
     })
-    it('relink-assets')
-    it('relink-impacts')
+    
+    //it('relink-assets')
+    //it('relink-impacts')
+
+    it('Cleanup', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
+        cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
+
+        cy.deleteDataEntry('testingMVP')
+    })
 })
