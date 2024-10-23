@@ -108,6 +108,7 @@ Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSecti
         return
     }
     cy.openManagement(openSectionName, openManagementName, openBrowserName)
+    cy.wait(500)
 })
 
 Cypress.Commands.add('save', () => {
