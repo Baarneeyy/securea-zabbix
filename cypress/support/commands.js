@@ -23,6 +23,9 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import '@cypress-audit/lighthouse/commands';
+
+//Logs In -> TODO: Remove env vars
 Cypress.Commands.add('login', (username, password) => {
     cy.visit(Cypress.env('PRE_URL')) //https://securea-dev.germanywestcentral.cloudapp.azure.com/
     cy.get('[type="username"]').type(username) //'tvsetecka'
@@ -34,15 +37,7 @@ Cypress.Commands.add('login', (username, password) => {
     cy.wait(1000)
 })
 
-//CLEANUP ERRORS COMMAND
-Cypress.Commands.add('errCleanup', () => {
-    cy.get('.Vue-Toastification__close-button').click( {multiple:true} )
-    cy.wait(2500)
-    cy.get('.Vue-Toastification__close-button').click( {multiple:true} )
-    cy.wait(2500)
-    cy.get('.Vue-Toastification__close-button').click()
-})
-
+//Switches Tenant -> differentiate between newer dropdown and Select Tenant
 Cypress.Commands.add('switchTenant', (tenantName) => {
     cy.get('.flex > .overflow-hidden').click()
     cy.wait(250)
@@ -55,6 +50,7 @@ Cypress.Commands.add('switchTenant', (tenantName) => {
     })
 })
 
+//Self Explanatory
 Cypress.Commands.add('changePassword', (oldPassword, newPassword) => {
     cy.get('input').first().type(oldPassword)
     cy.get('input').eq(1).type(newPassword)
@@ -63,25 +59,38 @@ Cypress.Commands.add('changePassword', (oldPassword, newPassword) => {
     cy.get('.change-pwd__inputs__button').click()
 })
 
-Cypress.Commands.add('openManagement', (sectionName, managementName, browserName) => {
+//Opens Any Management/Browser/Reports/...... -> TODO: wait times based on wrapper__header children length
+Cypress.Commands.add('openManagement', (sectionName, managementName="", browserName="") => {
     const menus = {
         "Tenant" : "tenant",
         "Dashboard" : "dashboard",
         "Security Posture": "securityPosture",
         "Management" : "management",
+        "Reports": 'reports'
     }
-    let string = '[data-cy="menu_' + menus[sectionName] + '"]'
+    let string = '[data-cy="menu_' + menus[sectionName] + '"]' //Sidebar element
+    
+    //Reports -> Only Section
     if (sectionName == 'Reports') {
-        cy.get('[data-cy="menu_reports"] > .flex').click()
+        cy.get(string).click()
         cy.wait(500)
         return
     }
     cy.get(string).click()
+    
+    //Most Sections -> Section/Management/Browser
+    //Security Posture -> Section/Browser
     if (sectionName == "Security Posture") {
         cy.get('.dropdown__sub-category-link').click()
         cy.wait(500)
         return
     }
+    //BCM -> BCM/Impacts
+    if (browserName == 'BCM') {
+        cy.wait(250)
+        cy.contains('Impacts').click()
+    }
+
     cy.contains(`${managementName}`).parent('.dropdown__link-holder').then(($element) => {
         if (!$element.hasClass('.border-purple')) {
             cy.get($element).contains(`${managementName}`).click()
@@ -89,17 +98,13 @@ Cypress.Commands.add('openManagement', (sectionName, managementName, browserName
         }
     })      
     cy.wait(250)     
-    //dropdown__link-holder__active-btn
     cy.contains(`${browserName}`).click()
     cy.wait(750)
-    if (browserName == 'BCM') {
-        cy.wait(250)
-        cy.contains('Impacts').click()
-    }
     cy.get('.wrapper__header').first().click()
     cy.wait(1500)
 })
 
+//Base Setup For Tests -> login; switches to desired tenant; opens desired section -> waits
 Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSectionName, openManagementName, openBrowserName) => {
     cy.login(userName, userPassword)
     cy.switchTenant(tenantName)
@@ -111,12 +116,13 @@ Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSecti
     cy.wait(500)
 })
 
+//Not used -> TODO: Implement
 Cypress.Commands.add('save', () => {
     cy.get('[aria-label="Save"]').click()
     cy.get('.Vue-Toastification__close-button').click()
 })
 
-
+//Not Used anymore -> DELETE/REDO
 Cypress.Commands.add('fillDataEntry', (dataEntryName, hasClass, lastClass) => {
     cy.contains('Add').click({force: true})
     cy.wait(1000)    
@@ -149,6 +155,7 @@ Cypress.Commands.add('fillDataEntry', (dataEntryName, hasClass, lastClass) => {
     })
 })
 
+//Deprecated -> DELETE/REDO
 Cypress.Commands.add('addDataEntry', (dataEntryName, hasClass=false, lastClass=false) => {
     cy.fillDataEntry(dataEntryName, hasClass, lastClass)
     
@@ -157,6 +164,7 @@ Cypress.Commands.add('addDataEntry', (dataEntryName, hasClass=false, lastClass=f
     cy.contains(`${dataEntryName}`).should('exist')
 })
 
+//IS USED?
 Cypress.Commands.add('Searchbar', (search) => {
     cy.get('.p-inputtext.p-component').first().as('searchbar')
     cy.get("@searchbar").should('exist')
@@ -166,19 +174,20 @@ Cypress.Commands.add('Searchbar', (search) => {
     cy.wait(1000)
 })
 
+//Deletes last data entry -> TODO: make any data entry
 Cypress.Commands.add('deleteDataEntry', (dataEntryName) => {
-    cy.get('.list__body-elem').last().find('.cursor-pointer').click({force:true})
-    cy.get('.toolbar').children().last().click()
+    cy.get('.list__body-elem').last().find('.cursor-pointer').click({force:true}) //selects last element in section
+    cy.get('.toolbar').children().last().click() //Clicks on delete icon in detail window
 
-    cy.get('.p-confirm-popup-accept > .p-button-label')
-        .should('exist')
+    cy.get('.p-confirm-popup-accept > .p-button-label') //popup with text 'do you want to delete'
+        .should('exist') //implicit wait time
         .click({force:true})
-    //cy.reload()
     cy.wait(1000)
     cy.get('.list__body-elem').last().children().eq(1) //name column of last item
         .children().should('not.contain', dataEntryName)
 })
 
+//Not Used -> DELETE
 Cypress.Commands.add('deleteSpecificEntry', (entryName) => {
     cy.get('p').should('have.text', entryName).as('entry')
 })
@@ -198,6 +207,29 @@ Cypress.Commands.add('editDataEntry', () => {
             cy.wrap(text).should('contain', 'test-add-asset-update')
         })
 })
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Cypress.Commands.add('sortCategory', (categoryName) => {
     //list__header__row opacity-100

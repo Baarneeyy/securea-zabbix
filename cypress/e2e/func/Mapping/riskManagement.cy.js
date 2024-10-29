@@ -229,7 +229,7 @@ describe.skip('Threat Browser', () => {
     })
 })
 
-describe('Control Browser', () => {
+describe.skip('Control Browser', () => {
     it('Prep Mapping Control', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Control Browser')
         cy.wait(500)

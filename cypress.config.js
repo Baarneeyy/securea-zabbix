@@ -1,5 +1,7 @@
 const { defineConfig } = require("cypress");
 const { verifyDownloadTasks } = require('cy-verify-downloads');
+const { lighthouse, prepareAudit } = require("@cypress-audit/lighthouse");
+const fs = require("fs");
 require('dotenv').config();
 
 
@@ -15,7 +17,21 @@ module.exports = defineConfig({
     experimentalStudio: true,
     setupNodeEvents(on, config) {
       // implement node event listeners here
-      on('task', verifyDownloadTasks);
+      on("before:browser:launch", (browser = {}, launchOptions) => {
+        prepareAudit(launchOptions);
+        });
+      
+      on('task', {
+        lighthouse: lighthouse((lighthouseReport) => {
+          console.log("---- Writing lighthouse report to disk ----");
+
+          fs.writeFile("lighthouse.html", lighthouseReport.report, (error) => {
+            error ? console.log(error) : console.log("Report created successfully");
+          });
+        }),
+      });
+
+      on('task', verifyDownloadTasks)
       
       config.env.DEV_USER = process.env.DEV_USER;
       config.env.DEV_PASS = process.env.DEV_PASS;
