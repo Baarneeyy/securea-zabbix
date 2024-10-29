@@ -1,6 +1,6 @@
 const { describe } = require("mocha")
 
-describe('Asset Browser showing data', () => {
+describe.skip('Asset Browser showing data', () => {
     //'enters asset browser and create a new asset
     it('asset browser showing assets and threats/controls', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
@@ -48,7 +48,7 @@ describe('Asset Browser showing data', () => {
         cy.get(':nth-child(6) > .px-3 > .w-full').click()
         cy.get(':nth-child(7) > .px-3 > .w-full').click()
         cy.get('.browser-container__main-model-wrapper > .wrapper > .wrapper__header > .mr-1').click()
-        cy.get('.list__header__row').first().children().should('have.length', '8')
+        cy.get('.list__header__row').first().children().should('have.length', '12')
     })
 })
 

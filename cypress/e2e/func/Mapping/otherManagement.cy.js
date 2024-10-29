@@ -1,4 +1,4 @@
-describe.skip('Governing Documentation mapping', () => {
+describe('Governing Documentation mapping', () => {
     it('Prep Mapping Gov Doc' , () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Governing Documentation')
         cy.wait(500)
@@ -63,7 +63,7 @@ describe.skip('Governing Documentation mapping', () => {
     })
 })
 
-describe.skip('SoA mapping', () => {
+describe('SoA mapping', () => {
     it('Prep Mapping Clause', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Regulation Catalogue')
         cy.wait(500)
@@ -171,7 +171,7 @@ describe.skip('SoA mapping', () => {
     })
 })
 
-describe.skip('Business Process mapping', () => {
+describe('Business Process mapping', () => {
     it('Prep Mapping Business Process', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Process')
         cy.wait(250)

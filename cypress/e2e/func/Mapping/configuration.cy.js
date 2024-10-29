@@ -269,7 +269,7 @@ describe.skip('Regulation Catalogue', () => {
     })
 })
 
-describe.skip('Requirement Catalogue', () => {
+describe('Requirement Catalogue', () => {
     it('Prepares mapping requirement', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Security Requirements Catalogue')
         cy.wait(250)
@@ -304,7 +304,7 @@ describe.skip('Requirement Catalogue', () => {
         cy.get('.transition').should('not.exist')
         cy.get('.mt-4').should('not.exist')
 
-        /*
+        
         for (let i = 1; i < 6; i++) {
             cy.get(`:nth-child(${i}) > :nth-child(5) > .flex > .checkbox-style`).click()
             cy.wait(250)
@@ -315,7 +315,7 @@ describe.skip('Requirement Catalogue', () => {
 
         cy.get('.primary-btn').click()
         cy.get('.Vue-Toastification__toast-body').should('exist')
-        */
+    
         for (let i = 1; i < 6; i++) {
             cy.get(`:nth-child(${i}) > :nth-child(5) > .flex > .checkbox-style`).invoke('val').should('eq', 'on')
             cy.get(`:nth-child(${i}) > :nth-child(6) > .w-full`).invoke('val').should('contain', 'testing description')
@@ -352,7 +352,7 @@ describe.skip('Requirement Catalogue', () => {
     //Add checks for deprecated urls
 })
 
-describe.skip('BCM/Impact', () => {
+describe('BCM/Impact', () => {
     let businessProcesses = []
     it('Impact Prep', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'BCM')
