@@ -113,7 +113,7 @@ describe.skip('Will check every url and match to window type', {testIsolation:tr
 describe('Management', () => {
     it('Risk Management', () => {
         //Setup + Asset Browser
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingTomas', 'Management', 'Risk Management', 'Asset Browser')
         cy.url().then((url) => {
             cy.wrap(url).should('contain', 'asset-browser')
         })
@@ -152,7 +152,7 @@ describe('Management', () => {
         
     })
     it('Compliance Management', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Governing Documentation')
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingTomas', 'Management', 'Compliance Management', 'Governing Documentation')
         cy.url().then((url) => {
             cy.wrap(url).should('contain', 'governing_document-browser')
         })
@@ -170,7 +170,7 @@ describe('Management', () => {
 
     })
     it('BCM', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingTomas', 'Management', 'BCM', 'Business Processes')
         cy.url().then((url) => {
             cy.wrap(url).should('contain', 'business_process-browser')
         })
@@ -180,7 +180,7 @@ describe('Management', () => {
 describe('Other', () => {
     it('Admin Tools', () => {
         //Tenant Management
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingTomas', 'Management', 'Risk Management', 'Asset Browser')
         cy.get('[data-cy="menu_adminTools"]').click({force:true})
         cy.wait(250)
         cy.contains('Tenant Management').click()
@@ -222,7 +222,7 @@ describe('Other', () => {
     })
     it('Otherothers (less than 2 subitems)', () => {
         //Dashboard
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingTomas', 'Management', 'Risk Management', 'Asset Browser')
         cy.get('[data-cy="menu_dashboard"]').click({force:true})
         cy.wait(250)
         cy.get('.dropdown__sub-category-link').click()
@@ -235,7 +235,7 @@ describe('Other', () => {
         //Security Posture
         cy.get('[data-cy="menu_securityPosture"]').click({force:true})
         cy.wait(250)
-        cy.get('.dropdown__sub-category-link').click()
+        cy.get('.dropdown__sub-category-link:visible').click()
         cy.wait(250)
         cy.url().then((url) => {
             cy.wrap(url).should('contain', 'requirement-fulfillment')
