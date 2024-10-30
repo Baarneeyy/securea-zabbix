@@ -38,6 +38,7 @@ Cypress.Commands.add('login', (username, password) => {
 })
 
 //Switches Tenant -> differentiate between newer dropdown and Select Tenant
+//TODO -> add differences between dashboard and other screens
 Cypress.Commands.add('switchTenant', (tenantName) => {
     cy.get('.flex > .overflow-hidden').click()
     cy.wait(250)
@@ -116,48 +117,48 @@ Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSecti
     cy.wait(500)
 })
 
-//Not used -> TODO: Implement
-Cypress.Commands.add('save', () => {
-    cy.get('[aria-label="Save"]').click()
-    cy.get('.Vue-Toastification__close-button').click()
+
+//UPDATED//////////////////////////////////////////////////////////////////////////////////////////////
+//Not used -> TODO: Implement --REDONE
+//Clicks on any highlighted/purple button -> has an Aria-label attr
+Cypress.Commands.add('clickOnBtn', (btnName) => {
+    cy.get(`[aria-label="${btnName}"]`).should('exist')
+        .click()
 })
 
 //Not Used anymore -> DELETE/REDO
-Cypress.Commands.add('fillDataEntry', (dataEntryName, hasClass, lastClass) => {
-    cy.contains('Add').click({force: true})
-    cy.wait(1000)    
-    cy.get('.p-inputtext.p-component').its('length').then((inputBoxes) => {
-        for (let i = 0; i < inputBoxes; i++) {
-            
-        }
+//UPDATED/////////////////////////////////////////////////////////////////////////////////////////////
+//Prefills data in the Creation subPage -> GOAL is Screen-agnostic
+Cypress.Commands.add('fillDataEntry', (dataEntryName, numVal='1') => {
+    cy.clickOnBtn('Add')
+
+    //Selects each textfield; checks it's column name, and writes dataEntryName's name alongside column name
+    cy.get('[class^="p-inputtext"]').not(':first').each(($el) => {
+        cy.wrap($el).then(($currentEl) => {
+            if ($currentEl.hasClass('p-inputnumber-input')) {
+                cy.wrap($currentEl).click().type(numVal)
+            }
+            else {
+                cy.wrap($currentEl).siblings('label').invoke('text').then((text) => {
+                    cy.wrap($currentEl).click().type(`${dataEntryName}'s ${text}`)
+                })
+            }
+        })
     })
-    //text input elements found, selectbar els missing
-    cy.get('.p-dropdown-trigger').filter(':visible')
-    cy.wait(10000)
 
-    cy.get('#description').type(`description of ${dataEntryName}`)
-    
-    if (hasClass) {
-        cy.get('#class').click()
-        if (lastClass) {
-            cy.get('.p-dropdown-item-label').last().click({force:true})
-        } else {
-            cy.get('.p-dropdown-item-label').eq(0).click()
-        }
-    }
-
-    cy.get('.p-inputnumber-input').type(256)
-
-    cy.get('#name').its('text').then((text) => {
-        if (text != 'test-add-asset') {
-            cy.get('#name').type(`{selectall}{backspace}${dataEntryName}`)
-        }
+    //Selects the first option for each dropdown element
+    cy.get('.p-dropdown:visible').each(($el) => {
+        cy.wrap($el).click()
+        cy.wait(250)
+        cy.get('.p-dropdown-item').first().click()
     })
+
 })
+//TODO -> for dropdown elements////////////////////////////////////////////////////////////////////////
 
 //Deprecated -> DELETE/REDO
-Cypress.Commands.add('addDataEntry', (dataEntryName, hasClass=false, lastClass=false) => {
-    cy.fillDataEntry(dataEntryName, hasClass, lastClass)
+Cypress.Commands.add('addDataEntry', (dataEntryName, numVal="1") => {
+    cy.fillDataEntry(dataEntryName, numVal)
     
     cy.contains('Create').click()
     

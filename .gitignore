@@ -4,3 +4,4 @@ cypress/downloads/
 cypress/e2e/assetBrowserMVP2.cy.js
 cypress/e2e/testSpec.cy.js
 .env.test
+lighthouse.html
