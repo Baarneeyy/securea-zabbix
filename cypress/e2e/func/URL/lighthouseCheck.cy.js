@@ -18,7 +18,7 @@ const lighthouseConfig = {
 
 
 describe.skip('Tenant Section', () => {
-    it.skip('Select Tenant', () => {
+    it('Select Tenant', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.get('[data-cy="menu_tenant"]').click({force:true})
         
@@ -28,7 +28,7 @@ describe.skip('Tenant Section', () => {
         cy.lighthouse(thresholds, lighthouseConfig)
     })
 
-    it.skip('User Settings', () => {
+    it('User Settings', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.get('[data-cy="menu_tenant"]').click({force:true})
         
@@ -47,102 +47,11 @@ describe.skip('Tenant Section', () => {
         cy.wait(250)
         cy.contains('Change Password').click({force:true})
         cy.wait(250)
-    })
-
-    it.skip('tenant section', () => {
-        //User Settings Check
-        cy.get('[data-cy="menu_tenant"]').click({force:true})
-        cy.wait(250)
-        cy.contains('User Settings').click()
-        cy.wait(250)
-        cy.url().then((url) => {
-            cy.wrap(url).should('contain', 'user-settings')
-        })
-        cy.get('body').click()
-        //Asset Class Catalogue Check
-        cy.get('[data-cy="menu_tenant"]').click({force:true})
-        cy.wait(250)
-        cy.contains('Configuration').click()
-        cy.wait(250)
-        cy.contains('Asset Class Catalogue').click()
-        cy.wait(250)
-        cy.url().then((url) => {
-            cy.wrap(url).should('contain', 'asset_class-browser')
-        })
-        cy.get('body').click()
-
-        //Owner Catalogue Check
-        cy.get('[data-cy="menu_tenant"]').click({force:true})
-        cy.wait(250)
-        //cy.contains('Configuration').click()
-        cy.wait(250)
-        cy.contains('Owner Browser').click()
-        cy.wait(250)
-        cy.url().then((url) => {
-            cy.wrap(url).should('contain', 'owner-browser')
-        })
-        cy.get('body').click()
-        //Regulation Catalogue Check
-        cy.get('[data-cy="menu_tenant"]').click({force:true})
-        cy.wait(250)
-        //cy.contains('Configuration').click()
-        cy.wait(250)
-        cy.contains('Regulation Catalogue').click()
-        cy.wait(250)
-        cy.url().then((url) => {
-            cy.wrap(url).should('contain', 'regulation-catalogue')
-        })
-        cy.get('body').click()
-        //Requirements Catalogue Check
-        cy.get('[data-cy="menu_tenant"]').click({force:true})
-        cy.wait(250)
-        //cy.contains('Configuration').click()
-        cy.wait(250)
-        cy.contains('Security Requirements Catalogue').click()
-        cy.wait(250)
-        cy.url().then((url) => {
-            cy.wrap(url).should('contain', 'requirement-catalogue')
-        })
-
-        //BCM / Impacts
-        cy.get('[data-cy="menu_tenant"]').click({force:true})
-        cy.wait(250)
-        cy.wait(250)
-        cy.contains('BCM').click()
-        cy.wait(250)
-        cy.contains('Impacts').click()
-        cy.wait(250)
-        cy.url().then((url) => {
-            cy.wrap(url).should('contain', 'impact-browser')
-        })
-
-        //Risk Thresholds
-        cy.get('[data-cy="menu_tenant"]').click({force:true})
-        cy.wait(250)
-        cy.wait(250)
-        cy.contains('Thresholds').click()
-        cy.wait(250)
-        cy.contains('Risk Thresholds').click()
-        cy.wait(250)
-        cy.url().then((url) => {
-            cy.wrap(url).should('contain', 'thresholds/risk')
-        })
-
-        //Bia Thresholds
-        cy.get('[data-cy="menu_tenant"]').click({force:true})
-        cy.wait(250)
-        cy.wait(250)
-        cy.contains('Thresholds').click()
-        cy.wait(250)
-        cy.contains('Bia Thresholds').click()
-        cy.wait(250)
-        cy.url().then((url) => {
-            cy.wrap(url).should('contain', 'thresholds/bia')
-        })
+        cy.lighthouse(thresholds, lighthouseConfig)
     })
 })
 
-describe('Tenant/Configuration', () => {
+describe.skip('Tenant/Configuration', () => {
     it('Asset Class Catalogue', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Asset Class Catalogue')
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
@@ -167,5 +76,110 @@ describe('Tenant/Configuration', () => {
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
         cy.lighthouse(thresholds, lighthouseConfig)
     })
+
+    it('Impacts Browser', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'BCM')
+        cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
 })
 
+describe.skip('Tenant/thresholds', () => {
+    it('Risk Thresholds', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Thresholds') 
+        //Risk Thresholds
+        cy.contains('Risk Thresholds').click()
+        cy.wait(250)
+        cy.url().then((url) => {
+            cy.wrap(url).should('contain', 'thresholds/risk')
+        })
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
+    it('BIA Thresholds', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Thresholds')
+        //Bia Thresholds
+        cy.contains('Bia Thresholds').click()
+        cy.wait(250)
+        cy.url().then((url) => {
+            cy.wrap(url).should('contain', 'thresholds/bia')
+        })
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
+})
+
+describe.skip('Dashboard + Security Posture', () => {
+    it('Dashboard', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Dashboard')
+        cy.wait(500)
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
+
+    it('Security Posture', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Security Posture')
+        cy.wait(500)
+        cy.get('.wrapper__header').click()
+        cy.lighthouse(thresholds, lighthouseConfig)  
+    })
+})
+
+describe.skip('Risk Management', () => {
+    it('Asset Browser', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.wait(500)
+        cy.get('.wrapper__header').click()
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
+    it('Threat Browser', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Threat Browser')
+        cy.wait(500)
+        cy.get('.wrapper__header').click()
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
+    it('Control Browser', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Control Browser')
+        cy.wait(500)
+        cy.get('.wrapper__header').click()
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
+    it('Risk Register', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Risk Report')
+        cy.wait(500)
+        cy.get('.wrapper__header').click()
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
+})
+
+describe.skip('Compliance Management', () => {
+    it('Gov Docs', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Governing Documentation')
+        cy.wait(500)
+        cy.get('.wrapper__header').click()
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
+    it('Gov Docs', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Regulations')
+        cy.wait(500)
+        cy.get('.wrapper__header').click()
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
+})
+
+describe.skip('BCM', () => {
+    it('Business Processes', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
+        cy.wait(500)
+        cy.get('.wrapper__header').click()
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
+})
+
+describe.skip('Reports', () => {
+    it('Reports', () => {
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Reports')
+        cy.wait(500)
+        cy.get('.wrapper__header').click()
+        cy.lighthouse(thresholds, lighthouseConfig)
+    })
+})
+
+//TODO -> divide into subfiles -> create set of reports -> send out

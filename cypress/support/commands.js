@@ -71,12 +71,20 @@ Cypress.Commands.add('openManagement', (sectionName, managementName="", browserN
     }
     let string = '[data-cy="menu_' + menus[sectionName] + '"]' //Sidebar element
     
+    if (sectionName == 'Dashboard') {
+        cy.get(string).click()
+        cy.wait(500)
+        cy.get('.dropdown__sub-category-link').click()
+        cy.wait(500)
+        return
+
+    }
     //Reports -> Only Section
     if (sectionName == 'Reports') {
         cy.get(string).click()
         cy.wait(500)
         return
-    }
+    } 
     cy.get(string).click()
     
     //Most Sections -> Section/Management/Browser
@@ -85,11 +93,6 @@ Cypress.Commands.add('openManagement', (sectionName, managementName="", browserN
         cy.get('.dropdown__sub-category-link').click()
         cy.wait(500)
         return
-    }
-    //BCM -> BCM/Impacts
-    if (browserName == 'BCM') {
-        cy.wait(250)
-        cy.contains('Impacts').click()
     }
 
     cy.contains(`${managementName}`).parent('.dropdown__link-holder').then(($element) => {
@@ -100,19 +103,24 @@ Cypress.Commands.add('openManagement', (sectionName, managementName="", browserN
     })      
     cy.wait(250)     
     cy.contains(`${browserName}`).click()
+
+    //BCM -> BCM/Impacts
+    if (browserName == 'BCM') {
+        cy.wait(250)
+        cy.contains('Impacts').click()
+    }
+
     cy.wait(750)
-    cy.get('.wrapper__header').first().click()
+    if (browserName != 'Thresholds') {
+        cy.get('.wrapper__header').first().click()
+    }
     cy.wait(1500)
 })
 
 //Base Setup For Tests -> login; switches to desired tenant; opens desired section -> waits
-Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSectionName, openManagementName, openBrowserName) => {
+Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSectionName, openManagementName='', openBrowserName='') => {
     cy.login(userName, userPassword)
     cy.switchTenant(tenantName)
-    cy.wait(750)
-    if (openSectionName == "Dashboard") {
-        return
-    }
     cy.openManagement(openSectionName, openManagementName, openBrowserName)
     cy.wait(500)
 })
