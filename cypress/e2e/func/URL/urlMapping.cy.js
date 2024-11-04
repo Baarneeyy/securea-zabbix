@@ -11,9 +11,9 @@ describe('URL Mapping checking', { testIsolation: false }, () =>{
         cy.wait(1000)
 
 // Switch Tenant
-        cy.get('#pv_id_7 > .p-dropdown-trigger').click()
-        cy.get('.p-dropdown-filter').type('tomas_workflow_tests')
-        cy.get('#pv_id_7_0').click()
+        cy.get('.dropdown-toggle:first').click()
+        cy.get('.filter-input').type('tomas_workflow_tests')
+        cy.get('.option-item').first().click()
         cy.wait(1000)
 
     })
@@ -136,7 +136,7 @@ describe('URL Mapping checking', { testIsolation: false }, () =>{
     it('Opens and checks Regulation Catalogue', () => {
 // Open Regulation Catalogue
         cy.get('[data-cy="menu_tenant"] > .flex').click()
-        cy.get('.dropdown.border-black-200 > .dropdown__link-holder').click()
+        //cy.get('.dropdown.border-black-200 > .dropdown__link-holder').click()
         cy.get('[href="#/t/1/regulation-catalogue"]').click()
         cy.wait(1000)
 

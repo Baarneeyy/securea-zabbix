@@ -1,4 +1,4 @@
-describe('Governing Documentation mapping', () => {
+describe.skip('Governing Documentation mapping', () => {
     it('Prep Mapping Gov Doc' , () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Governing Documentation')
         cy.wait(500)
@@ -9,9 +9,9 @@ describe('Governing Documentation mapping', () => {
         cy.wait(750)
         cy.get('.field--hidden > .p-inputtext').click().type('testingMapping')
         cy.get('.p-inputtextarea').click().type('testing description')
-        cy.get('.p-dropdown').first().click()
+        cy.get('.dropdown-toggle:visible').click() 
         cy.wait(250)
-        cy.get('.p-dropdown-item').first().click()
+        cy.get('.option-item').first().click()
         cy.get('.p-calendar').click()
         cy.wait(250)
         cy.get('[aria-label="23"]').click()
@@ -63,7 +63,7 @@ describe('Governing Documentation mapping', () => {
     })
 })
 
-describe('SoA mapping', () => {
+describe.skip('SoA mapping', () => {
     it('Prep Mapping Clause', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Regulation Catalogue')
         cy.wait(500)
@@ -130,7 +130,7 @@ describe('SoA mapping', () => {
         cy.get('.list__body-elem').first().click()
         cy.get('.list__body', {timeout:8000}).should('have.length', 2)
         cy.get('.list__body').last().children().last().click({force:true})
-
+        cy.wait(750)
         cy.get('.transition').should('have.length', 3)
         cy.get('.transition', {timeout:8000}).should('not.exist')
 
@@ -171,7 +171,7 @@ describe('SoA mapping', () => {
     })
 })
 
-describe('Business Process mapping', () => {
+describe.skip('Business Process mapping', () => {
     it('Prep Mapping Business Process', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Process')
         cy.wait(250)

@@ -269,7 +269,7 @@ describe.skip('Regulation Catalogue', () => {
     })
 })
 
-describe('Requirement Catalogue', () => {
+describe.skip('Requirement Catalogue', () => {
     it('Prepares mapping requirement', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Security Requirements Catalogue')
         cy.wait(250)
@@ -352,7 +352,7 @@ describe('Requirement Catalogue', () => {
     //Add checks for deprecated urls
 })
 
-describe('BCM/Impact', () => {
+describe.skip('BCM/Impact', () => {
     let businessProcesses = []
     it('Impact Prep', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'BCM')

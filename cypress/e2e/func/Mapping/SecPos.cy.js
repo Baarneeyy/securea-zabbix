@@ -89,6 +89,9 @@ describe('Security Posture', () => {
         cy.get('.primary-btn').click()
 
         cy.openManagement('Security Posture', 'bum', 'bum')
+        
+        cy.get('.transition').should('exist')
+        cy.get('.transition', {timeout:16000}).should('not.exist')
         cy.get('.list__body-elem').last().click({force:true})
         cy.wait(500)
 

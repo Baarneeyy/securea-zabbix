@@ -42,7 +42,7 @@ Cypress.Commands.add('login', (username, password) => {
 Cypress.Commands.add('switchTenant', (tenantName) => {
     cy.get('.flex > .overflow-hidden').click()
     cy.wait(250)
-    cy.get('.p-dropdown-item').each(($el) => {
+    cy.get('.option-item').each(($el) => {
         cy.wrap($el).find('p').invoke('text').then((itemName) => {
             if (itemName.trim() == tenantName) {
                 $el.click()

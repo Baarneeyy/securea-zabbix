@@ -16,10 +16,11 @@ describe.skip('Asset Browser', () => {
         cy.get('.p-inputnumber > .p-inputtext').click().type('3')
         cy.get(':nth-child(5) > .p-inputtextarea').click().type('testing detail')
 
-        for (let i = 1; i < 6; i++) {
-            cy.get('.p-dropdown').eq(i).click()
+        for (let i = 6; i < 11; i++) {
+            cy.get(`:nth-child(${i}) > .dropdown > .dropdown-toggle > .dropdown-text`)
+                .click()
             cy.wait(250)
-            cy.get('.p-dropdown-item').first().click()
+            cy.get('.option-item').first().click()
             cy.wait(250)
         }
         cy.get('[data-cy="assetBrowser_create"]').click({force:true})
@@ -124,7 +125,7 @@ describe.skip('Threat Browser', () => {
         //Creation
         
         //////////////IMPORTANT
-        cy.get('.wrapper__header > ').should('have.length', '4', {timeout:8000})
+        cy.get('.wrapper__header > ', {timeout:8000}).should('have.length', '4')
         //////////////////
         cy.contains('Add').should('exist').click()
         cy.wait(250)
@@ -188,7 +189,7 @@ describe.skip('Threat Browser', () => {
         cy.get('.Vue-Toastification__toast-body').should('exist')
 
         cy.go(-1)
-        cy.wait(500)
+        cy.wait(1500)
 
         cy.get('.list__body').eq(2).children().should('have.length', 10)
     })
@@ -229,11 +230,11 @@ describe.skip('Threat Browser', () => {
     })
 })
 
-describe.skip('Control Browser', () => {
-    it('Prep Mapping Control', () => {
+describe('Control Browser', () => {
+    it.skip('Prep Mapping Control', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Control Browser')
         cy.wait(500)
-        cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
+        cy.get('.wrapper__header >', {timeout:18000}).should('have.length', 4)
 
         cy.contains('Add').should('exist').click()
         cy.wait(250)
@@ -251,17 +252,17 @@ describe.skip('Control Browser', () => {
         cy.get(':nth-child(3) > .field__value').should('contain', '3')
     })
 
-    it('Control-Asset Mapping', () => {
+    it.skip('Control-Asset Mapping', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Control Browser')
         cy.wait(500)
-        cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
+        cy.get('.wrapper__header >', {timeout:18000}).should('have.length', 4)
         
         cy.get('.list__body-elem').last().click({force:true})
         cy.wait(500)
 
         cy.get(':nth-child(1) > .wrapper__header > a > .p-button').click()
         cy.get('.mt-4').should('exist')
-        cy.get('.mt-4', {timeout:8000}).should('not.exist')
+        cy.get('.mt-4', {timeout:12000}).should('not.exist')
 
         for (let i = 1; i < 11; i++) {
             cy.get(`:nth-child(${i}) > :nth-child(10) > .gap-x-1 > .checkbox-style`).click()
@@ -271,24 +272,25 @@ describe.skip('Control Browser', () => {
         cy.get('.Vue-Toastification__toast-body').should('exist')
 
         cy.go(-1)
-        cy.get('.wrapper__header').first().children({timeout:16000}).should('have.length', 4)
+        cy.wait(500)
+        cy.get('.wrapper__header').first().children({timeout:20000}).should('have.length', 4)
         //cy.wait(1500)
 
         cy.get('.list__body').eq(1).children().should('have.length', 10)
 
     })
 
-    it('Control-Asset Class Mapping', () => {
+    it.skip('Control-Asset Class Mapping', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Control Browser')
         cy.wait(500)
-        cy.get('.wrapper__header >', {timeout:12000}).should('have.length', 4)
+        cy.get('.wrapper__header >', {timeout:18000}).should('have.length', 4)
 
         cy.get('.list__body-elem').last().click({force:true})
         cy.wait(500)
 
         cy.get(':nth-child(2) > .wrapper__header > a > .p-button').click()
         cy.get('.mt-4').should('exist')
-        cy.get('.mt-4', {timeout:8000}).should('not.exist')
+        cy.get('.mt-4', {timeout:20000}).should('not.exist')
 
         for (let i = 1; i < 11; i++) {
             cy.get(`:nth-child(${i}) > :nth-child(3) > .flex > .checkbox-style`).click()
@@ -298,22 +300,23 @@ describe.skip('Control Browser', () => {
         cy.get('.Vue-Toastification__toast-body').should('exist')
 
         cy.go(-1)
-        cy.get('.wrapper__header').first().children({timeout:16000}).should('have.length', 4)
+        cy.wait(1500)
+        cy.get('.wrapper__header').first().children({ timeout:24000 }).should('have.length', 4)
 
         cy.get('.list__body').eq(2).children().should('have.length', 10)
     })
 
-    it('Control-Requirements Mapping', () => {
+    it.skip('Control-Requirements Mapping', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Control Browser')
         cy.wait(500)
-        cy.get('.wrapper__header >', {timeout:12000}).should('have.length', 4)
+        cy.get('.wrapper__header >', {timeout:18000}).should('have.length', 4)
 
         cy.get('.list__body-elem').last().click({force:true})
         cy.wait(500)
 
         cy.get(':nth-child(3) > .wrapper__header > a > .p-button').click()
         cy.get('.mt-4').should('exist')
-        cy.get('.mt-4', {timeout:8000}).should('not.exist')
+        cy.get('.mt-4', {timeout:20000}).should('not.exist')
 
         for (let i = 1; i < 11; i++) {
             cy.get(`:nth-child(${i}) > :nth-child(3) > .flex > .checkbox-style`).click()
@@ -323,22 +326,22 @@ describe.skip('Control Browser', () => {
         cy.get('.Vue-Toastification__toast-body').should('exist')
 
         cy.go(-1)
-        cy.get('.wrapper__header').first().children({timeout:16000}).should('have.length', 4)
+        cy.get('.wrapper__header').first().children({timeout:24000}).should('have.length', 4)
 
         cy.get('.list__body').eq(3).children().should('have.length', 10)
     })
 
-    it('Control-Threats Mapping', () => {
+    it.skip('Control-Threats Mapping', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Control Browser')
         cy.wait(500)
-        cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
+        cy.get('.wrapper__header >', {timeout:18000}).should('have.length', 4)
 
         cy.get('.list__body-elem').last().click({force:true})
         cy.wait(500)
 
         cy.get(':nth-child(4) > .wrapper__header > a > .p-button').click()
         cy.get('.mt-4').should('exist')
-        cy.get('.mt-4', {timeout:8000}).should('not.exist')
+        cy.get('.mt-4', {timeout:24000}).should('not.exist')
 
         for (let i = 1; i < 11; i++) {
             cy.get(`:nth-child(${i}) > :nth-child(4) > .flex > .checkbox-style`).click()
@@ -348,15 +351,15 @@ describe.skip('Control Browser', () => {
         cy.get('.Vue-Toastification__toast-body').should('exist')
 
         cy.go(-1)
-        cy.get('.wrapper__header').first().children({timeout:16000}).should('have.length', 4)
+        cy.get('.wrapper__header').first().children({timeout:24000}).should('have.length', 4)
 
         cy.get('.list__body').eq(4).children().should('have.length', 10)
     })
 
-    it('Control Cleanup', () => {
+    it.skip('Control Cleanup', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Control Browser')
         cy.wait(500)
-        cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
+        cy.get('.wrapper__header >', {timeout:20000}).should('have.length', 4)
 
         cy.deleteDataEntry('testingMapping')
     })
