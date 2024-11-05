@@ -27,8 +27,8 @@ describe('Governing Documentation', () => {
         //Creates a Governing Documentation
         cy.get('.field--hidden > .p-inputtext').click().type('testingMVP')
         cy.get('.p-inputtextarea').click().type(loremIpsum)
-        cy.get('.p-dropdown').first().click({force:true})
-        cy.get('.p-dropdown-item').first().click()
+        cy.get('.dropdown-toggle:visible').click({force:true})
+        cy.get(':nth-child(1) > .option-label').click()
 
         cy.get('.field').eq(3)
             .children().last().click()
@@ -129,8 +129,8 @@ describe('Governing Documentation', () => {
         
         //Generates General Report
         cy.contains('Generate Report').click({force:true})
-        cy.get('.p-dropdown-label').last().click()
-        cy.get('.p-dropdown-item').click()
+        cy.get('.dropdown-toggle').last().click()
+        cy.get('.option-item').click()
         cy.get('.modal__body > .flex > .p-button').click()
 
         //Generation/PostGeneration checks
@@ -142,11 +142,11 @@ describe('Governing Documentation', () => {
 
         //Generates Report for 1 data_entry
         cy.contains('Generate Report').click({force:true})
-        cy.get('.p-dropdown-label').first().click()
-        cy.get('.p-dropdown-item').last().click()
+        cy.get('.dropdown-toggle').first().click()
+        cy.get('.options-list >').last().click()
 
-        cy.get('.p-dropdown-label').last().click()
-        cy.get('.p-dropdown-item').click()
+        cy.get('.dropdown-toggle').last().click()
+        cy.get('.option-item').contains('Gov Doc Clause').click()
         cy.get('.modal__body > .flex > .p-button').click()
 
         //Generation/PostGeneration checks
