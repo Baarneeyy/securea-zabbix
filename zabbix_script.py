@@ -71,7 +71,7 @@ if __name__ == "__main__":
     zabbix_host: str = 'sec-tester10'
     zabbix_server: str = 'zabbix.bcresearch.eu'
 
-    path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/func'
+    path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/zabbix'
     path_repots: str = '/root/cypress/securea-zabbix/mochawesome-report'
 
     tests = {
