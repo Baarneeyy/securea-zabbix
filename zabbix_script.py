@@ -75,7 +75,10 @@ if __name__ == "__main__":
     path_repots: str = '/root/cypress/securea-zabbix/mochawesome-report'
 
     tests = {
-        'deleteAdd': 'deleteAdd.json',
+        'bcmMVP': 'bcmMVP.json',
+        'GovDocsMVP': 'GovDocsMVP.json',
+        'urlCheck': 'urlCheck.json',
+        'tlsCheck': 'tlsCheck.json',
     }
 
     stats_keys = ['tests', 'pending', 'failures', 'start', 'end', 'duration']
