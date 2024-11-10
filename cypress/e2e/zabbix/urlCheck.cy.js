@@ -145,7 +145,7 @@ describe('Management', () => {
         //Risk Register
         cy.get('[data-cy="menu_management"]').click({force:true})
         cy.wait(250)
-        cy.contains('Risk Report').click()
+        cy.contains('Risk Register').click()
         cy.wait(250)
         cy.url().then((url) => {
             cy.wrap(url).should('contain', 'risk-register')
