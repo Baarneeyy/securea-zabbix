@@ -71,8 +71,8 @@ if __name__ == "__main__":
     zabbix_host: str = 'sec-tester10'
     zabbix_server: str = 'zabbix.bcresearch.eu'
 
-    path_tests: str = '/root/securea-zabbix/cypress/e2e/zabbix'
-    path_repots: str = '/root/securea-zabbix/mochawesome-report'
+    path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/zabbix'
+    path_repots: str = '/root/cypress/securea-zabbix/mochawesome-report'
 
     tests = {
         'bcmMVP': 'bcmMVP.json',
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     stats_keys = ['tests', 'pending', 'failures', 'start', 'end', 'duration']
     aggregates = {'returncode': 0, 'start': None, 'end': None, 'tests': 0, 'pending': 0, 'failures': 0, 'duration': 0, 'ok': 0}
 
-    os.chdir("/root/securea-zabbix")
+    os.chdir("/root/cypress/securea-zabbix")
 
     discovery = []
 
