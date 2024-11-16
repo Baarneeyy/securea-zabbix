@@ -58,7 +58,7 @@ def extract_values(keys, result_dict):
 
 def send_to_zabbix(server, host, prefix, stats, suffix=''):
     for key, value in stats.items():
-        zabbix_sender_cmd = ['zabbix_sender', '-z', server, '-p', '10050', '-s', host, '-k', prefix + key + suffix, '-o', str(value)]
+        zabbix_sender_cmd = ['zabbix_sender', '-z', server, '-p', '10051', '-s', host, '-k', prefix + key + suffix, '-o', str(value), '-vv']
         print(f" Z {key}: {value}")
         zabbix_sender_process = subprocess.Popen(zabbix_sender_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         zabbix_sender_output, zabbix_sender_error = zabbix_sender_process.communicate()
