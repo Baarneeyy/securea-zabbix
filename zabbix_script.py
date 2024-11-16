@@ -88,7 +88,7 @@ if __name__ == "__main__":
     zabbix_server: str = 'zabbix.bcresearch.eu'
 
     if func_arg == 'base':
-        path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/func/CRUD'  
+        path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/zabbix'  
         tests = {
             'bcmMVP': 'bcmMVP.json',
             'GovDocsMVP': 'GovDocsMVP.json',
