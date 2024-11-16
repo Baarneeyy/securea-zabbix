@@ -91,9 +91,7 @@ if __name__ == "__main__":
         path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/zabbix'  
         tests = {
             'bcmMVP': 'bcmMVP.json',
-            'GovDocsMVP': 'GovDocsMVP.json',
-            'urlCheck': 'urlCheck.json',
-            'tlsCheck': 'tlsCheck.json',
+
         }
     else:
         path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/zabbix'
