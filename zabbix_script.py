@@ -5,6 +5,9 @@ import os
 import sys
 from datetime import datetime
 
+#orchestration pre-alpha
+import argparse
+
 def run_cypress_test(test_file: str) -> int:
     command = f"npx cypress run --spec {test_file}"
     try:
@@ -68,18 +71,39 @@ def send_to_zabbix(server, host, prefix, stats, suffix=''):
 
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser(description="Script with flags for orchestration")
+
+    # Add the flags. They are mutually exclusive, meaning only one can be used at a time.
+    group = parser.add_mutually_exclusive_group(required=True)
+
+    group.add_argument('--url', action='store_const', const='url', dest="func", required=False, help="Arg to run only url checks")
+    group.add_argument('--base', action='store_const', const='base', dest="func", required=False, help="Arg to run only url checks")
+
+    args = parser.parse_args()
+
+    func_arg = args.func
+    print(f'Function arg recieved: {func_arg}')
+
     zabbix_host: str = 'sec-tester10'
     zabbix_server: str = 'zabbix.bcresearch.eu'
 
-    path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/zabbix'
+    if func_arg == 'base':
+        path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/func/CRUD'  
+        tests = {
+            'bcmMVP': 'bcmMVP.json',
+            'GovDocsMVP': 'GovDocsMVP.json',
+            'urlCheck': 'urlCheck.json',
+            'tlsCheck': 'tlsCheck.json',
+        }
+    else:
+        path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/zabbix'
+        tests = {
+            'urlCheck': 'urlCheck.json',
+        }
+    
+
     path_repots: str = '/root/cypress/securea-zabbix/mochawesome-report'
 
-    tests = {
-        'bcmMVP': 'bcmMVP.json',
-        'GovDocsMVP': 'GovDocsMVP.json',
-        'urlCheck': 'urlCheck.json',
-        'tlsCheck': 'tlsCheck.json',
-    }
 
     stats_keys = ['tests', 'pending', 'failures', 'start', 'end', 'duration']
     aggregates = {'returncode': 0, 'start': None, 'end': None, 'tests': 0, 'pending': 0, 'failures': 0, 'duration': 0, 'ok': 0}

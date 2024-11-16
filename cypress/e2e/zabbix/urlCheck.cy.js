@@ -184,7 +184,7 @@ describe('Other', () => {
     it('Admin Tools', () => {
         //Tenant Management
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingTomas', 'Management', 'Risk Management', 'Asset Browser')
-        cy.get('[data-cy="menu_adminTools"]').click({force:true})
+        cy.get('[data-cy="menu_admintools"]').click({force:true})
         cy.wait(250)
         cy.contains('Tenant Management').click()
         cy.wait(250)
@@ -194,7 +194,7 @@ describe('Other', () => {
         cy.get('body').click()
 
         //User Management
-        cy.get('[data-cy="menu_adminTools"]').click({force:true})
+        cy.get('[data-cy="menu_admintools"]').click({force:true})
         cy.wait(250)
         cy.contains('Users Management').click()
         cy.wait(250)
@@ -204,7 +204,7 @@ describe('Other', () => {
         cy.get('body').click()
 
         //Export Data
-        cy.get('[data-cy="menu_adminTools"]').click({force:true})
+        cy.get('[data-cy="menu_admintools"]').click({force:true})
         cy.wait(250)
         cy.contains('Export Data').click()
         cy.wait(250)
@@ -214,7 +214,7 @@ describe('Other', () => {
         cy.get('body').click()
 
         //Import Data
-        cy.get('[data-cy="menu_adminTools"]').click({force:true})
+        cy.get('[data-cy="menu_admintools"]').click({force:true})
         cy.wait(250)
         cy.contains('Import Data').click()
         cy.wait(250)
@@ -236,7 +236,7 @@ describe('Other', () => {
         cy.get('body').click()
 
         //Security Posture
-        cy.get('[data-cy="menu_securityPosture"]').click({force:true})
+        cy.get('[data-cy="menu_securityposture"]').click({force:true})
         cy.wait(250)
         cy.get('.dropdown__sub-category-link:visible').click()
         cy.wait(250)

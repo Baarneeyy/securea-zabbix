@@ -65,7 +65,7 @@ Cypress.Commands.add('openManagement', (sectionName, managementName="", browserN
     const menus = {
         "Tenant" : "tenant",
         "Dashboard" : "dashboard",
-        "Security Posture": "securityPosture",
+        "Security Posture": "securityposture",
         "Management" : "management",
         "Reports": 'reports'
     }

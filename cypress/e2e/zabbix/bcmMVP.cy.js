@@ -1,7 +1,7 @@
 describe('Checks mappings to and from Business Processes', () => {
     it('Creates process to test with; checks correct amount', () => {
         let bpCount = 0;
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingZ', 'Management', 'BCM', 'Business Processes')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         cy.get('.list__body-elem').its('length').then((length) => {
             bpCount += length;
@@ -24,7 +24,7 @@ describe('Checks mappings to and from Business Processes', () => {
     })
 
     it('Maps Assets to new Business Process', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingZ', 'Management', 'BCM', 'Business Processes')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         
         //Mapping relink and loading check
@@ -50,7 +50,7 @@ describe('Checks mappings to and from Business Processes', () => {
     })
 
     it('Checks BP-Asset mappings', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingZ', 'Management', 'BCM', 'Business Processes')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         
         //Mapping check
@@ -69,7 +69,7 @@ describe('Checks mappings to and from Business Processes', () => {
     })
 
     it('Maps Assets to new Business Process', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingZ', 'Management', 'BCM', 'Business Processes')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         
         //Mapping relink and loading check
@@ -95,7 +95,7 @@ describe('Checks mappings to and from Business Processes', () => {
     })
 
     it('Checks BP-Asset mappings', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingZ', 'Management', 'BCM', 'Business Processes')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         
         //Mapping check
@@ -118,7 +118,7 @@ describe('Checks mappings to and from Business Processes', () => {
     //it('relink-impacts')
 
     it('Cleanup', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Processes')
+        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingZ', 'Management', 'BCM', 'Business Processes')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
 
         cy.deleteDataEntry('testingMVP')
