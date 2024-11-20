@@ -66,6 +66,12 @@ module.exports = defineConfig({
           username: process.env.PRE_USER_ADMIN,
           password: process.env.PRE_PASS_ADMIN,
           url: process.env.PRE_URL_ADMIN,
+        },
+        PROD: {
+          username: process.env.PROD_USER,
+          password: process.env.PROD_PASS,
+          url: process.env.PROD_URL
+
         }
       }
 
