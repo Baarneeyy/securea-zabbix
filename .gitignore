@@ -1,8 +1,8 @@
 mochawesome-report/
+reports
 node_modules
 cypress/downloads/
 cypress/e2e/assetBrowserMVP2.cy.js
 cypress/e2e/testSpec.cy.js
-.env.test
 lighthouse.html
 cypress/e2e/test.cy.js
