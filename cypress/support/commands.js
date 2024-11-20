@@ -26,14 +26,21 @@
 import '@cypress-audit/lighthouse/commands';
 
 const env = Cypress.env(Cypress.env('envSet'));
+const checkEnv = Cypress.env('envSet')
 
 
 //Logs In -> TODO: Remove env vars
 Cypress.Commands.add('login', (username, password) => {
-    cy.visit(Cypress.env('PRE_URL')) //https://securea-dev.germanywestcentral.cloudapp.azure.com/
-    cy.get('[type="username"]').type(username) //'tvsetecka'
+    /*let loginURL;
+    if (!checkEnv) {
+        loginURL = Cypress.env('PRE_URL')
+    } else {
+        loginURL = env.url
+    }*/
+    cy.visit(Cypress.env('url')) //https://securea-dev.germanywestcentral.cloudapp.azure.com/
+    cy.get('[type="username"]').type(Cypress.env('username')) //'tvsetecka'
 
-    cy.get('[type="password"]').type(password) //'G,E+vXbhM8Qb8KJ'
+    cy.get('[type="password"]').type(Cypress.env('password')) //'G,E+vXbhM8Qb8KJ'
 
     cy.get('.submit__btn').click()
 
