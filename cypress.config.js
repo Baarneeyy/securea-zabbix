@@ -4,6 +4,7 @@ const { lighthouse, prepareAudit } = require("@cypress-audit/lighthouse");
 const fs = require("fs");
 require('dotenv').config();
 
+let lighthouseName;
 
 module.exports = defineConfig({
   reporter: 'mochawesome', //try only mochawesome // cypress-mochawesome-reporter doesnt return json, prolly better?
@@ -11,7 +12,21 @@ module.exports = defineConfig({
     reportFilename: "[name]"
   },
   env: {
-    tempUrl: '',
+    DEV: {
+      username: process.env.DEV_USER,
+      password: process.env.DEV_PASS,
+      url: process.env.DEV_URL,
+    },
+    PRE: {
+      username: process.env.PRE_USER,
+      password: process.env.PRE_PASS,
+      url: process.env.PRE_URL
+    },
+    PRE_ADMIN: {
+      username: process.env.PRE_USER_ADMIN,
+      password: process.env.PRE_PASS_ADMIN,
+      url: process.env.PRE_URL_ADMIN,
+    }
   },
   e2e: {
     experimentalStudio: true,
@@ -19,18 +34,21 @@ module.exports = defineConfig({
       // implement node event listeners here
       on("before:browser:launch", (browser = {}, launchOptions) => {
         prepareAudit(launchOptions);
-        });
+      });
       
       on('task', {
-        lighthouse: lighthouse((lighthouseReport) => {
+        setLighthouseName: (name) => {
+          lighthouseName = name;
+          return null
+        },
+        lighthouse: lighthouse(function(lighthouseReport) {
           console.log("---- Writing lighthouse report to disk ----");
-
-          fs.writeFile("lighthouse.html", lighthouseReport.report, (error) => {
+          fs.writeFile(`reports/${lighthouseName}.html`, lighthouseReport.report, (error) => {
             error ? console.log(error) : console.log("Report created successfully");
           });
+          return lighthouseReport
         }),
       });
-
       on('task', verifyDownloadTasks)
       
       config.env.DEV_USER = process.env.DEV_USER;
@@ -40,6 +58,9 @@ module.exports = defineConfig({
       config.env.PRE_USER = process.env.PRE_USER;
       config.env.PRE_PASS = process.env.PRE_PASS;
       config.env.PRE_URL = process.env.PRE_URL;
+      config.env.PRE_USER_ADMIN = process.env.PRE_USER_ADMIN;
+      config.env.PRE_PASS_ADMIN = process.env.PRE_PASS_ADMIN;
+
 
       return config;
     },
