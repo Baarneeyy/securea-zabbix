@@ -25,6 +25,9 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import '@cypress-audit/lighthouse/commands';
 
+const env = Cypress.env(Cypress.env('envSet'));
+
+
 //Logs In -> TODO: Remove env vars
 Cypress.Commands.add('login', (username, password) => {
     cy.visit(Cypress.env('PRE_URL')) //https://securea-dev.germanywestcentral.cloudapp.azure.com/
@@ -124,7 +127,18 @@ Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSecti
     cy.openManagement(openSectionName, openManagementName, openBrowserName)
     cy.wait(500)
 })
+Cypress.Commands.add('setupUser1', (userName, userPassword, tenantName, openSectionName, openManagementName='', openBrowserName='') => {
+    cy.login(userName, userPassword)
 
+    cy.get('[data-cy="menu_account"] > .flex').click()
+    cy.get(':nth-child(4) > .user-settings__buttons__button > p').click()
+    cy.get('.language__inputs__select').select('enUS')
+    cy.get('.truncate > p').click()
+    cy.get('.p-inputtext').type(`${tenantName}{enter}`)
+    cy.get('.tenant-selection__content-wrapper__card').click()
+    cy.openManagement(openSectionName, openManagementName, openBrowserName)
+    cy.wait(500)
+})
 
 //UPDATED//////////////////////////////////////////////////////////////////////////////////////////////
 //Not used -> TODO: Implement --REDONE

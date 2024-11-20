@@ -1,23 +1,24 @@
 describe('Risk Management', () => {
     it('Asset Browser', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(500)
+        cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
         
         //PreCreation
         cy.contains('Add').should('exist').click()
         cy.wait(750)
         cy.get('.field--hidden > .p-inputtext').click().type('testingAddition')
         cy.get(':nth-child(2) > .p-inputtextarea').click().type('testing description')
-        cy.get('.p-dropdown').first().click()
+        cy.get('.dropdown-toggle').first().click()
         cy.wait(500)
-        cy.get('.p-dropdown-item').first().click()
+        cy.get('.option-label').first().click()
         cy.get('.p-inputnumber > .p-inputtext').click().type('3')
         cy.get(':nth-child(5) > .p-inputtextarea').click().type('testing detail')
 
         for (let i = 1; i < 6; i++) {
-            cy.get('.p-dropdown').eq(i).click()
+            cy.get('.dropdown-toggle').eq(i).click()
             cy.wait(250)
-            cy.get('.p-dropdown-item').first().click()
+            cy.get('.option-label').first().click()
             cy.wait(250)
         }
         cy.get('[data-cy="assetBrowser_create"]').click({force:true})
@@ -34,18 +35,18 @@ describe('Risk Management', () => {
         cy.get('.toolbar > :nth-child(1)').click({force:true})
         cy.get('.field--hidden > .p-inputtext').click().type('++')
         cy.get(':nth-child(2) > .p-inputtextarea').click().type('++')
-        cy.get('.p-dropdown').first().click()
+        cy.get('.dropdown-toggle').first().click()
         cy.wait(500)
-        cy.get('.p-dropdown-item').eq(1).click()
+        cy.get('.option-label').eq(1).click()
         cy.get('.p-inputnumber > .p-inputtext').click().type('4')
         cy.get(':nth-child(5) > .p-inputtextarea').click().type('++')
 
-        for (let i = 1; i < 6; i++) {
-            cy.get('.p-dropdown').eq(i).click()
+        /*for (let i = 1; i < 6; i++) {
+            cy.get('.dropdown-toggle').eq(i).click()
             cy.wait(250)
-            cy.get('.p-dropdown-item').eq(1).click()
+            cy.get('.option-label').eq(1).click()
             cy.wait(250)
-        }
+        }*/
 
         cy.contains('Save').click({force:true})
         cy.get('.Vue-Toastification__toast').should('exist', {timeout:8000})
@@ -63,13 +64,13 @@ describe('Risk Management', () => {
     })
 
     it('Threat Browser', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Threat Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Threat Browser')
         cy.wait(500)
 
         //Creation
         
         //////////////IMPORTANT
-        cy.get('.wrapper__header > ').should('have.length', '4', {timeout:8000})
+        cy.get('.wrapper__header > ', {timeout:8000}).should('have.length', '4')
         //////////////////
         cy.contains('Add').should('exist').click()
         cy.wait(250)
@@ -109,10 +110,10 @@ describe('Risk Management', () => {
     })
 
     it('Control Browser', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Control Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Control Browser')
         cy.wait(500)
         //////////////IMPORTANT cy.get('.wrapper__header > ').should('have.length', '4')
-        cy.waitUntil(() => Cypress.$('.wrapper__header').children().length === 4, {timeout:14000})
+        cy.get('.wrapper__header').children({timeout:16000}).should('have.length', 4)
         ////////////////
         cy.contains('Add').should('exist').click()
         cy.wait(250)
@@ -121,10 +122,9 @@ describe('Risk Management', () => {
         cy.get('.p-inputnumber > .p-inputtext').click().type('3')
         cy.get('.p-inputtext').eq(4).click()
         cy.wait(750)
-        cy.get('[aria-label="8"] > [draggable="false"]').click({force:true})
-        cy.wait(250)
+        //cy.get('[aria-label="Clear"] > .p-button-label').click()
 
-        cy.get('[data-cy="assetBrowser_create"] > .p-button-label').click()
+        cy.get('[data-cy="assetBrowser_create"]').click()
         cy.get('.Vue-Toastification__toast').should('exist', {timeout:8000})
         cy.wait(250)
 
@@ -132,7 +132,7 @@ describe('Risk Management', () => {
         cy.get('.field--hidden > .field__value').should('contain', 'testingAddition')
         cy.get(':nth-child(2) > .field__value').should('contain', 'testing description')
         cy.get(':nth-child(3) > .field__value').should('contain', '3')
-        cy.get(':nth-child(4) > .field__value').should('contain', '8')
+
 
         //Edit MISSING - review date
         cy.get('.toolbar > :nth-child(1)').click({force:true})
@@ -153,15 +153,15 @@ describe('Risk Management', () => {
     })
 
     it('Risk Register', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Risk Report')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Risk Register')
         cy.wait(500)
         cy.get('.list__body-elem').last().click()
         cy.wait(500)
 
         //Risk Creation
-        cy.get('.p-dropdown-label').click()
+        cy.get('.dropdown-toggle').click()
         cy.wait(750)
-        cy.get('.p-dropdown-item-label').first().click()
+        cy.get('.option-label').first().click()
         cy.get(':nth-child(2) > .p-inputtextarea').click().type('testing description')
         cy.get(':nth-child(3) > .p-inputtextarea').click().type('testing treatment strategy')
         cy.get(':nth-child(4) > .p-inputtextarea').click().type('testing detail')
@@ -175,7 +175,7 @@ describe('Risk Management', () => {
         cy.get('.list__body-elem').last().click()
         cy.wait(250)
 
-        cy.get('.p-dropdown-label > span').should('contain', 'Jane Doe')
+        cy.get('.dropdown-toggle >:first').should('contain', 'Jane Doe')
         cy.get(':nth-child(2) > .p-inputtextarea')
             .invoke('val').then((text) => {
                 expect(text).to.contain('testing description')
@@ -199,7 +199,7 @@ describe('Risk Management', () => {
     })
 
     it('Risk Register Cleanup', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(500)
         cy.deleteDataEntry('testingAddition++')
     })

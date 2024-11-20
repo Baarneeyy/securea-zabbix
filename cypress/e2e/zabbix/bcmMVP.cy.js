@@ -31,7 +31,7 @@ describe('Checks mappings to and from Business Processes', () => {
         cy.get('.list__body-elem').last().click()
         cy.get('.wrapper__header').eq(1).children().last().click() //mapping window relink
         cy.wait(250)
-        cy.get('.mt-4').should('not.exist')
+        cy.get('.mt-4', {timeout:8000}).should('not.exist')
 
         //Mapping
         for (let i = 1; i < 6; i++) {

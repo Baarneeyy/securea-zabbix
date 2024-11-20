@@ -183,7 +183,7 @@ describe('Management', () => {
 describe('Other', () => {
     it('Admin Tools', () => {
         //Tenant Management
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingTomas', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'demoTestingTomas', 'Management', 'Risk Management', 'Asset Browser')
         cy.get('[data-cy="menu_admintools"]').click({force:true})
         cy.wait(250)
         cy.contains('Tenant Management').click()

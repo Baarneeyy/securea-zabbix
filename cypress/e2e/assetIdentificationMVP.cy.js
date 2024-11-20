@@ -54,7 +54,7 @@ describe.skip('Asset Browser showing data', () => {
 
 describe('Adding new asset and populating the data', () => {
     it('adds a new asset with pre-made data', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
@@ -69,19 +69,21 @@ describe('Adding new asset and populating the data', () => {
         //Creation
         cy.get('.field--hidden > .p-inputtext').click().type('testingMVP')
         cy.get(':nth-child(2) > .p-inputtextarea').click().type('testing description')
-        cy.get('.p-dropdown').first().click()
+        cy.get('.dropdown-toggle').first().click()
         cy.wait(250)
-        cy.get('.p-dropdown-item').first().click()
+        cy.get('.option-label').first().click()
         cy.get('.p-inputnumber > .p-inputtext').click().type('23')
         cy.get(':nth-child(5) > .p-inputtextarea').click().type('testing detail')
         
-        cy.get('.p-dropdown').its('length').then((length) => {
+        /*cy.get('.p-dropdown').its('length').then((length) => {
             for (let i = 1; i < (length-2); i++) {
                 cy.get('.p-dropdown').eq(i).click()
                 cy.wait(250)
                 cy.get('.p-dropdown-item').first().click()
             }
-        })
+        })*/
+        cy.get('.dropdown-toggle:nth(1)').click()
+        cy.get('.option-label').first().click()
 
         cy.wait(250)
         cy.get('[data-cy="assetBrowser_create"]').click()
@@ -89,7 +91,7 @@ describe('Adding new asset and populating the data', () => {
     })
     //set asset class values or nah
     it('propagates values from asset class', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
 
@@ -120,7 +122,7 @@ describe('Adding new asset and populating the data', () => {
 //add depth
 describe('Editing of asset; Owners; Propagation from Asset Class', () => {
     it('Edits asset testingMVP', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
 
@@ -135,8 +137,8 @@ describe('Editing of asset; Owners; Propagation from Asset Class', () => {
 
         cy.get('.field--hidden > .p-inputtext').click().type('++')
         cy.get(':nth-child(2) > .p-inputtextarea').click().type('++')
-        cy.get('.p-dropdown').first().click()
-        cy.get('.p-dropdown-item').eq(1).click()
+        cy.get('.dropdown-toggle').first().click()
+        cy.get('.option-label').eq(1).click()
         cy.get('.p-inputnumber > .p-inputtext').click().type('{backspace}6')
         cy.get(':nth-child(5) > .p-inputtextarea').click().type('++')
         
@@ -151,7 +153,7 @@ describe('Editing of asset; Owners; Propagation from Asset Class', () => {
     })
 
     it('Goes to Owner Browser & Checks if owner is in list', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
         
@@ -177,7 +179,7 @@ describe('Editing of asset; Owners; Propagation from Asset Class', () => {
 
 describe('propagation & cloning of mappings', () => {
     it('Preps Asset Class', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Asset Class Catalogue')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Asset Class Catalogue')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
@@ -187,7 +189,7 @@ describe('propagation & cloning of mappings', () => {
         cy.get('.field--hidden > .p-inputtext').click().type('testingAssetClass')
         cy.get('.p-inputtextarea').click().type('testing description')
 
-        cy.get('[data-cy="assetBrowser_create"] > .p-button-label').click()
+        cy.get('[data-cy="assetBrowser_create"]').click()
         cy.get('.Vue-Toastification__toast-body', {timeout:8000}).should('exist')
 
         //cy.get('.list__body-elem').last().click({force:true})
@@ -245,7 +247,7 @@ describe('propagation & cloning of mappings', () => {
     })
 
     it('Asset Class switch and Propagation', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
@@ -260,14 +262,12 @@ describe('propagation & cloning of mappings', () => {
         cy.get('.toolbar >').first().click()
         cy.wait(250)
 
-        cy.get('.p-dropdown').first().click()
+        cy.get('.dropdown-toggle').first().click()
         cy.wait(500)
-        cy.get('.p-dropdown-item').last().click()
+        cy.get('.option-label').last().click()
 
         cy.get('.items-center > .primary-btn').last().click()
-        cy.get('.Vue-Toastification__toast--warning > .Vue-Toastification__toast-body',
-            {timeout:8000}
-        ).should('exist')
+        cy.get('.Vue-Toastification__toast--warning > .Vue-Toastification__toast-body', {timeout:8000}).should('exist')
 
         cy.get(':nth-child(3) > .wrapper__header > a > .p-button').click()
         cy.get('.flex-col > .mt-4', {timeout:8000}).should('exist')
@@ -282,11 +282,11 @@ describe('propagation & cloning of mappings', () => {
         //Threat PROPAGATION
         cy.get('.actions__body > :nth-child(2)').click()
         cy.wait(500)
-        cy.get(':nth-child(2) > .p-button > .p-button-label').click()
+        cy.get(':nth-child(2) > .p-button').click()
         cy.get('.Vue-Toastification__toast-body', {timeout:8000}).should('exist')
 
         cy.get('.splitpanes__pane > .wrapper > .wrapper__header > .mr-1 >')
-            .should('not.contain', '13')
+            .should('contain', '19')
         
         cy.go(-1)
         cy.get('.transition', {timeout:8000}).should('not.exist')
@@ -305,7 +305,7 @@ describe('propagation & cloning of mappings', () => {
         //Threat PROPAGATION
         cy.get('.actions__body > :nth-child(2)').click()
         cy.wait(500)
-        cy.get(':nth-child(2) > .p-button > .p-button-label').click()
+        cy.get(':nth-child(2) > .p-button').click()
         cy.get('.Vue-Toastification__toast-body', {timeout:8000}).should('exist')
 
         cy.get('.splitpanes__pane > .wrapper > .wrapper__header > .mr-1 >')
@@ -313,7 +313,7 @@ describe('propagation & cloning of mappings', () => {
     })
 
     it('Preps asset for cloning', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
@@ -334,7 +334,7 @@ describe('propagation & cloning of mappings', () => {
     })
 
     it('Mapping cloning into & from', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', 4)
@@ -386,9 +386,7 @@ describe('propagation & cloning of mappings', () => {
         cy.get('.transition', {timeout:8000}).should('not.exist')
         cy.get('.wrapper__header').first().children({timeout:8000}).should('have.length', 4) 
 
-        cy.get('.ml-auto > .p-button-icon-only').click()
-        cy.get('.list__body').should('have.length', '1')
-        cy.get('.list__body-elem').last().click({force:true})
+        cy.get('.list__body:first').find('.list__body-elem').last().click({force:true})
 
         //PostCloning assertions
         cy.get('.list__body').eq(2).children().should('have.length', '45')
@@ -396,28 +394,26 @@ describe('propagation & cloning of mappings', () => {
 
         //check from other asset PoV
         //add/find way to check the api/requests sent
-        
-
     })
 })
 
 describe('Cleanup', () => {
     it('Clone asset Cleanup', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
         cy.deleteDataEntry('assetClone')
     })
 
     it('Main asset Cleanup', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
         cy.deleteDataEntry('testingMVP++')
     })
 
     it('Asset Class Cleanup', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Asset Class Catalogue')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Asset Class Catalogue')
         cy.wait(250)
         cy.get('.transition', {timeout:8000}).should('not.exist')
         cy.deleteDataEntry('testingAssetClass')
@@ -425,4 +421,3 @@ describe('Cleanup', () => {
 })
 
 //MISSING IN THE CLONIN SPEC -> cleanup of asset class & cloned asset
-//

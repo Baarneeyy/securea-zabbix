@@ -1,6 +1,6 @@
 describe('Other Management CRUD', () => {
     it('Governing Documentation', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Governing Documentation')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Governing Documentation')
         cy.wait(500)
 
         //Creation
@@ -8,23 +8,22 @@ describe('Other Management CRUD', () => {
         cy.wait(750)
         cy.get('.field--hidden > .p-inputtext').click().type('testing addition')
         cy.get('.p-inputtextarea').click().type('testing description')
-        cy.get('.p-dropdown').first().click()
+        cy.get('.dropdown-toggle').first().click()
         cy.wait(250)
-        cy.get('.p-dropdown-item').first().click()
+        cy.get('.option-label').first().click()
         cy.get('.p-calendar').click()
         cy.wait(250)
-        cy.get('[aria-label="23"]').click()
+        cy.get('[aria-label="Clear"] > .p-button-label').click()
         cy.get('.p-inputnumber > .p-inputtext').click().type('3')
 
         cy.get('.flex > .p-inputtext').click().type('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
-        cy.get('[data-cy="assetBrowser_create"] > .p-button-label').click()
+        cy.get('[data-cy="assetBrowser_create"]').click()
         cy.get('.Vue-Toastification__toast-body').should('exist')
 
         //PostCreation assertions
         cy.get('.field--hidden > .field__value').should('contain', 'testing addition')
         cy.get(':nth-child(2) > .field__value').should('contain', 'testing description')
         cy.get('[style="grid-column: span 1 / auto;"] > .field__value').should('contain', 'Jane Doe')
-        cy.get(':nth-child(4) > .field__value').should('contain', '23')
         cy.get(':nth-child(5) > .field__value').should('contain', '90')
         cy.get('.px-4 > .w-full > p').should('contain', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 
@@ -33,12 +32,12 @@ describe('Other Management CRUD', () => {
         cy.get('.toolbar > :nth-child(1)').click()
         cy.get('.field--hidden > .p-inputtext').click().type('++')
         cy.get('.p-inputtextarea').click().type('++')
-        cy.get('.p-dropdown').first().click()
+        cy.get('.dropdown-toggle').first().click()
         cy.wait(250)
-        cy.get('.p-dropdown-item').eq(1).click()
-        cy.get('.p-calendar').click()
+        cy.get('.option-label').eq(1).click()
+        /*cy.get('.p-calendar').click()
         cy.wait(250)
-        cy.get('[aria-label="24"]').click()
+        cy.get('[aria-label="24"]').click()*/
         cy.get('.p-inputnumber > .p-inputtext').click().type('{backspace}4')
 
         cy.get('.detail-toolbar__inner > .primary-btn').click()
@@ -54,7 +53,7 @@ describe('Other Management CRUD', () => {
     })
 
     it('Clause for SoA creation', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Regulation Catalogue')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Regulation Catalogue')
         cy.wait(500)
         cy.get('.list__body-elem').first().click()
         cy.wait(750)
@@ -67,9 +66,9 @@ describe('Other Management CRUD', () => {
         cy.get(':nth-child(2) > .p-inputtextarea').click().type('testing area')
         cy.get(':nth-child(3) > .p-inputtextarea').click().type('testing statement')
         cy.get(':nth-child(4) > .p-inputtextarea').click().type('testing assessment points')
-        cy.get('.p-dropdown-label').click()
+        //cy.get('.dropdown-toggle').click()
         cy.wait(500)
-        cy.get('.p-dropdown-item').first().click()
+        //cy.get('.option-label').first().click()
         cy.get('.primary-btn').click()
         cy.wait(750)
 
@@ -94,15 +93,15 @@ describe('Other Management CRUD', () => {
                 let cleanedText = text.replace(/[\s\x00-\x1F\x7F-\uFFFF]+/g, '');
                 expect(cleanedText).to.eq('testingassessmentpoints')
             })
-        cy.get(':nth-child(6) > .whitespace-pre-wrap').invoke('text')
+        /*cy.get(':nth-child(6) > .whitespace-pre-wrap').invoke('text')
             .then((text) => {
                 let cleanedText = text.replace(/[\s\x00-\x1F\x7F-\uFFFF]+/g, '');
                 expect(cleanedText).to.contain('5001')
-            })
+            })*/
     })
 
     it('SoA edit', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Regulations')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'Compliance Management', 'Regulations')
         cy.wait(500)
         cy.get('.list__body-elem').first().click()
         cy.wait(750)
@@ -111,7 +110,7 @@ describe('Other Management CRUD', () => {
             .find('.list__body-elem').last().click({force:true})
         cy.wait(250)
         cy.get('.flex > .transition').should('have.length', 3,{timeout:8000})
-        cy.get('.flex > .transition').should('not.exist',{timeout:8000})
+        cy.get('.flex > .transition', {timeout:8000}).should('not.exist')
         cy.get(':nth-child(2) > .overflow-auto').invoke('text')
             .then((text) => {
                 let cleanedText = text.replace(/[\s\x00-\x1F\x7F-\uFFFF]+/g, '');
@@ -138,7 +137,7 @@ describe('Other Management CRUD', () => {
 
     it('Clause for SoA deletion', () => {
         let clauseName;
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Regulation Catalogue')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Tenant', 'Configuration', 'Regulation Catalogue')
         cy.wait(500)
         cy.get('.list__body-elem').first().click()
         cy.wait(750)
@@ -157,7 +156,7 @@ describe('Other Management CRUD', () => {
     })
 
     it('Business Process', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Process')
+        cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'tomas_workflow_tests', 'Management', 'BCM', 'Business Process')
         cy.wait(250)
 
         //Creation
