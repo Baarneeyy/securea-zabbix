@@ -144,6 +144,7 @@ if __name__ == "__main__":
         discovery.append({'name': key, 'title': title})
 
         # Process special cases
+        """
         if 'tlsCheck' in file_test and isinstance(result_dict, dict):
             test_results = result_dict['results'][0]['suites'][0]['tests']
             for test_res in test_results:
@@ -155,7 +156,7 @@ if __name__ == "__main__":
                         stats['outNum'] = int(date.timestamp())
                     except:
                         stats['outNum'] = 0
-
+        """
         # Print stats
         yaml.dump(stats, sys.stdout, default_flow_style=False)
 
