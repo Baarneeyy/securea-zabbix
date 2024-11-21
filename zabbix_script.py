@@ -78,6 +78,7 @@ if __name__ == "__main__":
 
     group.add_argument('--url', action='store_const', const='url', dest="func", required=False, help="Arg to run only url checks")
     group.add_argument('--base', action='store_const', const='base', dest="func", required=False, help="Arg to run only url checks")
+    group.add_argument('--bcm', action='store_const', const='bcm', dest="func", required=False, help="Arg to run only bcm")
 
     args = parser.parse_args()
 
@@ -95,10 +96,15 @@ if __name__ == "__main__":
             'urlCheck': 'urlCheck.json',
             'tlsCheck': 'tlsCheck.cy.js',
         }
-    else:
+    elif func_arg == 'url':
         path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/zabbix'
         tests = {
             'urlCheck': 'urlCheck.json',
+        }
+    else:
+        path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/zabbix'
+        tests = {
+            'bcmMVP': 'bcmMVP.json',
         }
     
 
