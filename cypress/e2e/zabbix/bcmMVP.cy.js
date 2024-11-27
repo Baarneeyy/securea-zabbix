@@ -32,14 +32,18 @@ describe('Checks mappings to and from Business Processes', () => {
         cy.get('.wrapper__header').eq(1).children().last().click() //mapping window relink
         cy.wait(250)
         cy.get('.mt-4', {timeout:8000}).should('not.exist')
+        cy.get('p.ml-auto', {timeout:8000}).should('not.exist')
 
         //Mapping
         for (let i = 1; i < 6; i++) {
-            cy.get(`:nth-child(${i}) > :nth-child(10) > .flex > .checkbox-style`).click() //checkbox
-            cy.get(`:nth-child(${i}) > :nth-child(11) > .relative > .custom-spinner`).click().type('00')
+            cy.get(`:nth-child(${i}) > :nth-child(10) > .flex > .checkbox-style`).click({force:true}) //checkbox
+            cy.wait(250)
+            cy.get(`:nth-child(${i}) > :nth-child(11) > .relative > .custom-spinner`).click({force:true}).type('00')
             cy.get('.list__body').eq(1).find('.list__body-elem').eq(i-1).children().first().invoke('text').then((text) => {
                 cy.get(':nth-child(2) > .value').invoke('text').then((bp) => {
-                    cy.get(`:nth-child(${i}) > :nth-child(12) > .w-full`).click().type(`asset ${text} mapping to ${bp}`)
+                    cy.get(`.list__body:nth(1) >:nth(${i-1})`).click()
+                    cy.wait(250)
+                    cy.get('textarea').click().type(`asset ${text} mapping to ${bp}`)
                 })
             })
             cy.wait(500)
@@ -84,7 +88,9 @@ describe('Checks mappings to and from Business Processes', () => {
             cy.get(`:nth-child(${i}) > :nth-child(4) > .relative > .custom-spinner`).click().type('00')
             cy.get('.list__body').eq(1).find('.list__body-elem').eq(i-1).children().first().invoke('text').then((text) => {
                 cy.get(':nth-child(2) > .value').invoke('text').then((bp) => {
-                    cy.get(`:nth-child(${i}) > :nth-child(5) > .w-full`).click().type(`impact ${text} mapping to ${bp}`)
+                    cy.get(`.list__body:nth(1) > :nth(${i-1})`).click()
+                    cy.wait(250)
+                    cy.get('textarea').click().type(`impact ${text} mapping to ${bp}`)
                 })
             })
             cy.wait(500)
