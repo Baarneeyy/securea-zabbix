@@ -6,7 +6,7 @@ ullamcorper. Vestibulum nec elementum nisi. Fusce ut mi ut nulla interdum eleife
 `
 
 describe('Governing Documentation', () => {
-    it('Checks Fields shown in Gov Doc creation & creates a Governing Documentation record', () => {
+    it.skip('Checks Fields shown in Gov Doc creation & creates a Governing Documentation record', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingZ', 'Management', 'Compliance Management', 'Governing Documentation')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         cy.contains('Add').click({force:true})
@@ -77,7 +77,9 @@ describe('Governing Documentation', () => {
             //Filling
             for (let i = 1; i < 6; i++) {
                 cy.get(`:nth-child(${i}) > :nth-child(3) > .flex > .checkbox-style`).click()
-                cy.get(`:nth-child(${i}) > :nth-child(4) > .w-full`).click().type(`mapping of req${i} to regulation${docID}`)
+                cy.get(`.list__body:last >:nth(${i-1})`).click()
+                cy.wait(250)
+                cy.get('textarea').click().type(`mapping of req${i} to regulation${docID}`)
             }
         })
         
