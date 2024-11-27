@@ -6,7 +6,7 @@ ullamcorper. Vestibulum nec elementum nisi. Fusce ut mi ut nulla interdum eleife
 `
 
 describe('Governing Documentation', () => {
-    it.skip('Checks Fields shown in Gov Doc creation & creates a Governing Documentation record', () => {
+    it('Checks Fields shown in Gov Doc creation & creates a Governing Documentation record', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingZ', 'Management', 'Compliance Management', 'Governing Documentation')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         cy.contains('Add').click({force:true})
