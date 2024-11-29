@@ -31,6 +31,8 @@ describe('Checks mappings to and from Business Processes', () => {
         cy.get('.list__body-elem').last().click()
         cy.get('.wrapper__header').eq(1).children().last().click() //mapping window relink
         cy.wait(250)
+        cy.get('.mt-4').should('exist')
+        cy.get('p.ml-auto').should('exist')
         cy.get('.mt-4', {timeout:8000}).should('not.exist')
         cy.get('p.ml-auto', {timeout:8000}).should('not.exist')
 
@@ -43,7 +45,7 @@ describe('Checks mappings to and from Business Processes', () => {
                 cy.get(':nth-child(2) > .value').invoke('text').then((bp) => {
                     cy.get(`.list__body:nth(1) >:nth(${i-1})`).click()
                     cy.wait(250)
-                    cy.get('textarea').click().type(`asset ${text} mapping to ${bp}`)
+                    cy.get('.p-inputtextarea').click().type(`asset ${text} mapping to ${bp}`)
                 })
             })
             cy.wait(500)
@@ -90,7 +92,7 @@ describe('Checks mappings to and from Business Processes', () => {
                 cy.get(':nth-child(2) > .value').invoke('text').then((bp) => {
                     cy.get(`.list__body:nth(1) > :nth(${i-1})`).click()
                     cy.wait(250)
-                    cy.get('textarea').click().type(`impact ${text} mapping to ${bp}`)
+                    cy.get('.p-inputtextarea').click().type(`impact ${text} mapping to ${bp}`)
                 })
             })
             cy.wait(500)
@@ -114,7 +116,7 @@ describe('Checks mappings to and from Business Processes', () => {
             cy.get('.list__body').eq(2).children() //asset mappings
                 .eq(i-1).children().as('childEls')
             cy.get('@childEls').first().invoke('text').then((id) => { //id of asset mapping
-                cy.get('@childEls').eq(-2).should('contain', id)
+                cy.get('@childEls').eq(0).should('contain', id)
             })
             //toAdd BP name
         }
