@@ -290,7 +290,7 @@ Cypress.Commands.add('openManagement', (sectionName, pageName) => {
 ///////////////////////////////////////////////////////////////////////////
 //BETA DONE -> Goes through manually made list to find 
 //--which section of sidebar does the inputted link belong to
-Cypress.Commands.add('findLink', (pageName) => {
+Cypress.Commands.add('goToPage', (pageName) => {
     const menuToScreen = {
         "Tenant" : [
             'Select Tenant', 
@@ -339,11 +339,3 @@ Cypress.Commands.add('findLink', (pageName) => {
     }
 
 })
-
-////////////////////////GO TO PAGE/////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-//BETA DONE -> Needs only the name of said page to navigate to it -> wait times included with api
-Cypress.Commands.add('goToPage', (pageName) => {
-    cy.findLink(pageName)
-})
-

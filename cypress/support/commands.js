@@ -24,32 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import '@cypress-audit/lighthouse/commands';
-
-//Logs In -> TODO: Remove env vars
-Cypress.Commands.add('login', (username, password) => {
-    cy.visit(Cypress.env('PRE_URL')) //https://securea-dev.germanywestcentral.cloudapp.azure.com/
-    cy.get('[type="username"]').type(username) //'tvsetecka'
-
-    cy.get('[type="password"]').type(password) //'G,E+vXbhM8Qb8KJ'
-
-    cy.get('.submit__btn').click()
-
-    cy.wait(1000)
-})
-
-//Switches Tenant -> differentiate between newer dropdown and Select Tenant
-//TODO -> add differences between dashboard and other screens
-Cypress.Commands.add('switchTenant', (tenantName) => {
-    cy.get('.flex > .overflow-hidden').click()
-    cy.wait(250)
-    cy.get('.option-item').each(($el) => {
-        cy.wrap($el).find('p').invoke('text').then((itemName) => {
-            if (itemName.trim() == tenantName) {
-                $el.click()
-            }
-        })
-    })
-})
+import './loginNav';
+import './crud';
 
 //Self Explanatory
 Cypress.Commands.add('changePassword', (oldPassword, newPassword) => {
@@ -60,72 +36,6 @@ Cypress.Commands.add('changePassword', (oldPassword, newPassword) => {
     cy.get('.change-pwd__inputs__button').click()
 })
 
-//Opens Any Management/Browser/Reports/...... -> TODO: wait times based on wrapper__header children length
-Cypress.Commands.add('openManagement', (sectionName, managementName="", browserName="") => {
-    const menus = {
-        "Tenant" : "tenant",
-        "Dashboard" : "dashboard",
-        "Security Posture": "securityposture",
-        "Management" : "management",
-        "Reports": 'reports'
-    }
-    let string = '[data-cy="menu_' + menus[sectionName] + '"]' //Sidebar element
-    
-    if (sectionName == 'Dashboard') {
-        cy.get(string).click()
-        cy.wait(500)
-        cy.get('.dropdown__sub-category-link').click()
-        cy.wait(500)
-        return
-
-    }
-    //Reports -> Only Section
-    if (sectionName == 'Reports') {
-        cy.get(string).click()
-        cy.wait(500)
-        return
-    } 
-    cy.get(string).click()
-    
-    //Most Sections -> Section/Management/Browser
-    //Security Posture -> Section/Browser
-    if (sectionName == "Security Posture") {
-        cy.get('.dropdown__sub-category-link').click()
-        cy.wait(500)
-        return
-    }
-
-    cy.contains(`${managementName}`).parent('.dropdown__link-holder').then(($element) => {
-        if (!$element.hasClass('.border-purple')) {
-            cy.get($element).contains(`${managementName}`).click()
-            //for some reason all logic ignored -> clicks anyway
-        }
-    })      
-    cy.wait(250)     
-    cy.contains(`${browserName}`).click()
-
-    //BCM -> BCM/Impacts
-    if (browserName == 'BCM') {
-        cy.wait(250)
-        cy.contains('Impacts').click()
-    }
-
-    cy.wait(750)
-    if (browserName != 'Thresholds') {
-        cy.get('.wrapper__header').first().click()
-    }
-    cy.wait(1500)
-})
-
-//Base Setup For Tests -> login; switches to desired tenant; opens desired section -> waits
-Cypress.Commands.add('setupUser', (userName, userPassword, tenantName, openSectionName, openManagementName='', openBrowserName='') => {
-    cy.login(userName, userPassword)
-    cy.switchTenant(tenantName)
-    cy.openManagement(openSectionName, openManagementName, openBrowserName)
-    cy.wait(500)
-})
-
-
 //UPDATED//////////////////////////////////////////////////////////////////////////////////////////////
 //Not used -> TODO: Implement --REDONE
 //Clicks on any highlighted/purple button -> has an Aria-label attr
@@ -133,37 +43,6 @@ Cypress.Commands.add('clickOnBtn', (btnName) => {
     cy.get(`[aria-label="${btnName}"]`).should('exist')
         .click()
 })
-
-//Not Used anymore -> DELETE/REDO
-//UPDATED/////////////////////////////////////////////////////////////////////////////////////////////
-//Prefills data in the Creation subPage -> GOAL is Screen-agnostic
-Cypress.Commands.add('fillDataEntry', (dataEntryName, numVal='1') => {
-    cy.clickOnBtn('Add')
-
-    //Selects each textfield; checks it's column name, and writes dataEntryName's name alongside column name
-    cy.get('[class^="p-inputtext"]').not(':first').each(($el) => {
-        cy.wrap($el).then(($currentEl) => {
-            if ($currentEl.hasClass('p-inputnumber-input')) {
-                cy.wrap($currentEl).click().type(numVal)
-            }
-            else {
-                cy.wrap($currentEl).siblings('label').invoke('text').then((text) => {
-                    cy.wrap($currentEl).click().type(`${dataEntryName}'s ${text}`)
-                })
-            }
-        })
-    })
-
-    //Selects the first option for each dropdown element
-    cy.get('.p-dropdown:visible').each(($el) => {
-        cy.wrap($el).click()
-        cy.wait(250)
-        cy.get('.p-dropdown-item').first().click()
-    })
-
-})
-//TODO -> for dropdown elements////////////////////////////////////////////////////////////////////////
-
 //Deprecated -> DELETE/REDO
 Cypress.Commands.add('addDataEntry', (dataEntryName, numVal="1") => {
     cy.fillDataEntry(dataEntryName, numVal)
@@ -184,7 +63,7 @@ Cypress.Commands.add('Searchbar', (search) => {
 })
 
 //Deletes last data entry -> TODO: make any data entry
-Cypress.Commands.add('deleteDataEntry', (dataEntryName) => {
+Cypress.Commands.add('deleteKKDataEntry', (dataEntryName) => {
     cy.get('.list__body-elem').last().find('.cursor-pointer').click({force:true}) //selects last element in section
     cy.get('.toolbar').children().last().click() //Clicks on delete icon in detail window
 
@@ -199,22 +78,6 @@ Cypress.Commands.add('deleteDataEntry', (dataEntryName) => {
 //Not Used -> DELETE
 Cypress.Commands.add('deleteSpecificEntry', (entryName) => {
     cy.get('p').should('have.text', entryName).as('entry')
-})
-
-Cypress.Commands.add('editDataEntry', () => {
-    cy.get('.toolbar').children().first().click()
-    cy.wait(1000)
-    cy.get('#name').type('-update')
-
-    cy.get('.detail-toolbar__inner').children().first().click()
-
-    cy.get('.main-model-detail-container__header').find('button').click()
-    cy.wait(500)
-    cy.get('.list__body-elem').last()
-        .children().eq(1).find('p').invoke('text').then((text) => {
-            text = text.replace(/<[^>]*>/g, '').toLowerCase().replace(/\s/g, '').replace(/\u00AD/g, '')
-            cy.wrap(text).should('contain', 'test-add-asset-update')
-        })
 })
 
 
