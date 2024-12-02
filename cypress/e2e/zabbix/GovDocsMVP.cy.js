@@ -79,7 +79,7 @@ describe('Governing Documentation', () => {
                 cy.get(`:nth-child(${i}) > :nth-child(3) > .flex > .checkbox-style`).click()
                 cy.get(`.list__body:last >:nth(${i-1})`).click()
                 cy.wait(250)
-                cy.get('textarea').click().type(`mapping of req${i} to regulation${docID}`)
+                cy.get('.associated-model-container > main').find('textarea').click().type(`mapping of req${i} to regulation${docID}`)
             }
         })
         
