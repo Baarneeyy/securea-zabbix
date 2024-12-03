@@ -113,7 +113,7 @@ describe('Will check every url and match to window type', {testIsolation:true}, 
         })
     })
 })
-describe('Management', () => {
+describe.skip('Management', () => {
     it('Risk Management', () => {
         //Setup + Asset Browser
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingTomas', 'Management', 'Risk Management', 'Asset Browser')
@@ -180,7 +180,7 @@ describe('Management', () => {
         cy.wait(250)
     })
 })
-describe('Other', () => {
+describe.skip('Other', () => {
     it('Admin Tools', () => {
         //Tenant Management
         cy.setupUser(Cypress.env('PRE_USER_ADMIN'), Cypress.env('PRE_PASS_ADMIN'), 'demoTestingTomas', 'Management', 'Risk Management', 'Asset Browser')

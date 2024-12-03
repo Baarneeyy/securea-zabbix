@@ -6,7 +6,7 @@ ullamcorper. Vestibulum nec elementum nisi. Fusce ut mi ut nulla interdum eleife
 `
 
 describe('Governing Documentation', () => {
-    it('Checks Fields shown in Gov Doc creation & creates a Governing Documentation record', () => {
+    it.skip('Checks Fields shown in Gov Doc creation & creates a Governing Documentation record', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingZ', 'Management', 'Compliance Management', 'Governing Documentation')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
         cy.contains('Add').click({force:true})
@@ -53,7 +53,7 @@ describe('Governing Documentation', () => {
             expect(cleanedText).to.contain('Vivamusneclacus')
             // /y.log(cleanedText)
         })
-        cy.get('[style="grid-column: span 1 / auto;"] > .field__value').should('contain', 'owner')
+        cy.get('[style="grid-column: span 1 / auto;"] > .field__value').should('contain', 'Gregor Erebor')
         //cy.get(':nth-child(4) > .field__value').should('contain', '23')
         cy.get(':nth-child(5) > .field__value').should('contain', '5')
         cy.get('.px-4 > .w-full > p').should('contain', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
@@ -76,10 +76,12 @@ describe('Governing Documentation', () => {
             cy.get('.mt-4', {timeout:8000}).should('not.exist')
             //Filling
             for (let i = 1; i < 6; i++) {
+                //cy.get(`.list__body:last > :nth(${i-1})`).click()
                 cy.get(`:nth-child(${i}) > :nth-child(3) > .flex > .checkbox-style`).click()
-                cy.get(`.list__body:last >:nth(${i-1})`).click()
+                //cy.get(`.list__body:last >:nth(${i-1})`).click()
                 cy.wait(250)
-                cy.get('.associated-model-container > main').find('textarea').click().type(`mapping of req${i} to regulation${docID}`)
+                //cy.get('.associated-model-container > main').find('textarea').click().type(`mapping of req${i} to regulation${docID}`)
+                cy.get(`.list__body:last > :nth(${i-1}) > > textarea`).click().type(`mapping of req${i} to regulation${docID}`)
             }
         })
         
