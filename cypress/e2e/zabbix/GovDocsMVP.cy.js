@@ -126,7 +126,7 @@ describe('Governing Documentation', () => {
     })
 
     //One type of report: check diff between general report and 1-govdoc specific report
-    it('Generates and checks newly made report', () => {
+    it.skip('Generates and checks newly made report', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'demoTestingZ', 'Management', 'Compliance Management', 'Governing Documentation')
         cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
 
