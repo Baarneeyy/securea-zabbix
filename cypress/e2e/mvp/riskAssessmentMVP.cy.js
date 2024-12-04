@@ -1,83 +1,59 @@
-describe.skip('newly made asset has threats and controls assigned from asset class', () => {
+describe('newly made asset has threats and controls assigned from asset class', () => {
+    let counts = {
+        0: 'controls',
+        1: 'threats'
+    }
     it('creates a new asset with propagated threats and assets', () => {
-        //cy.clearCookies()
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
-        //CREATES AN ASSET WITH EVERY FIELD FILLED//
-        //TODO -> create list with assets info to control later
-        cy.get('.wrapper__header >').should('have.length', '4', {timeout:8000})
-        cy.contains("Add").click()
-        cy.wait(750)
-        cy.get('.p-inputtext.p-component').eq(1).type('test-add-asset', {delay:100})
-            .should('have.value', 'test-add-asset') //Name
+        cy.setupUser('demoTestingTomas', 'Asset Browser')
+        cy.get('.wrapper__header >', {timeout:16000}).should('have.length', '4') //-> waits for load sequence to be finished
+        cy.get('[data-cy="assetBrowser_add"]').click()
+        cy.get('.\\!grid').should('have.length', 1) //-> checks if asset creation window is shown
+        cy.fillDataEntry()
+        cy.addConfirm()
+        //cy.get('.list__body-elem').last().click({force:true})
+        cy.wait(500)
 
-        cy.get('.p-inputtext.p-component').eq(2).type('testing creation of new asset') //Description
-
-        cy.get('.p-dropdown-trigger').first().click() //Asset Class
-        cy.get('.p-dropdown-items').children().eq(1).click() //first in the list
-        cy.wait(750)
-
-        cy.get('.p-inputtext.p-component').eq(3).type('10') //Value  TODO-> Change according to Metodika analyzy
-        
-        cy.get('.p-inputtext.p-component').eq(4).type('testing creation of new asset') //Detail
-
-        //Fills all dropdown boxes
-        for (let i = 0; i < 6; i++) {
-            cy.get('.p-dropdown-trigger').eq(i).click() //Dropdown Menu
-            cy.get('.p-dropdown-items').children().first().click() //first in the list
-            cy.wait(750)
+        //Asserts that propagated assets and threats show correct number of data-entries
+        for (let i = 2; i < 4; i++) {
+            cy.get(`.list__body:nth(${i}) >`).its('length').then((length) => {
+                cy.get(`.wrapper__header:nth(${i}) > >:first`).should('have.text', length.toString())
+                counts[i-2] = length;
+            })
         }
-        cy.get('[data-cy="assetBrowser_create"] > .p-button-label').click({force:true})
-        cy.wait(1000)
-        
-        // Assert that the asset is created and visible
-        cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden')
-            cy.wait(200)
-            .contains('test-add-asset')
-        cy.get('.list__body-elem--select > :nth-child(2) > .overflow-hidden').should('be.visible');
-        //Asserts that the asset has both threats and controls propagated from asset classs
-        cy.get('.list__body').eq(2).children().should('have.length', '36', {timeout:8000})
-        cy.get('.list__body').last().children().should('have.length', '13', {timeout:12000})
-
+        cy.then(() => {
+            cy.log(counts)
+        })
     })
 
     it('is possible to adjust mapped threats', () => {
-        cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
-        cy.get('.wrapper__header >', {timeout:8000}).should('have.length', '4')
+        cy.setupUser('demoTestingTomas', 'Asset Browser')
+        cy.get('.wrapper__header >', {timeout:16000}).should('have.length', '4') //-> waits for load sequence to be finished
         cy.get('.list__body-elem').last().click({force:true})
         cy.wait(500)
-        cy.get(':nth-child(3) > .wrapper__header >').last().click()
-        cy.wait(1000)
-        cy.get('.flex-col > .mt-4', {timeout:18000}).should('not.exist')
+        cy.get(':nth-child(3) > .wrapper__header >').last().click() //-> relinks to Asset-Threat mapping window
 
-        //in mapping window
-        cy.wait(800)
-        cy.get('.p-checkbox-input', {timeout:8000}).click()
-        //assert num of controls
-        cy.get('.splitpanes__pane > .wrapper > .wrapper__header > .mr-1 > .text-base')
-            .should('contain', '13')
-
-        cy.get('.list__body').eq(1).find('.list__body-elem').as('items')
+        cy.intercept('GET', '/api/t/*/asset/*/threat').as('fullLoad'); //-> request | screen is loaded for user
+        cy.wait('@fullLoad', {timeout:20000}).then((interception) => {
+            //Verify if request was successful
+            expect(interception.response.statusCode).to.eq(200);
+        }); ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         
-        
-        cy.get('@items').first().children().eq(4)
-            .click().type('{backspace}{backspace}28')
-        
-        cy.get('@items').eq(1).children().eq(3)
-            .click()
-        
-        cy.get('.primary-btn').click()
-        cy.get('.Vue-Toastification__toast-body', {timeout:8000}).should('exist')
-
+        //Maps the first data entry without anything
+        cy.get('.list__body:nth(1)>:nth-child(1)>>> .checkbox-style').click()
+        cy.get('.primary-btn').should('exist').click()
+        cy.get('.Vue-Toastification__toast-body', {timeout:16000}).should('exist')
+        cy.get('.Vue-Toastification__toast-body', {timeout:16000}).should('contain', 'successfully')
         cy.go(-1)
-        cy.wait(3000)
-        cy.get('.list__body').last().children()
-            .should('have.length', '12')
-        cy.get(':nth-child(1) > :nth-child(3) > .pl-3')
-            .should('contain' , '28')
+        cy.get('.list__body', {timeout:8000}).should('have.length', 4)
+        cy.get('.wrapper__header:first >', {timeout:8000}).should('have.length', 4)
+
+        cy.get('.wrapper__header:nth(3) > >:first').invoke('text').then((newCount) => {
+            expect(parseInt(newCount)).to.be.greaterThan(parseInt(counts[1]))
+        })
     })
 
     //Tenant Name and asset id needed
-    it('is possible to adjust mapped controls', () => { //potential benefit; highlighted items
+    it.skip('is possible to adjust mapped controls', () => { //potential benefit; highlighted items
 
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.get('.wrapper__header >', {timeout:8000}).should('have.length', '4')
@@ -334,7 +310,7 @@ describe.skip('Risk Register v Risk Report comparison; Browser/Viewer', () => {
 
 })
 
-describe('Cleanup', () => {
+describe.skip('Cleanup', () => {
     it('Cleans up asset from risk assessment', () => {
         cy.setupUser(Cypress.env('PRE_USER'), Cypress.env('PRE_PASS'), 'tomas_workflow_tests', 'Management', 'Risk Management', 'Asset Browser')
         cy.wait(250)

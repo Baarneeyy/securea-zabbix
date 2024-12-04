@@ -24,6 +24,9 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import '@cypress-audit/lighthouse/commands';
+
+//v0.1.0 formatted commands
+//TODO -> search command; mappings
 import './loginNav';
 import './crud';
 
@@ -42,14 +45,6 @@ Cypress.Commands.add('changePassword', (oldPassword, newPassword) => {
 Cypress.Commands.add('clickOnBtn', (btnName) => {
     cy.get(`[aria-label="${btnName}"]`).should('exist')
         .click()
-})
-//Deprecated -> DELETE/REDO
-Cypress.Commands.add('addDataEntry', (dataEntryName, numVal="1") => {
-    cy.fillDataEntry(dataEntryName, numVal)
-    
-    cy.contains('Create').click()
-    
-    cy.contains(`${dataEntryName}`).should('exist')
 })
 
 //IS USED?
@@ -122,17 +117,6 @@ Cypress.Commands.add('sortCategory', (categoryName) => {
 
 })
 
-Cypress.Commands.add('AddMapAndSave', (NO, BoxNO) => {
-    let selector =  '#checkb';
-    if (BoxNO == 0) {
-       selector =  '.p-checkbox-input'
-    }
-    cy.get(`${selector}`).eq(NO).click()
-    //selects the asset and maps it
-    //cy.get('[type="checkbox"]').check()
-    //cy.get(`${selector}`).eq(NO).check();
-    //checks if the applied checkbox is checked
-})
 Cypress.Commands.add('defaultValues', () => {
     cy.get('u').filter(':contains("Default Values")').as('defaultRiskValues').then((defaultRiskValues) => {
         let thresholdTab = 0

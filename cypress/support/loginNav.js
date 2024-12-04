@@ -3,7 +3,7 @@
 //Base Setup For Tests -> login; switches to desired tenant; opens desired section -> waits
 Cypress.Commands.add('setupUser', (tenantName, pageName='') => {
     cy.login()
-    cy.switchTenant(tenantName)
+    cy.switchTenant(true, tenantName)
     if (pageName != '') {
         cy.goToPage(pageName)
     }
@@ -51,13 +51,16 @@ Cypress.Commands.add('switchTenant', (onDashboard=true, tenantName) => {
             //Verify if request was successful
             expect(interception.response.statusCode).to.eq(200);
         });
-        cy.get('.option-item').each(($el) => {
+        cy.log(tenantName)
+        cy.get('.option-item').contains(tenantName).click()
+        
+        /*.each(($el) => {
             cy.wrap($el).find('p').invoke('text').then((itemName) => {
                 if (itemName.trim() == tenantName) {
                     $el.click()
                 }
             })
-        })
+        })*/
     
     //Select Tenant Screen
     } else {
@@ -114,7 +117,7 @@ Cypress.Commands.add('openManagement', (sectionName, pageName) => {
         break;
     //DONE
         case 'Reports':
-            cy.intercept('GET', '/api/t/50/report/save').as('pageLoad'); //-> request | screen is loaded for user
+            cy.intercept('GET', '/api/t/*/report/save').as('pageLoad'); //-> request | screen is loaded for user
             cy.wrap(null).then(() => {
                 assertUrl = '/report-manager';
             })
