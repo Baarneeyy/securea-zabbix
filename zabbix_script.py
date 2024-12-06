@@ -79,6 +79,7 @@ if __name__ == "__main__":
     group.add_argument('--url', action='store_const', const='url', dest="func", required=False, help="Arg to run only url checks")
     group.add_argument('--base', action='store_const', const='base', dest="func", required=False, help="Arg to run only url checks")
     group.add_argument('--bcm', action='store_const', const='bcm', dest="func", required=False, help="Arg to run only bcm")
+    group.add_argument('--web', action='store_const', const='web', dest="func", required=False, help="Arg to run web tests for binary sites")
 
     args = parser.parse_args()
 
@@ -100,6 +101,13 @@ if __name__ == "__main__":
         path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/zabbix'
         tests = {
             'urlCheck': 'urlCheck.json',
+        }
+    elif func_arg == 'web':
+        path_tests : str = '/root/cypress/securea-zabbix/cypress/e2e/webs'
+        tests = {
+            'BinConf': 'BinConf.json',
+            'Securea': 'Securea.json',
+            'VScan': 'VScan.json',
         }
     else:
         path_tests: str = '/root/cypress/securea-zabbix/cypress/e2e/zabbix'
